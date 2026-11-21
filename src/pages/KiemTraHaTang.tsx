@@ -217,6 +217,13 @@ export function KiemTraHaTang() {
           </p>
         </section>
 
+        {/* Có dòng này thì nhìn phát biết trình duyệt đang chạy bản nào. Service
+            worker từng phục vụ bundle cũ sau khi deploy mà không ai nhận ra. */}
+        <p className="mb-5 text-center text-xs text-ca-cao-nhat">
+          Bản đang chạy: <span className="font-mono">{__MA_BUILD__}</span> · build lúc{' '}
+          {new Date(__LUC_BUILD__).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}
+        </p>
+
         <section className="rounded-the bg-white/70 p-5 shadow-mem backdrop-blur-sm">
           <h2 className="mb-1 text-xl">Bảng màu</h2>
           <p className="mb-4 text-sm text-ca-cao-nhat">
