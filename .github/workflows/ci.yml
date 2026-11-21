@@ -1,0 +1,36 @@
+name: Kiểm tra
+
+# Chạy trên mọi pull request và mọi push vào main.
+# Mục đích: không ai (kể cả AI) merge được code hỏng vào bản live.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  kiem-tra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Cài dependencies
+        run: npm ci
+
+      - name: Kiểm tra kiểu dữ liệu
+        run: npm run typecheck
+
+      - name: Chạy test
+        run: npm test
+
+      - name: Thử build
+        run: npm run build
+        env:
+          # Giá trị giả, chỉ để build chạy được.
+          # Giá trị thật nằm trong Vercel Environment Variables.
+          VITE_SUPABASE_URL: https://vi-du.supabase.co
+          VITE_SUPABASE_ANON_KEY: khoa-gia-cho-ci

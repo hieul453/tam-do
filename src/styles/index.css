@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+/* ===========================================================================
+   Design token của Tâm Đồ — nguồn duy nhất cho màu, chữ, bo góc, bóng đổ.
+   Lấy từ bảng màu đã chốt (CLAUDE.md mục 9).
+   Đổi màu ở đây là đổi cả app; đừng viết mã màu trực tiếp trong component.
+
+   Tên token bằng tiếng Việt không dấu để cả hai người đọc được:
+   bg-kem-hong, text-ca-cao, bg-san-ho, rounded-the...
+   =========================================================================== */
+
+@theme {
+  /* --- Màu --- */
+  --color-kem-hong: #fff6f1; /* nền toàn app */
+  --color-san-ho: #f2788a; /* màu chính, linh vật Tim */
+  --color-hong-dam: #c24d63; /* nút, liên kết */
+  --color-hong-phan: #f7a8b6; /* linh vật Não */
+  --color-dao: #ffb38a; /* màu phụ */
+  --color-dao-nhat: #ffc9a8; /* màu phụ, dùng cho chuyển màu */
+  --color-vang-bo: #ffe3b0; /* thử thách */
+  --color-xanh-xo-thom: #7fa88b; /* đã hoàn thành */
+  --color-oai-huong: #b7a6ec; /* màu "thế giới" của chương Trí nhớ */
+  --color-man-chin: #6e3443; /* thanh 5 tab */
+  --color-ca-cao: #3d2a2e; /* chữ chính */
+  --color-ca-cao-nhat: #7a5f64; /* chữ phụ */
+
+  /* --- Chữ --- */
+  --font-tieu-de: 'Lora', Georgia, serif;
+  --font-than: 'Be Vietnam Pro', system-ui, sans-serif;
+
+  /* --- Bo góc: thẻ lớn 22-28px theo thiết kế --- */
+  --radius-the: 24px;
+  --radius-the-lon: 28px;
+  --radius-the-nho: 18px;
+
+  /* --- Bóng đổ mềm, không viền đen --- */
+  --shadow-mem: 0 2px 8px rgb(194 77 99 / 0.06), 0 8px 24px rgb(194 77 99 / 0.08);
+  --shadow-mem-noi: 0 4px 12px rgb(194 77 99 / 0.1), 0 16px 40px rgb(194 77 99 / 0.12);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-kem-hong);
+    color: var(--color-ca-cao);
+    font-family: var(--font-than);
+    font-weight: 400;
+    line-height: 1.65;
+    /* Mobile-first: chừa chỗ cho tai thỏ và thanh home của iPhone */
+    padding-bottom: env(safe-area-inset-bottom);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-tieu-de);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  /* Vùng chạm tối thiểu 44px theo chuẩn tay người */
+  button,
+  a[role='button'] {
+    min-height: 44px;
+  }
+
+  /* Tôn trọng người đã tắt hiệu ứng chuyển động trong cài đặt hệ thống.
+     Bắt buộc theo CLAUDE.md mục 9. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Mảng màu mờ lan nhẹ trên nền kem hồng (phong cách "ấm áp, dịu dàng") */
+@utility nen-mang-mau {
+  background-image:
+    radial-gradient(60% 50% at 15% 0%, rgb(247 168 182 / 0.35) 0%, transparent 70%),
+    radial-gradient(50% 45% at 90% 12%, rgb(255 201 168 / 0.4) 0%, transparent 70%);
+  background-repeat: no-repeat;
+}

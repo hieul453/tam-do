@@ -1,0 +1,27 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Biến môi trường — KHÔNG BAO GIỜ commit file này
+.env
+.env.local
+.env.*.local
+
+# Nội dung đã build từ content/*.md (sinh lại được, không commit)
+src/content/generated/
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Cài đặt riêng từng máy (có thể chứa khoá) — launch.json thì vẫn commit
+.claude/settings.local.json
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.log
