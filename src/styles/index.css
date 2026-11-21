@@ -83,6 +83,74 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Kiểu chữ cho markdown đã render (trang xem trước nội dung).
+   Viết tay thay vì thêm @tailwindcss/typography: chỉ cần vài thẻ, và mỗi thư
+   viện thêm vào là một thứ nữa partner phải sống cùng.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .prose-tamdo > * + * {
+    margin-top: 0.85em;
+  }
+
+  .prose-tamdo strong {
+    font-weight: 600;
+    color: var(--color-ca-cao);
+  }
+
+  .prose-tamdo em {
+    font-style: italic;
+  }
+
+  .prose-tamdo a {
+    color: var(--color-hong-dam);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose-tamdo ul,
+  .prose-tamdo ol {
+    padding-left: 1.3em;
+  }
+
+  .prose-tamdo ul {
+    list-style: disc;
+  }
+
+  .prose-tamdo ol {
+    list-style: decimal;
+  }
+
+  .prose-tamdo li + li {
+    margin-top: 0.3em;
+  }
+
+  /* Bảng là thành phần hay gặp nhất trong tầng Đào sâu. Cho cuộn ngang
+     để không vỡ layout trên màn hình điện thoại. */
+  .prose-tamdo table {
+    display: block;
+    overflow-x: auto;
+    /* min-width chứ không phải width: bảng hẹp thì vừa khung, bảng rộng thì
+       cuộn ngang thay vì bóp chữ xuống dòng từng ký tự. */
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .prose-tamdo th,
+  .prose-tamdo td {
+    border: 1px solid color-mix(in srgb, var(--color-hong-phan) 45%, transparent);
+    padding: 0.5rem 0.65rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .prose-tamdo th {
+    background-color: color-mix(in srgb, var(--color-hong-phan) 18%, transparent);
+    font-weight: 600;
+  }
+}
+
 /* Mảng màu mờ lan nhẹ trên nền kem hồng (phong cách "ấm áp, dịu dàng") */
 @utility nen-mang-mau {
   background-image:

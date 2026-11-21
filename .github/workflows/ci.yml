@@ -1,7 +1,8 @@
 name: Kiểm tra
 
 # Chạy trên mọi pull request và mọi push vào main.
-# Mục đích: không ai (kể cả AI) merge được code hỏng vào bản live.
+# Mục đích: không ai — kể cả AI — merge được code hỏng hay nội dung lệch khuôn
+# vào bản live.
 on:
   pull_request:
   push:
@@ -20,6 +21,14 @@ jobs:
 
       - name: Cài dependencies
         run: npm ci
+
+      # Để trước tiên: lỗi nội dung là lỗi người soạn nội dung hay gặp nhất,
+      # và thông báo của bước này viết bằng tiếng Việt, chỉ rõ bài nào thiếu gì.
+      - name: Kiểm tra nội dung bài học
+        run: npm run content:check
+
+      - name: Kiểm tra định dạng code
+        run: npm run format:check
 
       - name: Kiểm tra kiểu dữ liệu
         run: npm run typecheck

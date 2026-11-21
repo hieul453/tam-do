@@ -9,14 +9,10 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
  */
 export const daCauHinhSupabase = Boolean(url && anonKey)
 
-export const supabase = createClient(
-  url ?? 'http://localhost:54321',
-  anonKey ?? 'chua-cau-hinh',
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
+export const supabase = createClient(url ?? 'http://localhost:54321', anonKey ?? 'chua-cau-hinh', {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
   },
-)
+})
