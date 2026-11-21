@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { CircleCheck, CircleAlert, CircleDashed, ArrowRight } from 'lucide-react'
+import { CircleCheck, CircleAlert, CircleDashed, ArrowRight, LogIn, LogOut } from 'lucide-react'
 import { supabase, daCauHinhSupabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { soLieu } from '@/content'
@@ -50,9 +50,23 @@ function Dong({
 }
 
 export function KiemTraHaTang() {
-  const { session, dangTai, laAnDanh } = useAuth()
+  const { session, dangTai, laAnDanh, lienKetGoogle, dangXuat } = useAuth()
   const [db, setDb] = useState<Trangthai>('dang-kiem')
   const [dbChuThich, setDbChuThich] = useState<string>()
+  const [loiDangNhap, setLoiDangNhap] = useState<string>()
+  const [dangChuyen, setDangChuyen] = useState(false)
+
+  async function bamLienKet() {
+    setLoiDangNhap(undefined)
+    setDangChuyen(true)
+    try {
+      // Thành công thì trình duyệt rời trang sang Google, nên không cần tắt cờ.
+      await lienKetGoogle()
+    } catch (e) {
+      setDangChuyen(false)
+      setLoiDangNhap(e instanceof Error ? e.message : 'Không mở được đăng nhập Google')
+    }
+  }
 
   useEffect(() => {
     if (!daCauHinhSupabase) {
@@ -149,6 +163,58 @@ export function KiemTraHaTang() {
             Xem trước nội dung đã soạn
             <ArrowRight className="size-4" aria-hidden />
           </Link>
+        </section>
+
+        {/* Thử luồng đăng nhập. Liên kết Google giữ nguyên user_id của phiên ẩn danh,
+            nên mọi tiến độ đã có vẫn còn — đó là điểm chính cần kiểm chứng ở đây. */}
+        <section className="mb-5 rounded-the bg-white/70 p-5 shadow-mem backdrop-blur-sm">
+          <h2 className="mb-1 text-xl">Tài khoản</h2>
+
+          {laAnDanh ? (
+            <>
+              <p className="mb-4 text-sm text-ca-cao-nhat">
+                Bạn đang dùng phiên ẩn danh. Liên kết Google để giữ tiến độ khi đổi máy — mã người
+                dùng không đổi, nên không mất gì.
+              </p>
+              <button
+                onClick={bamLienKet}
+                disabled={dangChuyen || !daCauHinhSupabase}
+                className="flex w-full items-center justify-center gap-2.5 rounded-the-nho bg-hong-dam px-4 py-3 font-medium text-white disabled:opacity-60"
+              >
+                <LogIn className="size-4" aria-hidden />
+                {dangChuyen ? 'Đang mở Google…' : 'Liên kết tài khoản Google'}
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="mb-4 flex items-start gap-3">
+                <CircleCheck className="mt-0.5 size-5 shrink-0 text-xanh-xo-thom" aria-hidden />
+                <div className="min-w-0">
+                  <p className="font-medium">Đã liên kết Google</p>
+                  <p className="text-sm break-words text-ca-cao-nhat">
+                    {session?.user.email ?? 'không đọc được email'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => void dangXuat()}
+                className="flex w-full items-center justify-center gap-2.5 rounded-the-nho bg-hong-phan/25 px-4 py-3 font-medium text-hong-dam"
+              >
+                <LogOut className="size-4" aria-hidden />
+                Đăng xuất
+              </button>
+            </>
+          )}
+
+          {loiDangNhap && (
+            <p className="mt-3 rounded-the-nho bg-vang-bo/50 p-3 text-sm text-ca-cao">
+              {loiDangNhap}
+            </p>
+          )}
+
+          <p className="mt-3 text-xs text-ca-cao-nhat">
+            Mã người dùng hiện tại: <span className="font-mono">{session?.user.id ?? '—'}</span>
+          </p>
         </section>
 
         <section className="rounded-the bg-white/70 p-5 shadow-mem backdrop-blur-sm">
