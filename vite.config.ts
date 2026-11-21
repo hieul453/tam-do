@@ -21,9 +21,7 @@ export default defineConfig({
         theme_color: '#F2788A',
         // Tạm dùng SVG cho mọi cỡ. Khi có logo chính thức thì xuất thêm
         // icon-192.png / icon-512.png / apple-touch-icon.png (iOS cần PNG).
-        icons: [
-          { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-        ],
+        icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
     }),
   ],

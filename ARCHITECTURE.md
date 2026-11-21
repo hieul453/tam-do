@@ -142,11 +142,42 @@ Code: [src/lib/auth.tsx](src/lib/auth.tsx).
 
 | Chưa làm | Khi nào làm |
 |---|---|
-| Pipeline `content/*.md` → JSON | Khi bắt đầu làm trình đọc bài |
-| 5 tab, bản đồ hành trình, onboarding | Khi bắt đầu làm tính năng |
+| Giao diện thật của bài học (3 tab, thẻ vuốt, linh vật) | Theo bản thiết kế đã duyệt |
+| 5 tab, bản đồ hành trình, onboarding Stroop | Khi bắt đầu làm tính năng |
+| 32 hình SVG của chương 6 | Mô tả đã có sẵn trong dữ liệu, chưa vẽ |
+| Đăng nhập Google | Cần Client ID + Secret từ Google Cloud Console |
 | Chế độ tối | Spec có, nhưng để sau — làm nửa vời thì tệ hơn chưa làm |
 | Offline ghi dữ liệu khi mất mạng | Khi có người dùng thật phàn nàn |
 | Sentry | Nên có sớm, chỉ cần một DSN |
+| ESLint | Khi `typescript-eslint` hỗ trợ TypeScript 7 |
+
+## Pipeline nội dung
+
+```
+content/chuong-XX-*.md          markdown người soạn viết — BẢN GỐC DUY NHẤT
+   │
+   │  scripts/lib/parse-chuong.ts   parser dễ tính: đọc được gì lấy nấy
+   │  src/content/schema.ts         Zod khó tính: thiếu mục bắt buộc là chặn
+   ▼
+src/content/generated/*.json    gitignore, dựng lại trước mỗi dev/build
+   │
+   ▼
+src/content/index.ts            import.meta.glob, app đọc có kiểu
+```
+
+**Parser dễ tính, schema khó tính.** Parser không ném lỗi vặt; việc phán xét
+"bài này thiếu gì" để Zod làm, vì nó chỉ đúng tên trường. Script build dịch đường dẫn
+lỗi của Zod sang tiếng Việt: `bai.3.daoSau.nguon` thành `Bài 6.4 › Đào sâu › nguồn`.
+
+Bốn điều kiện chặn merge: đủ 3 tầng · thẻ cuối Hiểu nhanh là thẻ kiểm tra ·
+đúng 3 điều cần nhớ · có ít nhất một nguồn.
+
+`scripts/lib/parse-chuong.test.ts` chạy parser trên chính nội dung thật của chương 6.
+Đổi parser mà làm hỏng một test ở đó nghĩa là nội dung đã soạn sẽ bị đọc sai — nặng hơn
+một lỗi code thường.
+
+Trang `/noi-dung` là công cụ cho người soạn nội dung, **không phải giao diện thật**.
+Nó hiển thị markdown đã parse để thấy ngay mục nào trống hay sai chỗ.
 
 ---
 

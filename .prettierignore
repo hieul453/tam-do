@@ -1,0 +1,10 @@
+node_modules
+dist
+src/content/generated
+package-lock.json
+
+# Nội dung bài học do người soạn viết tay. Prettier sẽ bẻ dòng markdown và
+# làm diff rối, trong khi người soạn không đọc được lý do. Để nguyên.
+content
+docs
+*.md

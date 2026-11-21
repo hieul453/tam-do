@@ -75,3 +75,38 @@ sửa file, có history git, review được qua pull request.
 |---|---|
 | `content/khung-tlh-dai-cuong.md` | Khung 16 chương, ~104 bài |
 | `content/chuong-06-tri-nho.md` | 7 bài, đủ 3 tầng, đã kiểm chứng nguồn |
+| `content/_khuon-mau-bai-hoc.md` | **Khuôn để soạn chương mới** |
+
+### Sửa nội dung rồi xem kết quả
+
+```powershell
+npm run content:check
+```
+
+Lệnh này đọc markdown và báo bằng tiếng Việt nếu bài nào thiếu mục bắt buộc —
+ví dụ thiếu thẻ kiểm tra ở cuối, hay chỉ có 2 điều cần nhớ thay vì 3.
+
+```powershell
+npm run dev
+```
+
+Rồi mở **http://localhost:5173/noi-dung** để xem markdown của mình được đọc ra thành gì.
+Mục nào hiện trống hoặc sai chỗ nghĩa là viết lệch khuôn.
+
+Đẩy lên pull request thì CI chạy đúng lệnh kiểm tra đó, và Vercel đẻ ra một link xem được
+trên điện thoại — **không cần cài gì cũng sửa được nội dung**.
+
+### Nội dung biến thành dữ liệu thế nào
+
+```
+content/chuong-06-tri-nho.md
+   │  scripts/build-content.ts  (đọc markdown)
+   │  src/content/schema.ts     (Zod kiểm mọi mục bắt buộc)
+   ▼
+src/content/generated/tlhdc-06.json      ← không commit, luôn dựng lại
+   │
+   ▼
+app đọc qua src/content/index.ts
+```
+
+`src/content/generated/` do script sinh ra — **đừng sửa tay**, sửa markdown rồi dựng lại.

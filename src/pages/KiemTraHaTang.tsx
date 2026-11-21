@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { CircleCheck, CircleAlert, CircleDashed } from 'lucide-react'
+import { Link } from 'react-router'
+import { CircleCheck, CircleAlert, CircleDashed, ArrowRight } from 'lucide-react'
 import { supabase, daCauHinhSupabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
+import { soLieu } from '@/content'
 
 type Trangthai = 'dang-kiem' | 'ok' | 'loi' | 'chua-cau-hinh'
 
@@ -18,7 +20,15 @@ const MAU = [
   ['Nâu ca cao', 'bg-ca-cao', '#3D2A2E'],
 ] as const
 
-function Dong({ nhan, trangthai, chuThich }: { nhan: string; trangthai: Trangthai; chuThich?: string }) {
+function Dong({
+  nhan,
+  trangthai,
+  chuThich,
+}: {
+  nhan: string
+  trangthai: Trangthai
+  chuThich?: string
+}) {
   const Icon =
     trangthai === 'ok' ? CircleCheck : trangthai === 'dang-kiem' ? CircleDashed : CircleAlert
   const mau =
@@ -86,8 +96,8 @@ export function KiemTraHaTang() {
           <p className="font-than text-sm tracking-wide text-ca-cao-nhat uppercase">Tâm Đồ</p>
           <h1 className="mt-1 text-3xl text-ca-cao">Kiểm tra hạ tầng</h1>
           <p className="mt-2 text-ca-cao-nhat">
-            Trang này không phải tính năng. Nó chỉ xác nhận stack đã chạy đúng trước khi bắt đầu
-            làm app.
+            Trang này không phải tính năng. Nó chỉ xác nhận stack đã chạy đúng trước khi bắt đầu làm
+            app.
           </p>
         </header>
 
@@ -121,7 +131,24 @@ export function KiemTraHaTang() {
               }
             />
             <Dong nhan="Đọc dữ liệu qua Row Level Security" trangthai={db} chuThich={dbChuThich} />
+            <Dong
+              nhan="Nội dung đọc được từ content/*.md"
+              trangthai={soLieu.bai > 0 ? 'ok' : 'loi'}
+              chuThich={
+                soLieu.bai > 0
+                  ? `${soLieu.chuong} chương · ${soLieu.bai} bài · ${soLieu.the} thẻ`
+                  : 'Chưa có chương nào — chạy npm run content:build'
+              }
+            />
           </div>
+
+          <Link
+            to="/noi-dung"
+            className="mt-4 flex items-center justify-between rounded-the-nho bg-hong-phan/20 px-4 py-3 text-sm font-medium text-hong-dam"
+          >
+            Xem trước nội dung đã soạn
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
         </section>
 
         <section className="rounded-the bg-white/70 p-5 shadow-mem backdrop-blur-sm">
@@ -132,10 +159,7 @@ export function KiemTraHaTang() {
           </p>
           <ul className="grid grid-cols-2 gap-2.5">
             {MAU.map(([ten, lop, ma]) => (
-              <li
-                key={ten}
-                className="flex items-center gap-2.5 rounded-the-nho bg-white/60 p-2.5"
-              >
+              <li key={ten} className="flex items-center gap-2.5 rounded-the-nho bg-white/60 p-2.5">
                 <span
                   className={`${lop} size-9 shrink-0 rounded-xl ring-1 ring-ca-cao/10`}
                   aria-hidden
