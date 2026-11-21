@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+
+  "//": "App là single-page: React Router xử lý đường dẫn ở phía trình duyệt. Không có dòng rewrite này thì mở thẳng https://.../noi-dung hay bấm F5 ở route đó sẽ ra 404 của Vercel, vì trên máy chủ không có file nào tên /noi-dung. Vercel tìm file tĩnh trước rồi mới áp rewrite, nên /assets/*, /sw.js, /icon.svg vẫn được phục vụ bình thường.",
+
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
