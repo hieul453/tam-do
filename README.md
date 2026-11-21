@@ -5,8 +5,10 @@
 Web app PWA tiếng Việt, mobile-first, để ôn tập kiến thức tâm lý học. Mỗi bài học có ba tầng:
 ⚡ Hiểu nhanh · 📖 Đào sâu · 🌱 Áp dụng.
 
+**Bản chạy thật: https://tam-do-nu.vercel.app**
+
 **Giai đoạn hiện tại: chỉ có hạ tầng.** Chưa có tính năng nào. Trang duy nhất là màn
-*Kiểm tra hạ tầng*, dùng để xác nhận stack chạy đúng.
+*Kiểm tra hạ tầng*, dùng để xác nhận stack chạy đúng — mở ra phải thấy 5 dòng xanh.
 
 ## Chạy thử
 
@@ -43,6 +45,26 @@ Vite · React 19 · TypeScript · Tailwind v4 · React Router · TanStack Query 
 Supabase (Postgres + Auth + RLS) · Vercel
 
 Chi tiết và lý do: [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Hạ tầng đang chạy
+
+| | |
+|---|---|
+| Repo | [github.com/hieul453/tam-do](https://github.com/hieul453/tam-do) — public, `main` được bảo vệ |
+| Bản live | [tam-do-nu.vercel.app](https://tam-do-nu.vercel.app) — tự deploy mỗi lần `main` thay đổi |
+| Preview | mỗi pull request có một URL riêng, mở được trên điện thoại |
+| Database | Supabase `crbpqbjdvakhwmoybicw`, region Singapore (`ap-southeast-1`), Postgres 17 |
+| Đăng nhập | ẩn danh đã bật · liên kết thủ công đã bật · Google **chưa** bật |
+| Chi phí | 0 đồng. GitHub public (Actions không giới hạn phút), Supabase Free, Vercel hobby |
+
+**Cách làm việc:** không push thẳng vào `main`. Mỗi thay đổi một nhánh, một pull request,
+CI phải xanh, xem bản preview rồi mới merge.
+
+Hai hạn mức của gói miễn phí cần nhớ:
+
+- **Supabase tạm dừng project sau 7 ngày không hoạt động.** Không mất dữ liệu, nhưng phải
+  vào dashboard bấm khôi phục.
+- **Vercel hobby không dùng cho mục đích thương mại.** Dự án cá nhân thì đúng luật.
 
 ## Nội dung
 
