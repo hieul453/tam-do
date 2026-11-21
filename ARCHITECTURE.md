@@ -151,6 +151,29 @@ Code: [src/lib/auth.tsx](src/lib/auth.tsx).
 | Sentry | Nên có sớm, chỉ cần một DSN |
 | ESLint | Khi `typescript-eslint` hỗ trợ TypeScript 7 |
 
+## PWA và cái bẫy "chậm một nhịp"
+
+App là PWA, service worker lưu sẵn `index.html` để chạy được khi mất mạng. Hệ quả:
+**sau mỗi lần deploy, lần mở đầu tiên vẫn nhận bundle cũ từ cache**, phải tải lại lần
+hai mới thấy bản mới.
+
+Đã gặp thật: merge xong nút Google, mở `tam-do-nu.vercel.app`, trang vẫn chạy
+`index-CMZRjvRA.js` trong khi máy chủ đã phục vụ `index-DEaD-aPC.js`.
+
+Với người soạn nội dung đây là cái bẫy khó chịu nhất — sửa bài, merge, mở link, thấy y
+như cũ, tưởng mình làm sai.
+
+Cách xử lý ở [src/lib/tu-cap-nhat.ts](src/lib/tu-cap-nhat.ts): `registerType: 'autoUpdate'`
+đã bật `skipWaiting` + `clientsClaim` nên service worker mới tiếp quản ngay; chỉ cần nghe
+`controllerchange` rồi tải lại một lần. Không đụng cấu hình Workbox nên phần chạy offline
+giữ nguyên.
+
+> Bản vá chỉ có hiệu lực **từ lần deploy kế tiếp** trở đi, vì nó nằm trong bundle mới mà
+> trang đang chạy bundle cũ thì chưa có. Đừng tưởng nó hỏng.
+>
+> Link preview của pull request không dính bẫy này: mỗi nhánh một tên miền riêng, chưa
+> có service worker nào.
+
 ## vercel.json — vì sao cần
 
 App là single-page: React Router xử lý đường dẫn ở phía trình duyệt. Không có dòng
