@@ -151,6 +151,19 @@ Code: [src/lib/auth.tsx](src/lib/auth.tsx).
 | Sentry | Nên có sớm, chỉ cần một DSN |
 | ESLint | Khi `typescript-eslint` hỗ trợ TypeScript 7 |
 
+## vercel.json — vì sao cần
+
+App là single-page: React Router xử lý đường dẫn ở phía trình duyệt. Không có dòng
+rewrite trong `vercel.json` thì mở thẳng `https://…/noi-dung` hoặc bấm F5 ở route đó sẽ
+ra **404 của Vercel**, vì trên máy chủ không có file nào tên `/noi-dung`. Bấm link trong
+app thì vẫn chạy, nên lỗi này rất dễ lọt — phải mở URL trực tiếp mới thấy.
+
+Vercel tìm file tĩnh trước rồi mới áp rewrite, nên `/assets/*`, `/sw.js`, `/icon.svg`
+vẫn được phục vụ bình thường.
+
+> **`vercel.json` không nhận key lạ.** Kể cả `"//"` dùng làm chú thích cũng làm deploy
+> đỏ với lỗi *"should NOT have additional property"*. Muốn ghi chú thì ghi ở đây.
+
 ## Pipeline nội dung
 
 ```
