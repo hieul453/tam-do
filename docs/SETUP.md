@@ -1,142 +1,132 @@
 # Cài đặt và cấp quyền
 
-> Danh sách việc cần làm một lần để dự án chạy được và để Claude làm việc tự động.
-> Đánh dấu `[x]` khi xong.
+> Việc làm một lần để dự án chạy được. Hầu hết đã xong — giữ file này để dựng lại
+> khi đổi máy, hoặc khi partner tham gia.
 
-Phần 1 và 2 là bắt buộc. Phần 3 làm khi partner bắt đầu tham gia.
+**Trạng thái: hạ tầng đã chạy.** Còn lại duy nhất đăng nhập Google (mục 2c).
 
 ---
 
-## 1. Máy của bạn
+## 1. Máy làm việc ✅
 
-Đã có sẵn: Node v24, npm, git, pnpm. Thiếu `gh` — không có nó thì Claude không tạo được
-repo, không mở được pull request, không đặt được branch protection.
-
-- [ ] Cài GitHub CLI
+- [x] Node 20+, git, npm
+- [x] GitHub CLI
 
 ```powershell
 winget install --id GitHub.cli --source winget
 ```
 
-- [ ] Đăng nhập (mở browser, chọn Authorize)
-
 ```powershell
-gh auth login --web --scopes repo,workflow
+gh auth login --hostname github.com --git-protocol https --web --scopes repo,workflow
 ```
 
-Supabase CLI đã nằm trong `devDependencies` của repo, không cần cài riêng — gọi bằng
-`npx supabase` hoặc qua `npm run db:push`. Làm vậy để hai máy luôn dùng cùng một version.
+Supabase CLI nằm trong `devDependencies`, gọi bằng `npx supabase`, không cần cài riêng.
 
-Sau khi cài `gh`, **mở lại cửa sổ terminal** rồi kiểm tra:
+### Kho token
+
+Token của các dịch vụ cất ở `%LOCALAPPDATA%\ai-tokens`, mã hoá bằng DPAPI gắn với tài
+khoản Windows. Xem `%LOCALAPPDATA%\ai-tokens\README.md`.
 
 ```powershell
-gh auth status
+& "$env:LOCALAPPDATA\ai-tokens\token.ps1" list
 ```
+
+Đang có: `github`, `supabase`, `vercel`, `supabase-db-pass`.
+
+> Token GitHub hiện đang full scope (gồm `delete_repo`, `admin:org`). Dự án chỉ cần
+> `repo` và `workflow`. Nên thay bằng token hẹp hơn khi có dịp.
 
 ---
 
 ## 2. Supabase
 
-- [ ] Tạo project ở [supabase.com/dashboard](https://supabase.com/dashboard) — gói Free.
-  **Region: Southeast Asia (Singapore)** — gần Việt Nam nhất, giảm độ trễ rõ rệt.
-- [ ] Lưu lại mật khẩu database mà nó sinh ra. Mất là phải reset.
+- [x] Project `crbpqbjdvakhwmoybicw`, region **Southeast Asia (Singapore)**, Postgres 17
+- [x] Migration `supabase/migrations/0001_khoi_tao.sql` — 8 bảng, RLS bật trên tất cả
+- [x] Anonymous sign-ins
+- [x] Manual linking (để tài khoản ẩn danh nâng cấp lên Google mà giữ nguyên `user_id`)
+- [x] Redirect URL cho các domain Vercel và `localhost:5173`
 
-### Bật đăng nhập
+> **Region không đổi được sau khi tạo.** Lần đầu lỡ tạo ở Tokyo, phải xoá làm lại.
+> Đo thật từ Việt Nam: Singapore ~72ms, Tokyo ~131ms.
 
-Vào **Authentication → Sign In / Providers**:
+### 2c. Đăng nhập Google — chưa làm
 
-- [ ] Bật **Anonymous sign-ins** — để vào app là dùng được ngay, không bắt đăng nhập.
-- [ ] Bật **Google**. Cần Client ID và Client Secret, lấy ở
-  [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
-  tạo OAuth 2.0 Client ID, loại Web application, rồi dán **Authorized redirect URI**
-  mà Supabase hiển thị sẵn trong màn hình cấu hình Google đó.
-- [ ] Vào **Authentication → Advanced**, bật **Manual linking** — để tài khoản ẩn danh
-  nâng cấp lên Google mà giữ nguyên dữ liệu.
+Đây là việc duy nhất còn lại, và phải làm bằng tay vì cần browser:
 
-> Ba bước này chỉ bạn làm được, vì phải bấm trong browser và đăng nhập Google.
+1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → tạo
+   **OAuth 2.0 Client ID**, loại *Web application*.
+2. Dán **Authorized redirect URI** mà Supabase hiển thị sẵn trong màn hình cấu hình Google.
+3. Cất hai giá trị vào kho:
 
-### Lấy hai giá trị cho app
-
-Vào **Project Settings → API**, copy:
-
-- [ ] **Project URL** → `VITE_SUPABASE_URL`
-- [ ] **anon public key** → `VITE_SUPABASE_ANON_KEY`
-
-Tạo file `.env.local` ở gốc repo (file này đã được gitignore):
-
-```
-VITE_SUPABASE_URL=https://xxxx.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...
+```powershell
+& "$env:LOCALAPPDATA\ai-tokens\token.ps1" set google-client-id -EnvVar GOOGLE_CLIENT_ID
 ```
 
-> `anon key` được thiết kế để nằm công khai trong code frontend. An toàn dữ liệu đến từ
-> Row Level Security trong Postgres, không từ việc giấu key. Không cần lo khi thấy nó
-> trong bundle.
+```powershell
+& "$env:LOCALAPPDATA\ai-tokens\token.ps1" set google-client-secret -EnvVar GOOGLE_CLIENT_SECRET
+```
 
-### Để Claude tự chạy migration
+Có hai giá trị đó rồi thì bật provider qua API được, không cần bấm thêm.
 
-Chọn một trong hai:
+### Giới hạn của token Supabase
 
-- [ ] **Cách gọn hơn:** đưa Claude **connection string** của project này
-  (Project Settings → Database → Connection string → URI). Phạm vi ảnh hưởng chỉ gói trong
-  một database của project pilot.
-- [ ] **Cách thủ công:** bạn tự mở SQL Editor, dán nội dung
-  `supabase/migrations/0001_khoi_tao.sql` vào rồi Run.
-
-### ĐỪNG đưa Claude
-
-- Mật khẩu tài khoản Google của bạn.
-- **`service_role` key** của Supabase — key này bỏ qua toàn bộ RLS. Giai đoạn này không cần đến nó.
+Personal access token **không tạo được project** (HTTP 403) và không đọc được
+`/v1/organizations`. Nhưng chạy SQL, sửa cấu hình auth, lấy anon key, xoá project thì được.
+Nên tạo project luôn phải làm trong dashboard.
 
 ---
 
-## 3. GitHub và Vercel
+## 3. GitHub và Vercel ✅
 
-- [ ] Chốt tên repo và public hay private.
-- [ ] Để Claude tạo repo, push code, bật branch protection cho `main`
-  (không ai push trực tiếp, phải qua pull request và CI phải xanh).
-- [ ] Lấy **username GitHub của partner** → mời làm collaborator.
-- [ ] Vào [vercel.com](https://vercel.com), đăng nhập **bằng GitHub**, bấm Import repo.
-  Vercel tự nhận ra đây là Vite, không cần cấu hình gì.
-- [ ] Trong Vercel → Settings → Environment Variables, thêm đúng hai biến
-  `VITE_SUPABASE_URL` và `VITE_SUPABASE_ANON_KEY` cho cả ba môi trường
-  (Production, Preview, Development).
-- [ ] Copy URL production của Vercel, quay lại Supabase →
-  **Authentication → URL Configuration**, thêm vào **Redirect URLs**:
-  URL production, và `https://*.vercel.app/**` để link preview cũng đăng nhập được.
+- [x] Repo [hieul453/tam-do](https://github.com/hieul453/tam-do), public
+- [x] Branch protection trên `main`: bắt buộc PR, bắt buộc check `kiem-tra` xanh,
+      chặn force push và xoá nhánh
+- [x] Vercel project nối với repo, tự deploy khi `main` đổi
+- [x] `VITE_SUPABASE_URL` và `VITE_SUPABASE_ANON_KEY` cho cả production, preview, development
+- [x] Deployment Protection **đã tắt** — mặc định của team là bắt đăng nhập mới xem được
+- [ ] Mời partner làm collaborator (cần username GitHub)
 
-> Không cần tạo Vercel token. Nối repo qua dashboard một lần là từ đó mỗi push tự deploy,
-> và mỗi pull request tự có một URL xem trước.
+Hai lựa chọn cố ý khác mặc định:
+
+- **Số approval = 0.** GitHub không cho tự approve PR của mình; để 1 thì bạn tự khoá mình.
+  Vẫn bắt buộc có PR và CI xanh.
+- **Admin không bị chặn.** Để còn đường gỡ khi CI hỏng vì lý do ngoài code.
+
+### Bẫy của Vercel API
+
+Ghi lại vì mất khá nhiều thời gian:
+
+- Biến môi trường phải đặt `type: 'plain'`. `type: 'encrypted'` bị trả **403**.
+- **Đừng** truyền `teamId` — token này với tới project mà không cần, thêm vào lại thành 404.
+- PowerShell 5.1 để body lỗi HTTP ở `$_.ErrorDetails.Message`, không phải ở response stream.
+- Tên biến PowerShell **không phân biệt hoa thường**: `foreach ($v in ...)` sẽ ghi đè `$V`.
 
 ---
 
 ## 4. Tuỳ chọn
 
-- [ ] **Sentry** — đáng làm sớm. Khi partner báo "app lỗi rồi" thì có stack trace thật
-  thay vì đoán. Chỉ cần một DSN, dán vào `VITE_SENTRY_DSN`.
+- [ ] **Sentry** — đáng làm sớm, để khi partner báo "app lỗi rồi" thì có stack trace thật.
 - [ ] Domain riêng.
 
 ---
 
 ## 5. Partner tham gia bằng cách nào
 
-**Mức 1 — chỉ nội dung, không cài gì.** Sửa `content/*.md` ngay trên GitHub web
-(nút bút chì), hoặc soạn ở claude.ai rồi dán vào. Tạo pull request → CI kiểm format →
-Vercel đẻ ra một link → mở link trên điện thoại xem bài của mình → merge.
-Setup 0 phút. **Bắt đầu từ mức này.**
+**Mức 1 — chỉ nội dung, không cài gì.** Sửa `content/*.md` trên GitHub web (nút bút chì),
+hoặc soạn ở claude.ai rồi dán vào. Tạo pull request → CI kiểm tra → Vercel đẻ ra một link →
+mở link trên điện thoại xem bài của mình → merge. Setup 0 phút. **Bắt đầu từ mức này.**
 
 **Mức 2 — vibe code thật.** Cài Node, git, Claude Code; clone repo; `npm run dev`.
-Khoảng 30 phút setup. Làm sau khi dự án đã chạy ổn.
+Khoảng 30 phút setup.
 
 ---
 
-## Kiểm tra lại
-
-Xong phần 1 và 2 thì chạy:
+## Kiểm tra lại bất cứ lúc nào
 
 ```powershell
 npm run dev
 ```
 
-Mở `http://localhost:5173`. Trang **Kiểm tra hạ tầng** phải xanh cả 5 dòng. Dòng nào đỏ
-thì nó ghi rõ thiếu gì.
+Mở `http://localhost:5173`, trang **Kiểm tra hạ tầng** phải xanh cả 5 dòng.
+
+Hoặc mở thẳng bản live: **https://tam-do-nu.vercel.app**
