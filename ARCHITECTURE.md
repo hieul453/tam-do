@@ -89,8 +89,10 @@ cần xử lý.
 
 ## Database
 
-[supabase/migrations/0001_khoi_tao.sql](supabase/migrations/0001_khoi_tao.sql) — 8 bảng,
-RLS bật trên tất cả, mỗi bảng một policy `auth.uid() = user_id`.
+[0001_khoi_tao.sql](supabase/migrations/0001_khoi_tao.sql) — 8 bảng.
+[0002_tien_do_va_co_che.sql](supabase/migrations/0002_tien_do_va_co_che.sql) — thêm bảng
+`tien_do_phan` và các cột XP / chuỗi / tim. RLS bật trên cả 9 bảng, mỗi bảng một policy
+`auth.uid() = user_id`.
 
 > Thêm bảng mà quên `enable row level security` thì bảng đó mở cho bất kỳ ai có anon key.
 
@@ -100,8 +102,28 @@ Hai cái bẫy đã xử lý:
   `profiles.timezone` mặc định `Asia/Ho_Chi_Minh`, `card_reviews.due_on` là `date`.
 - **Dữ liệu nhạy cảm.** Nhật ký và câu chuyện kể cho AI: không analytics, `on delete cascade`.
 
-Schema hiện được thiết kế cho mô hình nội dung cũ; sẽ viết migration mới ở M3 khi làm XP,
-chuỗi ngày và tim.
+0001 được viết cho mô hình nội dung cũ (`lesson_progress.tier` dùng bộ giá trị cũ), nên
+0002 thêm bảng `tien_do_phan` riêng thay vì sửa bảng đã chạy trên database thật.
+
+### Mọi số liệu đi qua một hàm
+
+`so_lieu_hoc()` trả về chuỗi ngày, tim, XP hôm nay, mục tiêu và danh sách phần đã xong
+trong một lời gọi. `ghi_nhan_phien()` làm cả ba việc (đánh dấu phần xong, cộng XP hôm
+nay, cập nhật chuỗi và tim) rồi trả về chính số liệu mới đó, nên ghi xong không cần đọc lại.
+
+Gộp lại vì **chỉ server biết "hôm nay" là ngày nào** theo múi giờ của người dùng. Để client
+tự tính ngày rồi truy vấn ba bảng là mở đường cho chuỗi ngày bị mất oan.
+
+Tim do client gửi (`p_tim_con_lai`) chứ không để server tự trừ theo số câu sai: phiên học
+cho nạp lại tim giữa đường nên hai bên sẽ lệch — người học thấy 5 tim trong bài mà thanh
+bên hiện 0. Bài đọc bỏ trống tham số này.
+
+> Tham số đó có `default null`. Sửa migration mà quên chạy lại thì PostgREST trả 404 cho
+> lời gọi thiếu tham số. Đã mất một vòng mới tìm ra, vì giao diện lúc đó vẫn báo "đã xong"
+> — lý do bây giờ dấu tích chỉ bật sau khi database xác nhận.
+
+Kiểm bằng cách đánh thẳng vào database bằng chính khoá anon công khai:
+`node .git/sb-07-test-rls-m3.mjs` — 25 phép thử, gồm cả RLS lẫn các ca biên của chuỗi ngày.
 
 ## Đăng nhập
 
@@ -113,12 +135,23 @@ Redirect URI trỏ về Supabase, không phải Vercel:
 
 ## AI ở tầng Áp dụng
 
-Google Gemini, gói miễn phí. Hai điều đã kiểm chứng và phải nhớ:
+Google Gemini, gói miễn phí. Những gì đã đo được và phải nhớ:
 
-- `gemini-2.5-flash` **không còn cấp cho tài khoản mới**. Dùng `gemini-3.8-flash`.
+- `gemini-2.5-flash` **không còn cấp cho tài khoản mới** (404). `gemini-4-*` trả 429.
 - Gemini 3.x **mặc định có "thinking"**, ăn hết ngân sách token đầu ra. Đặt
-  `maxOutputTokens: 700` mà chỉ nhận về 93 ký tự trong khi tốn 792 token. Phải cấu hình
-  `thinkingConfig` hoặc nâng hẳn hạn mức, không thì câu trả lời cụt giữa chừng.
+  `maxOutputTokens: 700` mà chỉ nhận về 93 ký tự trong khi tốn 792 token. Phải đặt
+  `thinkingConfig: { thinkingBudget: 0 }`, không thì câu trả lời cụt giữa chừng.
+- **Model đông không trả 503 ngay mà treo.** Đo thật: `gemini-3.8-flash` 120 giây,
+  `gemini-3.7-flash` 288 giây. Fallback xếp hàng tuần tự vì thế chết trước khi tới được
+  model đang rảnh — Edge function của Vercel chỉ có 25 giây, và nó đã 504 thật.
+- **Model nào rảnh đổi theo từng phút.** Cùng `gemini-3.6-flash`: lần đo đầu 7,3 giây,
+  lần sau treo quá 20 giây. Không thứ tự cố định nào đáng tin.
+
+Vì hai điều cuối, [api/goi-y.ts](api/goi-y.ts) **gọi gối đầu**: phóng model tốt nhất
+trước, cứ 2 giây chưa ai trả lời thì phóng thêm một model nữa, ai về trước thì lấy và huỷ
+phần còn lại; model vừa thắng được nhớ lại để lần sau thử trước. Đo 5 lượt liên tiếp với
+prompt thật: lượt nào cũng có đủ 3 gợi ý, quanh 10 giây.
+Đo lại bất cứ lúc nào: `node .git/gemini-hedge-test.mjs`.
 
 Khoá gọi qua serverless function của Vercel, **không bao giờ** đặt vào biến `VITE_*`.
 
@@ -143,8 +176,8 @@ cũ. Đã gặp thật. Xử lý ở [src/lib/tu-cap-nhat.ts](src/lib/tu-cap-nha
 | | |
 |---|---|
 | **M1** ✅ | Hệ thiết kế · hai bố cục · màn hình lộ trình · màn chọn hướng tiếp cận |
-| **M2** | Ba hướng tiếp cận: bài tập Nhanh, bài đọc Đào sâu, Áp dụng + AI |
-| **M3** | Cơ chế: XP, chuỗi ngày, tim, mục tiêu ngày, màn tổng kết phiên |
+| **M2** ✅ | Ba hướng tiếp cận: bài tập Nhanh, bài đọc Đào sâu, Áp dụng + AI |
+| **M3** ✅ | Cơ chế: XP, chuỗi ngày, tim, mục tiêu ngày, màn tổng kết phiên |
 | **M4** | Hoàn thiện demo: onboarding, âm thanh, hoạt ảnh, trạng thái rỗng |
 
 ## Backlog
@@ -156,3 +189,7 @@ Những thứ chưa quyết được, gom lại thay vì chặn tiến độ:
 - Ghi dữ liệu khi mất mạng.
 - Sentry — nên có trước khi demo thật.
 - Âm thanh phản hồi: cần tìm nguồn miễn phí có giấy phép rõ ràng.
+- Làm lại một phần vẫn được XP đầy đủ. Duolingo giảm XP cho lượt làm lại; giảm ở đây thì
+  màn tổng kết (tính XP phía client) sẽ nói khác database, nên để nguyên và ghi lại.
+- Trợ lý AI mất khoảng 10 giây cho gợi ý đầu tiên vì các model tốt đang đông. Chấp nhận
+  được cho bản pilot; muốn nhanh hơn thì phải trả tiền hạn mức.

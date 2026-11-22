@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { X, Heart, Check, Info, RotateCcw } from 'lucide-react'
 import { timPhan } from '@/content'
@@ -6,10 +6,16 @@ import type { BaiTap } from '@/content/schema'
 import { Nut } from '@/components/ui/Nut'
 import { ThanhTienDo } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
+import {
+  useSoLieu,
+  useGhiNhanPhien,
+  useNapLaiTim,
+  xpPhienNhanh,
+  TIM_TOI_DA,
+  khoaPhan,
+} from '@/features/tiendo/duLieu'
 import { RenderBaiTap, kiemTra, cauHoiCua, type TraLoi } from './baiTap'
 import { ManTongKet } from './ManTongKet'
-
-const TIM_BAN_DAU = 5
 
 /**
  * Phiên học NHANH.
@@ -29,17 +35,29 @@ export function TrangHoc() {
   const kq = timPhan(idNhanh, idChuong, idPhan)
   const goc = useMemo<BaiTap[]>(() => kq?.phan.nhanh ?? [], [kq])
 
+  const { soLieu, sanSang } = useSoLieu()
+  const ghiNhan = useGhiNhanPhien()
+  const napLai = useNapLaiTim()
+
   const [hangDoi, setHangDoi] = useState<BaiTap[]>(goc)
   const [chiSo, setChiSo] = useState(0)
   const [traLoi, setTraLoi] = useState<TraLoi>(null)
   const [ketQua, setKetQua] = useState<'dung' | 'sai' | null>(null)
-  const [tim, setTim] = useState(TIM_BAN_DAU)
+  // null = chưa biết người này còn mấy tim. Lấy từ hồ sơ, không mặc định 5:
+  // nếu không, người vừa hết tim mở bài mới lại thấy đầy tim.
+  const [tim, setTim] = useState<number | null>(null)
   const [daXong, setDaXong] = useState<Set<string>>(new Set())
   const [soSai, setSoSai] = useState(0)
   const [xongHet, setXongHet] = useState(false)
   const [hoiThoat, setHoiThoat] = useState(false)
 
   const datTraLoi = useCallback((t: TraLoi) => setTraLoi(t), [])
+
+  // Đồng bộ một lần lúc vào bài. Sau đó tim do phiên học tự quản, và chỉ chốt
+  // lại xuống database ở màn tổng kết.
+  useEffect(() => {
+    setTim((cu) => (cu === null && sanSang ? soLieu.tim : cu))
+  }, [sanSang, soLieu.tim])
 
   if (!kq || goc.length === 0) {
     return (
@@ -54,14 +72,27 @@ export function TrangHoc() {
     )
   }
 
+  // Chờ biết số tim thật trước khi vào câu đầu: vào trước rồi sửa số sau là
+  // người học thấy tim nhảy, tưởng mình vừa mất một cái.
+  if (tim === null) {
+    return (
+      <div className="grid min-h-dvh place-items-center p-6">
+        <p className="text-sm text-chu-phu">Đang mở bài…</p>
+      </div>
+    )
+  }
+
   if (xongHet) {
     return (
       <ManTongKet
         tongCau={goc.length}
         soSai={soSai}
         timConLai={tim}
+        xp={xpPhienNhanh(goc.length, soSai)}
         tenPhan={kq.phan.tieuDe}
         duongDanPhan={`/phan/${idNhanh}/${idChuong}/${idPhan}`}
+        dangLuu={ghiNhan.isPending}
+        luuThatBai={ghiNhan.isError}
       />
     )
   }
@@ -80,7 +111,7 @@ export function TrangHoc() {
     setKetQua(dung ? 'dung' : 'sai')
     if (!dung) {
       setSoSai((n) => n + 1)
-      setTim((t) => Math.max(0, t - 1))
+      setTim((t) => Math.max(0, (t ?? TIM_TOI_DA) - 1))
       // Xếp lại cuối hàng đợi: chưa nắm thì chưa cho qua.
       setHangDoi((h) => [...h, bt])
     } else {
@@ -92,8 +123,28 @@ export function TrangHoc() {
     if (danhDauXong) setDaXong((s) => new Set(s).add(bt.id))
     setKetQua(null)
     setTraLoi(null)
-    if (chiSo + 1 >= hangDoi.length) setXongHet(true)
+    if (chiSo + 1 >= hangDoi.length) ketThuc()
     else setChiSo((i) => i + 1)
+  }
+
+  /**
+   * Chốt phiên: ghi XP, tim còn lại và đánh dấu phần đã xong.
+   *
+   * Gọi trong chính lần bấm của người học, không gọi trong useEffect của màn
+   * tổng kết — effect chạy hai lần ở StrictMode, và một phiên bị ghi hai lần
+   * là XP đôi.
+   *
+   * Ghi thất bại thì vẫn cho sang màn tổng kết. Mất XP một phiên là chuyện
+   * nhỏ; giữ người học lại giữa lúc vừa làm xong là chuyện lớn.
+   */
+  function ketThuc() {
+    ghiNhan.mutate({
+      phanId: khoaPhan(idNhanh, idChuong, idPhan),
+      huong: 'nhanh',
+      xp: xpPhienNhanh(goc.length, soSai),
+      timConLai: tim ?? TIM_TOI_DA,
+    })
+    setXongHet(true)
   }
 
   const hetTim = tim === 0 && ketQua === 'sai'
@@ -180,7 +231,9 @@ export function TrangHoc() {
               <Nut
                 co="lon"
                 onClick={() => {
-                  setTim(TIM_BAN_DAU)
+                  setTim(TIM_TOI_DA)
+                  // Ghi luôn, để con số ở thanh bên khớp với con số trong bài.
+                  napLai.mutate()
                   sangCauSau()
                 }}
               >
