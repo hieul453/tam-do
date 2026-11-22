@@ -145,7 +145,6 @@ Code: [src/lib/auth.tsx](src/lib/auth.tsx).
 | Giao diện thật của bài học (3 tab, thẻ vuốt, linh vật) | Theo bản thiết kế đã duyệt |
 | 5 tab, bản đồ hành trình, onboarding Stroop | Khi bắt đầu làm tính năng |
 | 32 hình SVG của chương 6 | Mô tả đã có sẵn trong dữ liệu, chưa vẽ |
-| Đăng nhập Google | Cần Client ID + Secret từ Google Cloud Console |
 | Chế độ tối | Spec có, nhưng để sau — làm nửa vời thì tệ hơn chưa làm |
 | Offline ghi dữ liệu khi mất mạng | Khi có người dùng thật phàn nàn |
 | Sentry | Nên có sớm, chỉ cần một DSN |
