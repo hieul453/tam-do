@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router'
-import { Brain, Dumbbell, Trophy, User, Flame, Heart, Zap } from 'lucide-react'
+import { Brain, Dumbbell, Trophy, User, Flame, Heart, Zap, Check } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { The, ThanhTienDo, ChiSo } from '@/components/ui/co-ban'
 import { Nut } from '@/components/ui/Nut'
+import { useAuth } from '@/lib/auth'
+import { useSoLieu } from '@/features/tiendo/duLieu'
 
 /**
  * Hai bố cục khác nhau cho cùng một nội dung, theo đúng cách Duolingo làm:
@@ -26,8 +28,40 @@ const MUC = [
   { den: '/toi', nhan: 'Tôi', icon: User },
 ] as const
 
-// Số liệu giả cho M1. Nối vào dữ liệu thật ở M3 khi làm XP và chuỗi ngày.
-const SO_LIEU_TAM = { chuoi: 0, tim: 5, xp: 0, mucTieuNgay: 20 }
+/**
+ * Ba con số của thanh bên.
+ *
+ * Chưa tải xong thì hiện gạch ngang chứ không hiện 0: thấy 0 rồi nhảy thành 7
+ * làm người ta tưởng vừa mất chuỗi. Màu cũng mang nghĩa — ngọn lửa xám khi
+ * chuỗi bằng 0, trái tim rỗng khi hết tim.
+ */
+function BaChiSo({ doc = false }: { doc?: boolean }) {
+  const { soLieu, sanSang } = useSoLieu()
+  const so = (n: number) => (sanSang ? n : '–')
+
+  return (
+    <div className={cn('flex items-center', doc ? 'justify-between' : 'gap-4')}>
+      <ChiSo
+        icon={<Flame className={cn('size-5', soLieu.chuoi > 0 && 'fill-vang')} />}
+        giaTri={so(soLieu.chuoi)}
+        nhan="chuỗi ngày học liên tiếp"
+        mau={soLieu.chuoi > 0 ? 'text-vang' : 'text-chu-mo'}
+      />
+      <ChiSo
+        icon={<Zap className="size-5" />}
+        giaTri={so(soLieu.xpHomNay)}
+        nhan="điểm kinh nghiệm hôm nay"
+        mau="text-nhan-dam"
+      />
+      <ChiSo
+        icon={<Heart className={cn('size-5', soLieu.tim > 0 && 'fill-sai')} />}
+        giaTri={so(soLieu.tim)}
+        nhan="tim còn lại"
+        mau={soLieu.tim > 0 ? 'text-sai' : 'text-chu-mo'}
+      />
+    </div>
+  )
+}
 
 function LogoTamDo({ gon = false }: { gon?: boolean }) {
   return (
@@ -78,42 +112,63 @@ function SidebarWeb() {
 /* ───────────────────────────── Web: cột phải ────────────────────────────── */
 
 function RailWeb() {
-  const { chuoi, tim, xp, mucTieuNgay } = SO_LIEU_TAM
+  const { soLieu, sanSang, luuDuoc } = useSoLieu()
+  const { laAnDanh, dangTai, lienKetGoogle } = useAuth()
+  const datMucTieu = soLieu.xpHomNay >= soLieu.mucTieuXpNgay
+
   return (
     <aside className="sticky top-0 hidden h-dvh w-[20rem] shrink-0 flex-col gap-4 overflow-y-auto border-l border-vien px-5 py-6 xl:flex">
-      <div className="flex items-center justify-between">
-        <ChiSo
-          icon={<Flame className="size-5" />}
-          giaTri={chuoi}
-          nhan="chuỗi ngày"
-          mau="text-vang"
-        />
-        <ChiSo icon={<Heart className="size-5" />} giaTri={tim} nhan="tim còn lại" mau="text-sai" />
-        <ChiSo
-          icon={<Zap className="size-5" />}
-          giaTri={xp}
-          nhan="điểm kinh nghiệm"
-          mau="text-nhan-dam"
-        />
-      </div>
+      <BaChiSo doc />
 
-      <The>
-        <h2 className="text-sm font-bold">Mục tiêu hôm nay</h2>
+      <The nhan={datMucTieu}>
+        <h2 className="flex items-center gap-1.5 text-sm font-bold">
+          Mục tiêu hôm nay
+          {datMucTieu && <Check className="size-4 text-dung" strokeWidth={3} aria-hidden />}
+        </h2>
         <p className="mt-1 mb-3 text-sm text-chu-phu">
-          {xp} / {mucTieuNgay} XP
+          {sanSang ? `${soLieu.xpHomNay} / ${soLieu.mucTieuXpNgay} XP` : 'Đang tải…'}
         </p>
-        <ThanhTienDo giaTri={xp} tong={mucTieuNgay} nhan="tiến độ mục tiêu hôm nay" />
+        <ThanhTienDo
+          giaTri={soLieu.xpHomNay}
+          tong={soLieu.mucTieuXpNgay}
+          mau={datMucTieu ? 'dung' : 'nhan'}
+          nhan="tiến độ mục tiêu hôm nay"
+        />
+        {datMucTieu && (
+          <p className="mt-2 text-xs font-bold text-dung">
+            Xong mục tiêu. Học thêm vẫn được tính XP.
+          </p>
+        )}
       </The>
 
-      <The>
-        <h2 className="text-sm font-bold">Giữ tiến độ của bạn</h2>
-        <p className="mt-1 mb-3 text-sm text-chu-phu">
-          Bạn đang học ẩn danh. Liên kết tài khoản để không mất gì khi đổi máy.
-        </p>
-        <Nut kieu="vien" co="lon" className="text-xs">
-          Liên kết tài khoản
-        </Nut>
-      </The>
+      {soLieu.chuoiDaiNhat > soLieu.chuoi && (
+        <The>
+          <h2 className="text-sm font-bold">Chuỗi dài nhất</h2>
+          <p className="mt-1 text-sm text-chu-phu">
+            {soLieu.chuoiDaiNhat} ngày. Hôm nay là cơ hội để vượt.
+          </p>
+        </The>
+      )}
+
+      {!dangTai && laAnDanh && (
+        <The>
+          <h2 className="text-sm font-bold">Giữ tiến độ của bạn</h2>
+          <p className="mt-1 mb-3 text-sm text-chu-phu">
+            Bạn đang học ẩn danh. Liên kết tài khoản để không mất gì khi đổi máy.
+          </p>
+          <Nut kieu="vien" co="lon" className="text-xs" onClick={() => void lienKetGoogle()}>
+            Liên kết tài khoản
+          </Nut>
+        </The>
+      )}
+
+      {!luuDuoc && !dangTai && (
+        <The className="bg-nen-dju">
+          <p className="text-xs leading-relaxed text-chu-phu">
+            Máy chủ lưu trữ chưa được cấu hình, nên tiến độ của phiên này không được lưu.
+          </p>
+        </The>
+      )}
 
       <p className="mt-auto text-xs leading-relaxed text-chu-mo">
         Tâm Đồ là công cụ học tập, không thay thế chẩn đoán hay trị liệu.
@@ -125,25 +180,24 @@ function RailWeb() {
 /* ───────────────────────── Mobile: thanh trên và dưới ───────────────────── */
 
 function ThanhTrenMobile() {
-  const { chuoi, tim, xp } = SO_LIEU_TAM
+  const { soLieu, sanSang } = useSoLieu()
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-vien bg-nen/90 px-4 py-3 backdrop-blur lg:hidden">
-      <LogoTamDo gon />
-      <div className="flex items-center gap-4">
-        <ChiSo
-          icon={<Flame className="size-5" />}
-          giaTri={chuoi}
-          nhan="chuỗi ngày"
-          mau="text-vang"
-        />
-        <ChiSo
-          icon={<Zap className="size-5" />}
-          giaTri={xp}
-          nhan="điểm kinh nghiệm"
-          mau="text-nhan-dam"
-        />
-        <ChiSo icon={<Heart className="size-5" />} giaTri={tim} nhan="tim còn lại" mau="text-sai" />
+    <header className="sticky top-0 z-20 border-b border-vien bg-nen/90 backdrop-blur lg:hidden">
+      <div className="flex items-center justify-between px-4 py-3">
+        <LogoTamDo gon />
+        <BaChiSo />
       </div>
+      {/* Mobile không có cột phải, nên mục tiêu ngày nằm thành một vạch mảnh
+          ngay dưới thanh số liệu — vẫn thấy, mà không chiếm chỗ của nội dung. */}
+      {sanSang && (
+        <ThanhTienDo
+          giaTri={soLieu.xpHomNay}
+          tong={soLieu.mucTieuXpNgay}
+          mau={soLieu.xpHomNay >= soLieu.mucTieuXpNgay ? 'dung' : 'nhan'}
+          className="h-1 rounded-none"
+          nhan={`mục tiêu hôm nay: ${soLieu.xpHomNay} trên ${soLieu.mucTieuXpNgay} XP`}
+        />
+      )}
     </header>
   )
 }

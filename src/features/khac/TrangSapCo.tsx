@@ -1,8 +1,11 @@
 import type { LucideIcon } from 'lucide-react'
-import { Dumbbell, Trophy, User, Flame, Zap, Heart, Hammer } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { Dumbbell, Trophy, Flame, Zap, Heart, Hammer, Check } from 'lucide-react'
 import { The, Huy, ThanhTienDo } from '@/components/ui/co-ban'
 import { Nut } from '@/components/ui/Nut'
+import { cn } from '@/lib/cn'
 import { useAuth } from '@/lib/auth'
+import { useSoLieu, useDatMucTieu, MUC_TIEU } from '@/features/tiendo/duLieu'
 
 /**
  * Các tab chưa làm trong M1.
@@ -16,11 +19,16 @@ function Khung({
   tieuDe,
   moTa,
   sePhai,
+  sapCo = true,
+  children,
 }: {
   icon: LucideIcon
   tieuDe: string
   moTa: string
   sePhai: string[]
+  /** Trang đã có nội dung thật thì bỏ nhãn "Sắp có" đi, đừng nói sai. */
+  sapCo?: boolean
+  children?: ReactNode
 }) {
   return (
     <div>
@@ -31,11 +39,13 @@ function Khung({
         <div className="min-w-0">
           <span className="flex flex-wrap items-center gap-2">
             <h1 className="text-xl font-extrabold">{tieuDe}</h1>
-            <Huy>Sắp có</Huy>
+            {sapCo && <Huy>Sắp có</Huy>}
           </span>
           <p className="text-sm text-chu-phu">{moTa}</p>
         </div>
       </div>
+
+      {children}
 
       <The className="bg-nen-dju">
         <p className="mb-3 flex items-center gap-2 text-sm font-bold text-chu-phu">
@@ -73,22 +83,54 @@ export function TrangLuyenTap() {
 }
 
 export function TrangThanhTich() {
+  const { soLieu, sanSang, luuDuoc } = useSoLieu()
+  const so = (n: number) => (sanSang ? n : '–')
+
+  const o = [
+    { icon: Zap, nhan: 'Tổng XP', giaTri: so(soLieu.xpTong), mau: 'text-nhan-dam' },
+    { icon: Flame, nhan: 'Chuỗi hiện tại', giaTri: so(soLieu.chuoi), mau: 'text-vang' },
+    { icon: Trophy, nhan: 'Chuỗi dài nhất', giaTri: so(soLieu.chuoiDaiNhat), mau: 'text-vang' },
+    { icon: Check, nhan: 'Lượt học đã xong', giaTri: so(soLieu.daXong.length), mau: 'text-dung' },
+  ]
+
   return (
     <Khung
       icon={Trophy}
       tieuDe="Thành tích"
       moTa="Những gì bạn đã đi qua"
+      sapCo={false}
       sePhai={[
-        'Chuỗi ngày học liên tiếp, và cách giữ nó khi lỡ một hôm',
         'Huy hiệu theo cột mốc thật, không phải điểm cho vui',
-        'Biểu đồ số khái niệm đã giải thích được bằng lời của mình',
+        'Biểu đồ XP theo tuần, thấy được tuần nào mình đi chậm lại',
+        'Số khái niệm đã giải thích được bằng lời của mình',
       ]}
-    />
+    >
+      <ul className="mb-4 grid grid-cols-2 gap-3">
+        {o.map(({ icon: Icon, nhan, giaTri, mau }) => (
+          <li key={nhan}>
+            <The className="text-center">
+              <Icon className={cn('mx-auto mb-1.5 size-6', mau)} strokeWidth={2.4} aria-hidden />
+              <p className={cn('text-2xl font-extrabold tabular-nums', mau)}>{giaTri}</p>
+              <p className="text-[0.7rem] font-bold tracking-wide text-chu-phu uppercase">{nhan}</p>
+            </The>
+          </li>
+        ))}
+      </ul>
+
+      {!luuDuoc && (
+        <p className="mb-4 text-xs text-chu-mo">
+          Máy chủ lưu trữ chưa được cấu hình, nên chưa có gì để đếm.
+        </p>
+      )}
+    </Khung>
   )
 }
 
 export function TrangToi() {
   const { session, laAnDanh, dangTai, lienKetGoogle, dangXuat } = useAuth()
+  const { soLieu, sanSang, luuDuoc } = useSoLieu()
+  const datMucTieu = useDatMucTieu()
+  const xongMucTieu = soLieu.xpHomNay >= soLieu.mucTieuXpNgay
 
   return (
     <div>
@@ -121,20 +163,75 @@ export function TrangToi() {
       <The className="mb-4">
         <h2 className="mb-3 text-sm font-bold">Hôm nay</h2>
         <div className="mb-4 flex items-center justify-between text-sm">
-          <span className="inline-flex items-center gap-1.5 font-bold text-vang">
-            <Flame className="size-4" aria-hidden /> 0 ngày
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 font-bold',
+              soLieu.chuoi > 0 ? 'text-vang' : 'text-chu-mo',
+            )}
+          >
+            <Flame className={cn('size-4', soLieu.chuoi > 0 && 'fill-vang')} aria-hidden />
+            {sanSang ? soLieu.chuoi : '–'} ngày
           </span>
           <span className="inline-flex items-center gap-1.5 font-bold text-nhan-dam">
-            <Zap className="size-4" aria-hidden /> 0 XP
+            <Zap className="size-4" aria-hidden /> {sanSang ? soLieu.xpHomNay : '–'} XP
           </span>
-          <span className="inline-flex items-center gap-1.5 font-bold text-sai">
-            <Heart className="size-4" aria-hidden /> 5
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 font-bold',
+              soLieu.tim > 0 ? 'text-sai' : 'text-chu-mo',
+            )}
+          >
+            <Heart className={cn('size-4', soLieu.tim > 0 && 'fill-sai')} aria-hidden />
+            {sanSang ? soLieu.tim : '–'}
           </span>
         </div>
-        <ThanhTienDo giaTri={0} tong={20} nhan="tiến độ mục tiêu hôm nay" />
-        <p className="mt-2 text-xs text-chu-mo">
-          Số liệu thật sẽ chạy khi làm xong phần XP và chuỗi ngày.
+        <ThanhTienDo
+          giaTri={soLieu.xpHomNay}
+          tong={soLieu.mucTieuXpNgay}
+          mau={xongMucTieu ? 'dung' : 'nhan'}
+          nhan="tiến độ mục tiêu hôm nay"
+        />
+        <p className="mt-2 flex items-center gap-1.5 text-xs text-chu-phu">
+          {xongMucTieu && <Check className="size-3.5 text-dung" strokeWidth={3} aria-hidden />}
+          {soLieu.xpHomNay} / {soLieu.mucTieuXpNgay} XP
+          {soLieu.chuoiDaiNhat > 0 && (
+            <span className="text-chu-mo">· chuỗi dài nhất {soLieu.chuoiDaiNhat} ngày</span>
+          )}
         </p>
+      </The>
+
+      <The className="mb-4">
+        <h2 className="mb-1 text-sm font-bold">Mục tiêu mỗi ngày</h2>
+        <p className="mb-3 text-sm text-chu-phu">
+          Chọn mức giữ được đều, không phải mức cao nhất. Đều đặn mới thành chuỗi.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {MUC_TIEU.map((xp) => {
+            const dangChon = soLieu.mucTieuXpNgay === xp
+            return (
+              <button
+                key={xp}
+                type="button"
+                disabled={!luuDuoc || datMucTieu.isPending}
+                onClick={() => datMucTieu.mutate(xp)}
+                aria-pressed={dangChon}
+                className={cn(
+                  'min-h-11 rounded-vua border-2 px-4 text-sm font-bold transition-colors disabled:opacity-50',
+                  dangChon
+                    ? 'border-nhan bg-nhan-nhat text-nhan-dam'
+                    : 'border-vien text-chu-phu hover:bg-nen-dju',
+                )}
+              >
+                {xp} XP
+              </button>
+            )
+          })}
+        </div>
+        {!luuDuoc && (
+          <p className="mt-3 text-xs text-chu-mo">
+            Máy chủ lưu trữ chưa được cấu hình, nên chưa đổi được mục tiêu.
+          </p>
+        )}
       </The>
 
       <p className="text-center text-xs leading-relaxed text-chu-mo">

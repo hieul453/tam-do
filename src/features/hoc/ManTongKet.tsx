@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router'
-import { Zap, Target, Heart, PartyPopper } from 'lucide-react'
+import { Zap, Target, Heart, PartyPopper, Flame, CloudOff, Check } from 'lucide-react'
 import { Nut } from '@/components/ui/Nut'
+import { ThanhTienDo } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
+import { useSoLieu } from '@/features/tiendo/duLieu'
 
 /**
  * Màn tổng kết phiên.
@@ -10,25 +12,34 @@ import { cn } from '@/lib/cn'
  * lực vừa bỏ ra được quy thành con số nhìn thấy được. Ba ô là đủ — thêm nữa
  * thì không ai đọc.
  *
- * XP tính thật từ kết quả, nhưng chưa lưu xuống database; phần đó ở M3.
+ * Dưới ba ô là hai thứ nối phiên này với đường dài: chuỗi ngày và mục tiêu hôm
+ * nay. Chúng đọc từ số liệu đã lưu, nên nếu màn này hiện 5 ngày thì database
+ * cũng đang nói 5 ngày.
  */
 export function ManTongKet({
   tongCau,
   soSai,
   timConLai,
+  xp,
   tenPhan,
   duongDanPhan,
+  dangLuu,
+  luuThatBai,
 }: {
   tongCau: number
   soSai: number
   timConLai: number
+  xp: number
   tenPhan: string
   duongDanPhan: string
+  dangLuu?: boolean
+  luuThatBai?: boolean
 }) {
   const navigate = useNavigate()
+  const { soLieu, luuDuoc } = useSoLieu()
   const doChinhXac =
     tongCau > 0 ? Math.round(((tongCau - Math.min(soSai, tongCau)) / tongCau) * 100) : 0
-  const xp = tongCau * 2 + (soSai === 0 ? 5 : 0)
+  const datMucTieu = soLieu.xpHomNay >= soLieu.mucTieuXpNgay
 
   const o = [
     {
@@ -73,6 +84,44 @@ export function ManTongKet({
 
         {soSai === 0 && (
           <p className="mt-5 text-sm font-bold text-dung">Không sai câu nào — thưởng thêm 5 XP</p>
+        )}
+
+        {luuDuoc && (
+          <div className="mt-8 w-full text-left">
+            {soLieu.chuoi > 0 && (
+              <p className="mb-3 flex items-center gap-2 text-sm font-bold text-vang">
+                <Flame className="size-5 fill-vang" aria-hidden />
+                Chuỗi {soLieu.chuoi} ngày
+                {soLieu.chuoi === soLieu.chuoiDaiNhat && soLieu.chuoi > 1 && (
+                  <span className="font-normal text-chu-phu">— dài nhất của bạn</span>
+                )}
+              </p>
+            )}
+
+            <p className="mb-1.5 flex items-center justify-between text-sm">
+              <span className="flex items-center gap-1.5 font-bold">
+                Mục tiêu hôm nay
+                {datMucTieu && <Check className="size-4 text-dung" strokeWidth={3} aria-hidden />}
+              </span>
+              <span className="tabular-nums text-chu-phu">
+                {soLieu.xpHomNay} / {soLieu.mucTieuXpNgay} XP
+              </span>
+            </p>
+            <ThanhTienDo
+              giaTri={soLieu.xpHomNay}
+              tong={soLieu.mucTieuXpNgay}
+              mau={datMucTieu ? 'dung' : 'nhan'}
+              nhan="tiến độ mục tiêu hôm nay"
+            />
+          </div>
+        )}
+
+        {dangLuu && <p className="mt-4 text-xs text-chu-mo">Đang lưu tiến độ…</p>}
+        {luuThatBai && (
+          <p className="mt-4 flex items-center gap-1.5 text-xs text-chu-phu">
+            <CloudOff className="size-4 shrink-0" aria-hidden />
+            Chưa lưu được tiến độ của phiên này. Bài học thì vẫn là của bạn.
+          </p>
         )}
       </main>
 

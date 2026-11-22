@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router'
-import { Zap, BookOpen, Sprout, ArrowLeft, ChevronRight } from 'lucide-react'
+import { Zap, BookOpen, Sprout, ArrowLeft, ChevronRight, Check } from 'lucide-react'
 import { timPhan } from '@/content'
-import { The, Huy } from '@/components/ui/co-ban'
+import { The, Huy, ThanhTienDo } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
+import { useSoLieu, daXongHuong, khoaPhan } from '@/features/tiendo/duLieu'
 
 /**
  * Màn hình chọn hướng tiếp cận.
@@ -48,6 +49,8 @@ const HUONG = [
 export function TrangPhan() {
   const { idNhanh = '', idChuong = '', idPhan = '' } = useParams()
   const kq = timPhan(idNhanh, idChuong, idPhan)
+  const { soLieu, luuDuoc } = useSoLieu()
+  const khoa = khoaPhan(idNhanh, idChuong, idPhan)
 
   if (!kq) {
     return (
@@ -69,6 +72,9 @@ export function TrangPhan() {
     'ap-dung': Boolean(phan.apDung),
   }
 
+  const tongHuong = Object.values(sanSang).filter(Boolean).length
+  const xongHuong = HUONG.filter((h) => sanSang[h.ma] && daXongHuong(soLieu, khoa, h.ma)).length
+
   return (
     <div>
       <Link
@@ -82,29 +88,58 @@ export function TrangPhan() {
       <h1 className="text-2xl font-extrabold">{phan.tieuDe}</h1>
       <p className="mt-1 mb-7 text-chu-phu">{phan.moTa}</p>
 
-      <h2 className="mb-3 text-sm font-bold tracking-wide text-chu-phu uppercase">
-        Chọn cách bạn muốn học
-      </h2>
+      <div className="mb-3 flex items-end justify-between gap-3">
+        <h2 className="text-sm font-bold tracking-wide text-chu-phu uppercase">
+          Chọn cách bạn muốn học
+        </h2>
+        {luuDuoc && (
+          <span className="shrink-0 text-xs font-bold tabular-nums text-chu-phu">
+            {xongHuong}/{tongHuong} cách
+          </span>
+        )}
+      </div>
+
+      {luuDuoc && (
+        <ThanhTienDo
+          giaTri={xongHuong}
+          tong={tongHuong}
+          className="mb-4 h-1.5"
+          nhan={`đã học ${xongHuong} trên ${tongHuong} cách`}
+        />
+      )}
 
       <ul className="flex flex-col gap-3">
         {HUONG.map(({ ma, ten, moTa, icon: Icon, mau, nen, vien }) => {
           const duoc = sanSang[ma]
+          const xong = duoc && daXongHuong(soLieu, khoa, ma)
           const noiDung = (
             <>
-              <span className={cn('grid size-12 shrink-0 place-items-center rounded-vua', nen)}>
-                <Icon
-                  className={cn('size-6', duoc ? mau : 'text-chu-mo')}
-                  strokeWidth={2.2}
-                  aria-hidden
-                />
+              <span
+                className={cn(
+                  'grid size-12 shrink-0 place-items-center rounded-vua',
+                  xong ? 'bg-dung' : nen,
+                )}
+              >
+                {xong ? (
+                  <Check className="size-6 text-white" strokeWidth={3} aria-hidden />
+                ) : (
+                  <Icon
+                    className={cn('size-6', duoc ? mau : 'text-chu-mo')}
+                    strokeWidth={2.2}
+                    aria-hidden
+                  />
+                )}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-2">
                   <span className={cn('font-extrabold', !duoc && 'text-chu-phu')}>{ten}</span>
-                  {ma === 'nhanh' && duoc && <Huy mau="nhan">{soBaiTap} bài tập</Huy>}
+                  {xong && <Huy mau="dung">Đã xong</Huy>}
+                  {ma === 'nhanh' && duoc && !xong && <Huy mau="nhan">{soBaiTap} bài tập</Huy>}
                   {!duoc && <Huy>Sắp có</Huy>}
                 </span>
-                <span className="mt-0.5 block text-sm text-chu-phu">{moTa}</span>
+                <span className="mt-0.5 block text-sm text-chu-phu">
+                  {xong && ma === 'nhanh' ? 'Làm lại để nhớ lâu hơn' : moTa}
+                </span>
               </span>
               {duoc && <ChevronRight className="size-5 shrink-0 text-chu-mo" aria-hidden />}
             </>
@@ -116,7 +151,8 @@ export function TrangPhan() {
                 <Link
                   to={`/hoc/${idNhanh}/${idChuong}/${idPhan}/${ma}`}
                   className={cn(
-                    'flex items-center gap-4 rounded-lon border border-vien bg-nen p-4 transition-colors',
+                    'flex items-center gap-4 rounded-lon border p-4 transition-colors',
+                    xong ? 'border-dung/35 bg-dung-nhat/40' : 'border-vien bg-nen',
                     vien,
                   )}
                 >

@@ -4,6 +4,7 @@ import { Check, Lock, Star } from 'lucide-react'
 import { cacNhanh, type Chuong, type Nhanh, type Phan } from '@/content'
 import { The, Huy } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
+import { useSoLieu, soHuongDaXong, khoaPhan, type SoLieuHoc } from '@/features/tiendo/duLieu'
 
 /**
  * Màn hình lộ trình — màn hình chính của app.
@@ -42,42 +43,102 @@ const DANG: Record<Dang, { vong: string; icon: string }> = {
   khoa: { vong: 'border-vien bg-nen-chim text-chu-mo', icon: 'text-chu-mo' },
 }
 
-function NutChang({ phan, duongDan, dang }: { phan: Phan; duongDan: string; dang: Dang }) {
+/** Bao nhiêu hướng tiếp cận thực sự có nội dung ở phần này. */
+function tongHuongCua(phan: Phan) {
+  return [Boolean(phan.nhanh?.length), Boolean(phan.daoSau), Boolean(phan.apDung)].filter(Boolean)
+    .length
+}
+
+/**
+ * Vành tiến độ quanh chặng: đã xong mấy trên mấy hướng.
+ *
+ * Duolingo dùng vành này cho "crown" của họ. Ở đây nó trả lời đúng câu hỏi
+ * người học hay có khi quay lại: phần này mình còn cách nào chưa thử. Chỉ vẽ
+ * khi đang dở — xong hẳn thì đã có dấu tích, chưa làm gì thì chẳng có gì để vẽ.
+ */
+function VanhTienDo({ xong, tong }: { xong: number; tong: number }) {
+  const r = 41
+  const chuVi = 2 * Math.PI * r
+  return (
+    <svg
+      viewBox="0 0 86 86"
+      className="pointer-events-none absolute -inset-[7px] -rotate-90"
+      aria-hidden
+    >
+      <circle cx="43" cy="43" r={r} fill="none" strokeWidth="3" className="stroke-vien" />
+      <circle
+        cx="43"
+        cy="43"
+        r={r}
+        fill="none"
+        strokeWidth="3"
+        strokeLinecap="round"
+        className="stroke-dung"
+        strokeDasharray={`${(chuVi * xong) / tong} ${chuVi}`}
+      />
+    </svg>
+  )
+}
+
+function NutChang({
+  phan,
+  duongDan,
+  dang,
+  xong,
+  tong,
+}: {
+  phan: Phan
+  duongDan: string
+  dang: Dang
+  xong: number
+  tong: number
+}) {
   const moDuoc = dang !== 'khoa'
   const kieu = DANG[dang]
+  const dangDo = dang !== 'khoa' && dang !== 'xong' && xong > 0 && xong < tong
 
   const than = (
-    <span
-      className={cn(
-        'grid size-[4.5rem] place-items-center rounded-full border-2 border-b-[6px] transition-transform',
-        kieu.vong,
-        moDuoc && 'active:translate-y-[6px] active:border-b-2',
-      )}
-    >
-      {dang === 'xong' ? (
-        <Check className={cn('size-8', kieu.icon)} strokeWidth={3} aria-hidden />
-      ) : dang === 'khoa' ? (
-        <Lock className={cn('size-6', kieu.icon)} strokeWidth={2.4} aria-hidden />
-      ) : (
-        <Star
-          className={cn('size-8', kieu.icon, dang === 'hien-tai' && 'fill-white/30')}
-          strokeWidth={2.4}
-          aria-hidden
-        />
-      )}
+    <span className="relative inline-grid">
+      {dangDo && <VanhTienDo xong={xong} tong={tong} />}
+      <span
+        className={cn(
+          'grid size-[4.5rem] place-items-center rounded-full border-2 border-b-[6px] transition-transform',
+          kieu.vong,
+          moDuoc && 'active:translate-y-[6px] active:border-b-2',
+        )}
+      >
+        {dang === 'xong' ? (
+          <Check className={cn('size-8', kieu.icon)} strokeWidth={3} aria-hidden />
+        ) : dang === 'khoa' ? (
+          <Lock className={cn('size-6', kieu.icon)} strokeWidth={2.4} aria-hidden />
+        ) : (
+          <Star
+            className={cn('size-8', kieu.icon, dang === 'hien-tai' && 'fill-white/30')}
+            strokeWidth={2.4}
+            aria-hidden
+          />
+        )}
+      </span>
     </span>
   )
+
+  const nhanDocLen =
+    dang === 'xong'
+      ? `${phan.tieuDe} — đã xong cả ${tong} cách`
+      : dangDo
+        ? `${phan.tieuDe} — đã xong ${xong} trên ${tong} cách`
+        : phan.tieuDe
 
   return (
     <li className="flex flex-col items-center">
       {dang === 'hien-tai' && (
         <span className="mb-2 animate-bounce rounded-vua border-2 border-vien bg-nen px-3 py-1 text-xs font-extrabold tracking-wide text-nhan-dam uppercase">
-          Bắt đầu
+          {xong > 0 ? 'Học tiếp' : 'Bắt đầu'}
         </span>
       )}
 
       {moDuoc ? (
-        <Link to={duongDan} className="group flex flex-col items-center" aria-label={phan.tieuDe}>
+        <Link to={duongDan} className="group flex flex-col items-center" aria-label={nhanDocLen}>
           {than}
           <span
             className={cn(
@@ -87,6 +148,11 @@ function NutChang({ phan, duongDan, dang }: { phan: Phan; duongDan: string; dang
           >
             {phan.tieuDe}
           </span>
+          {dangDo && (
+            <span className="mt-0.5 text-xs tabular-nums text-chu-mo">
+              {xong}/{tong} cách
+            </span>
+          )}
         </Link>
       ) : (
         <span className="flex flex-col items-center">
@@ -103,10 +169,33 @@ function NutChang({ phan, duongDan, dang }: { phan: Phan; duongDan: string; dang
 
 /* ─────────────────────────────── Một chương ─────────────────────────────── */
 
-function KhoiChuong({ nhanh, chuong, soThuTu }: { nhanh: Nhanh; chuong: Chuong; soThuTu: number }) {
+function KhoiChuong({
+  nhanh,
+  chuong,
+  soThuTu,
+  soLieu,
+}: {
+  nhanh: Nhanh
+  chuong: Chuong
+  soThuTu: number
+  soLieu: SoLieuHoc
+}) {
   const mo = chuong.trangThai === 'mo'
-  const phanMo = chuong.phan.filter((p) => p.trangThai === 'mo')
-  const changDauTien = phanMo[0]?.id
+
+  // Mỗi chặng biết mình đã xong mấy hướng. Tính một lần ở đây để còn biết
+  // chặng nào là "đang ở đây".
+  const chang = chuong.phan.map((phan) => {
+    const tong = tongHuongCua(phan)
+    const xong = soHuongDaXong(soLieu, khoaPhan(nhanh.id, chuong.id, phan.id))
+    return { phan, tong, xong: Math.min(xong, tong) }
+  })
+
+  // "Đang ở đây" là chặng mở đầu tiên chưa xong hết. Xong hết cả chương thì
+  // không chặng nào được gắn nhãn — không giục người ta làm lại.
+  const dangODay = chang.find((c) => c.phan.trangThai === 'mo' && c.xong < c.tong)?.phan.id
+
+  const xongChuong = chang.filter((c) => c.tong > 0 && c.xong === c.tong).length
+  const tongChuong = chang.filter((c) => c.phan.trangThai === 'mo').length
 
   return (
     <section className="mb-10">
@@ -116,22 +205,39 @@ function KhoiChuong({ nhanh, chuong, soThuTu }: { nhanh: Nhanh; chuong: Chuong; 
           mo ? 'bg-nhan text-white' : 'border border-vien bg-nen-dju text-chu-phu',
         )}
       >
-        <p className="text-[0.7rem] font-extrabold tracking-[0.12em] uppercase opacity-90">
-          Chương {soThuTu}
-        </p>
-        <h2 className="text-lg font-extrabold">{chuong.tieuDe}</h2>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[0.7rem] font-extrabold tracking-[0.12em] uppercase opacity-90">
+              Chương {soThuTu}
+            </p>
+            <h2 className="text-lg font-extrabold">{chuong.tieuDe}</h2>
+          </div>
+          {mo && tongChuong > 0 && (
+            <span className="shrink-0 rounded-full bg-white/20 px-2.5 py-1 text-xs font-extrabold tabular-nums">
+              {xongChuong}/{tongChuong}
+            </span>
+          )}
+        </div>
         <p className={cn('text-sm', mo ? 'text-white/85' : 'text-chu-mo')}>{chuong.cauHoi}</p>
       </header>
 
       {mo ? (
         <ol className="flex flex-col items-center gap-7">
-          {chuong.phan.map((phan, i) => (
+          {chang.map(({ phan, xong, tong }, i) => (
             <div key={phan.id} style={{ transform: `translateX(${LECH[i % LECH.length]}px)` }}>
               <NutChang
                 phan={phan}
                 duongDan={`/phan/${nhanh.id}/${chuong.id}/${phan.id}`}
+                xong={xong}
+                tong={tong}
                 dang={
-                  phan.trangThai !== 'mo' ? 'khoa' : phan.id === changDauTien ? 'hien-tai' : 'mo'
+                  phan.trangThai !== 'mo'
+                    ? 'khoa'
+                    : tong > 0 && xong === tong
+                      ? 'xong'
+                      : phan.id === dangODay
+                        ? 'hien-tai'
+                        : 'mo'
                 }
               />
             </div>
@@ -149,6 +255,7 @@ function KhoiChuong({ nhanh, chuong, soThuTu }: { nhanh: Nhanh; chuong: Chuong; 
 /* ──────────────────────────────── Trang ─────────────────────────────────── */
 
 export function TrangLoTrinh() {
+  const { soLieu } = useSoLieu()
   const mo = cacNhanh.filter((n) => n.trangThai === 'mo')
   const sapCo = cacNhanh.filter((n) => n.trangThai !== 'mo')
 
@@ -167,7 +274,13 @@ export function TrangLoTrinh() {
           </div>
 
           {nhanh.chuong.map((chuong, i) => (
-            <KhoiChuong key={chuong.id} nhanh={nhanh} chuong={chuong} soThuTu={i + 1} />
+            <KhoiChuong
+              key={chuong.id}
+              nhanh={nhanh}
+              chuong={chuong}
+              soThuTu={i + 1}
+              soLieu={soLieu}
+            />
           ))}
         </div>
       ))}

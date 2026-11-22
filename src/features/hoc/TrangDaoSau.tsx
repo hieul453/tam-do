@@ -1,9 +1,11 @@
 import { useNavigate, useParams, Link } from 'react-router'
-import { X, Clock, ExternalLink, Lightbulb, AlertTriangle } from 'lucide-react'
+import { X, Clock, ExternalLink, Lightbulb, AlertTriangle, Check, CloudOff } from 'lucide-react'
 import { timPhan } from '@/content'
 import type { Khoi } from '@/content/schema'
 import { Nut } from '@/components/ui/Nut'
 import { The } from '@/components/ui/co-ban'
+import { khoaPhan, XP_DAO_SAU } from '@/features/tiendo/duLieu'
+import { useGhiKhiDenCuoi } from '@/features/tiendo/useGhiKhiDenCuoi'
 
 /**
  * Tầng ĐÀO SÂU — bài đọc học thuật.
@@ -100,6 +102,14 @@ export function TrangDaoSau() {
   const navigate = useNavigate()
   const kq = timPhan(idNhanh, idChuong, idPhan)
   const ds = kq?.phan.daoSau
+
+  // Ghi nhận khi người đọc xuống tới danh sách nguồn ở cuối bài.
+  const { moc, daXong, ghiHong } = useGhiKhiDenCuoi({
+    phanId: khoaPhan(idNhanh, idChuong, idPhan),
+    huong: 'dao-sau',
+    xp: XP_DAO_SAU,
+    san: Boolean(ds),
+  })
 
   if (!kq || !ds) {
     return (
@@ -198,6 +208,22 @@ export function TrangDaoSau() {
             ))}
           </ul>
         </section>
+
+        {/* Mốc cuối bài. Chạm tới đây nghĩa là đã cuộn qua hết. */}
+        <div ref={moc} aria-hidden className="h-px" />
+
+        {daXong && (
+          <p className="flex items-center justify-center gap-1.5 py-2 text-sm font-bold text-dung">
+            <Check className="size-4" strokeWidth={3} aria-hidden />
+            Đã đọc xong · +{XP_DAO_SAU} XP
+          </p>
+        )}
+        {ghiHong && (
+          <p className="flex items-center justify-center gap-1.5 py-2 text-sm text-chu-phu">
+            <CloudOff className="size-4 shrink-0" aria-hidden />
+            Chưa lưu được là đã đọc xong. Bài thì vẫn đọc được bình thường.
+          </p>
+        )}
       </main>
 
       <footer

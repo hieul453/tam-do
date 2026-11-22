@@ -66,6 +66,9 @@ Xem `src/components/layout/Khung.tsx`.
 2. **Màu phải mang nghĩa.** Đây là app minimalism: màu dùng để báo trạng thái
    (đúng/sai/đã xong/đang khoá), không để trang trí. Thấy mình tô màu cho đẹp là sai hướng.
 3. **Thêm bảng database là phải bật RLS** và một policy `auth.uid() = user_id`.
+   Sửa migration rồi thì **chạy lại** (`node .git/sql.mjs <file>`) và chạy
+   `node .git/sb-07-test-rls-m3.mjs` — bộ này tấn công database bằng chính khoá anon
+   công khai, 25 phép thử.
 4. **`service_role` key và `GEMINI_API_KEY` không bao giờ vào biến `VITE_*`.** Mọi biến
    `VITE_*` đều lộ trong bundle. Khoá AI gọi qua serverless function, không gọi thẳng từ trình duyệt.
 5. **Không commit vào `main`.** Mỗi thay đổi một nhánh, một pull request, CI xanh rồi mới merge.
@@ -75,6 +78,8 @@ Xem `src/components/layout/Khung.tsx`.
 8. **Số liệu nghiên cứu phải có nguồn mở được.** Không bịa con số, không bịa tên nghiên cứu.
    Thiếu nguồn thì ghi là thiếu.
 9. **Vùng chạm tối thiểu 44px, tương phản chữ tối thiểu 4.5:1.**
+10. **Không báo "đã xong" trước khi database xác nhận.** Dấu tích, XP, chuỗi ngày đều phải
+    đợi lời gọi trả về. Đã vấp: lời gọi hỏng mà màn hình vẫn báo "+15 XP".
 
 ## Ngôn ngữ
 
@@ -87,6 +92,8 @@ Xem `src/components/layout/Khung.tsx`.
 
 - Mobile-first: thiết kế cho 375px trước, rồi mới nới ra.
 - Mỗi tính năng một thư mục trong `src/features/`. Component dùng chung ở `src/components/`.
+- Tiến độ, XP, chuỗi ngày, tim: tất cả đi qua `src/features/tiendo/duLieu.ts`, đừng gọi
+  thẳng `supabase.rpc` ở màn hình.
 - Dùng `@/` cho import nội bộ.
 - Server state qua TanStack Query, không tự viết `useEffect` + `fetch`.
 - Chạy `npm run format` trước khi commit; CI kiểm định dạng.

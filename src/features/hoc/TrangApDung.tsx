@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
-import { X, Sparkles, CalendarCheck, LifeBuoy, Lock, Loader2 } from 'lucide-react'
+import { X, Sparkles, CalendarCheck, LifeBuoy, Lock, Loader2, Check, CloudOff } from 'lucide-react'
 import { timPhan } from '@/content'
 import { Nut } from '@/components/ui/Nut'
 import { The } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
+import { khoaPhan, XP_AP_DUNG } from '@/features/tiendo/duLieu'
+import { useGhiKhiDenCuoi } from '@/features/tiendo/useGhiKhiDenCuoi'
 
 /**
  * Tầng ÁP DỤNG — đưa kiến thức ra khỏi đầu.
@@ -39,6 +41,13 @@ export function TrangApDung() {
   const ad = kq?.phan.apDung
 
   const [cauChuyen, setCauChuyen] = useState('')
+
+  const { moc, daXong, ghiHong } = useGhiKhiDenCuoi({
+    phanId: khoaPhan(idNhanh, idChuong, idPhan),
+    huong: 'ap-dung',
+    xp: XP_AP_DUNG,
+    san: Boolean(ad),
+  })
 
   const goiY = useMutation({
     mutationFn: async (chuyen: string) => {
@@ -213,6 +222,22 @@ export function TrangApDung() {
               <p className="leading-relaxed text-chu">{ad.khiNaoTimChuyenGia}</p>
             </The>
           </section>
+        )}
+
+        {/* Mốc cuối trang. Chạm tới đây nghĩa là đã xem hết phần áp dụng. */}
+        <div ref={moc} aria-hidden className="h-px" />
+
+        {daXong && (
+          <p className="flex items-center justify-center gap-1.5 py-2 text-sm font-bold text-dung">
+            <Check className="size-4" strokeWidth={3} aria-hidden />
+            Đã xem xong · +{XP_AP_DUNG} XP
+          </p>
+        )}
+        {ghiHong && (
+          <p className="flex items-center justify-center gap-1.5 py-2 text-sm text-chu-phu">
+            <CloudOff className="size-4 shrink-0" aria-hidden />
+            Chưa lưu được là đã xem xong. Phần này thì vẫn dùng được bình thường.
+          </p>
         )}
       </main>
 
