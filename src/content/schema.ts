@@ -1,140 +1,169 @@
 import { z } from 'zod'
 
 /**
- * Hình dạng của nội dung bài học sau khi đã chuyển từ markdown sang dữ liệu.
+ * Mô hình nội dung của Tâm Đồ.
  *
- * Đây là bản hợp đồng giữa người soạn nội dung và app. Script build kiểm tra
- * mọi file `content/*.md` theo schema này; thiếu mục nào thì CI đỏ, không để
- * lọt lên bản live.
+ * Bốn tầng, mượn cấu trúc đã được Duolingo chứng minh là chạy được:
  *
- * Tên trường bằng tiếng Việt không dấu, để người soạn nội dung đọc thông báo
- * lỗi cũng hiểu được nó đang nói về phần nào của bài.
+ *   Nhánh   (= Section)  Tâm lý học nhận thức, Tâm lý học xã hội…
+ *     Chương (= Unit)    Trí nhớ, Chú ý…
+ *       Phần (= Node)    một chặng trên lộ trình
+ *         3 hướng tiếp cận: NHANH · ĐÀO SÂU · ÁP DỤNG
+ *
+ * Khác Duolingo ở chỗ: một node của họ là một bài; một Phần của mình chứa
+ * ba cách học CÙNG một nội dung. Người vội lấy NHANH, người muốn chắc lấy
+ * ĐÀO SÂU, người muốn dùng được ngay lấy ÁP DỤNG.
+ *
+ * Nội dung nằm trong `du-lieu/*.ts`, không trong database — sửa file là xong,
+ * có history git, và sai kiểu thì `npm run typecheck` báo ngay.
  */
 
-/** Nhãn bài, lấy từ emoji ở cuối dòng tiêu đề trong markdown. */
-export const NhanBai = z.enum([
-  'trong-tam', // 🟢 có trong đề cương và slide lớp
-  'mo-rong', // 🔵 giáo trình quốc tế có, lớp chưa dạy kỹ
-  'da-cap-nhat', // ⚠️ nghiên cứu mới đã điều chỉnh
-  'viet-nam', // 🇻🇳 cách tiếp cận riêng của giáo trình tiếng Việt
+export const TrangThai = z.enum([
+  'mo', // học được
+  'sap-co', // đã có chỗ trên lộ trình, chưa có nội dung
+  'khoa', // phải xong phần trước mới mở
 ])
-export type NhanBai = z.infer<typeof NhanBai>
+export type TrangThai = z.infer<typeof TrangThai>
 
-/** Loại thẻ ở tầng Hiểu nhanh, suy ra từ nhãn in đậm đầu mỗi gạch đầu dòng. */
-export const LoaiThe = z.enum([
-  'doan-thu', // Đoán thử
-  'y-chinh', // Ý chính, Ý chính 2, Kết quả, Mẹo
-  'hinh', // Hình dung
-  'tuong-tac', // Thử ngay, Xếp nhóm
-  'vi-du', // Ví dụ
-  'kiem-tra', // Kiểm tra (áp dụng) — luôn là thẻ cuối
+/* ─────────────────────────── NHANH: các loại bài tập ────────────────────── */
+
+const Chung = { id: z.string(), giaiThich: z.string().optional() }
+
+export const BaiTap = z.discriminatedUnion('loai', [
+  /** Thẻ lật: mặt trước một khái niệm, mặt sau lời giải thích ngắn. */
+  z.object({
+    ...Chung,
+    loai: z.literal('the-lat'),
+    mat_truoc: z.string(),
+    mat_sau: z.string(),
+  }),
+  /** Chọn một đáp án đúng trong nhiều lựa chọn. */
+  z.object({
+    ...Chung,
+    loai: z.literal('chon-mot'),
+    cauHoi: z.string(),
+    luaChon: z.array(z.string()).min(2).max(4),
+    dapAn: z.number().int().min(0),
+  }),
+  /** Đúng hay sai — nhanh, hợp để đập vỡ hiểu lầm phổ biến. */
+  z.object({
+    ...Chung,
+    loai: z.literal('dung-sai'),
+    menhDe: z.string(),
+    dung: z.boolean(),
+  }),
+  /** Ghép cặp: khái niệm ↔ ví dụ đời thường. */
+  z.object({
+    ...Chung,
+    loai: z.literal('ghep-doi'),
+    cauHoi: z.string(),
+    cap: z.array(z.object({ trai: z.string(), phai: z.string() })).min(3).max(5),
+  }),
+  /** Điền từ còn thiếu bằng cách chạm vào từ cho sẵn. */
+  z.object({
+    ...Chung,
+    loai: z.literal('dien-tu'),
+    cauTruoc: z.string(),
+    cauSau: z.string(),
+    dapAn: z.string(),
+    nhieu: z.array(z.string()).min(1),
+  }),
+  /** Xếp đúng thứ tự — hợp với quy trình, giai đoạn. */
+  z.object({
+    ...Chung,
+    loai: z.literal('xep-thu-tu'),
+    cauHoi: z.string(),
+    dungThuTu: z.array(z.string()).min(3).max(5),
+  }),
 ])
-export type LoaiThe = z.infer<typeof LoaiThe>
+export type BaiTap = z.infer<typeof BaiTap>
+export type LoaiBaiTap = BaiTap['loai']
 
-export const The = z.object({
-  id: z.string(),
-  loai: LoaiThe,
-  /** Nhãn nguyên văn trong markdown, ví dụ "Ý chính 2". Giữ lại để hiện đúng chữ người soạn viết. */
-  nhan: z.string().min(1),
-  noiDung: z.string().min(1),
-})
-export type The = z.infer<typeof The>
-
-export const CauChuyen = z.object({
-  tieuDe: z.string().min(1),
-  than: z.string().min(1),
-  /** Câu kết "Nghĩa là:" — phần rút ra ý nghĩa của nghiên cứu. */
-  nghiaLa: z.string().nullable(),
-})
-export type CauChuyen = z.infer<typeof CauChuyen>
-
-export const ThuatNgu = z.object({
-  vi: z.string().min(1),
-  en: z.string().nullable(),
-})
-export type ThuatNgu = z.infer<typeof ThuatNgu>
+/* ──────────────────────────── ĐÀO SÂU ───────────────────────────────────── */
 
 export const Nguon = z.object({
-  ten: z.string().min(1),
-  url: z.string().url().nullable(),
+  tenNgan: z.string(),
+  moTa: z.string(),
+  url: z.string().url().optional(),
 })
 export type Nguon = z.infer<typeof Nguon>
 
+export const Khoi = z.discriminatedUnion('loai', [
+  z.object({ loai: z.literal('doan'), noiDung: z.string() }),
+  z.object({ loai: z.literal('tieuDe'), noiDung: z.string() }),
+  /** Câu chuyện nghiên cứu: bối cảnh → làm gì → phát hiện → "Nghĩa là". */
+  z.object({
+    loai: z.literal('nghienCuu'),
+    tieuDe: z.string(),
+    than: z.string(),
+    nghiaLa: z.string(),
+    nguon: z.string().optional(),
+  }),
+  /** Hộp cảnh báo kiến thức đã lỗi thời hoặc hay bị hiểu nhầm. */
+  z.object({ loai: z.literal('luuY'), tieuDe: z.string(), noiDung: z.string() }),
+  z.object({
+    loai: z.literal('bang'),
+    cot: z.array(z.string()),
+    hang: z.array(z.array(z.string())),
+  }),
+])
+export type Khoi = z.infer<typeof Khoi>
+
 export const DaoSau = z.object({
-  /** Câu "Đọc xong bạn sẽ hiểu…" mở đầu tầng Đào sâu. */
-  seHieu: z
-    .string()
-    .min(1, 'Thiếu dòng in nghiêng "Đọc xong bạn sẽ hiểu…" mở đầu tầng Đào sâu'),
-  phutDoc: z.number().int().positive().nullable(),
-  /** Toàn bộ phần thân, giữ nguyên markdown để render (bảng, in đậm, liên kết). */
-  than: z
-    .string()
-    .min(1, 'Tầng Đào sâu đang trống — không có nội dung giữa tiêu đề và "3 điều cần nhớ"'),
-  cauChuyen: z.array(CauChuyen),
-  /** Hộp ⚠️ hoặc 🇻🇳 "Cập nhật kiến thức". */
-  capNhat: z.string().nullable(),
-  tranhCai: z.string().nullable(),
-  baDieuCanNho: z
-    .array(z.string().min(1))
-    .length(3, 'Mục "3 điều cần nhớ" phải có đúng 3 gạch đầu dòng, không hơn không kém'),
-  thuatNgu: z.array(ThuatNgu),
-  lienKet: z.array(z.string()),
-  nguon: z
-    .array(Nguon)
-    .min(1, 'Thiếu mục "Nguồn đã kiểm chứng" trong phần Mở rộng — mọi bài đều phải dẫn nguồn'),
+  phutDoc: z.number().int().positive(),
+  tomTat: z.string(),
+  khoi: z.array(Khoi).min(1),
+  ghiNho: z.array(z.string()).min(2).max(4),
+  thuatNgu: z.array(z.object({ vi: z.string(), en: z.string() })),
+  nguon: z.array(Nguon).min(1),
 })
 export type DaoSau = z.infer<typeof DaoSau>
 
+/* ──────────────────────────── ÁP DỤNG ───────────────────────────────────── */
+
 export const ApDung = z.object({
-  thuThach: z.object({
-    /** Nguyên văn nhãn, ví dụ "Thử thách 3 ngày" — thời hạn nằm trong đó. */
-    nhan: z.string().min(1, 'Thiếu gạch đầu dòng "Thử thách …" trong tầng Áp dụng'),
-    noiDung: z.string().min(1, 'Thử thách chưa có nội dung'),
-  }),
-  tuSoi: z.string().min(1, 'Thiếu gạch đầu dòng "Câu hỏi tự soi" trong tầng Áp dụng'),
-  dungNgay: z.string().min(1, 'Thiếu gạch đầu dòng "Dùng ngay" trong tầng Áp dụng'),
-  /** Chỉ có ở các bài liên quan sức khỏe tâm thần. */
-  timChuyenGia: z.string().nullable(),
+  /** Việc làm được ngay hôm nay, không cần chuẩn bị. */
+  lamNgay: z.array(z.object({ tieuDe: z.string(), moTa: z.string() })).min(2),
+  /** Thử thách nhiều ngày, ghi lại kết quả. */
+  thuThach: z.object({ soNgay: z.number().int().positive(), tieuDe: z.string(), moTa: z.string() }),
+  /** Bối cảnh đưa cho AI để nó tư vấn đúng kiến thức của phần này. */
+  boiCanhAI: z.string(),
+  /** Gợi ý mẫu để người dùng không phải đối mặt ô nhập trống. */
+  viDuTinhHuong: z.array(z.string()).min(2),
+  /** Chỉ có ở phần đụng tới sức khỏe tâm thần. */
+  khiNaoTimChuyenGia: z.string().optional(),
 })
 export type ApDung = z.infer<typeof ApDung>
 
-export const Bai = z
-  .object({
-    id: z.string(), // tlhdc-06-01
-    so: z.string(), // "6.1"
-    thuTu: z.number().int().positive(),
-    tieuDe: z.string().min(1),
-    nhan: z.array(NhanBai),
-    /** Mô tả các hình cần vẽ, lấy từ dòng "🎨 Minh họa:". */
-    minhHoa: z.array(z.string()),
-    hieuNhanh: z
-      .array(The)
-      .min(3, 'Tầng Hiểu nhanh cần ít nhất 3 thẻ (mỗi gạch đầu dòng đánh số là một thẻ)'),
-    daoSau: DaoSau,
-    apDung: ApDung,
-  })
-  .refine((b) => b.hieuNhanh[b.hieuNhanh.length - 1]?.loai === 'kiem-tra', {
-    message:
-      'Thẻ cuối của Hiểu nhanh phải là thẻ "Kiểm tra (áp dụng)" — người học phải trả lời mới đi tiếp',
-    path: ['hieuNhanh'],
-  })
-export type Bai = z.infer<typeof Bai>
+/* ──────────────────────────── Cấu trúc ──────────────────────────────────── */
+
+export const Phan = z.object({
+  id: z.string(),
+  tieuDe: z.string(),
+  moTa: z.string(),
+  trangThai: TrangThai,
+  nhanh: z.array(BaiTap).min(3).optional(),
+  daoSau: DaoSau.optional(),
+  apDung: ApDung.optional(),
+})
+export type Phan = z.infer<typeof Phan>
 
 export const Chuong = z.object({
-  id: z.string(), // tlhdc-06
-  so: z.number().int().positive(),
-  tieuDe: z.string().min(1),
-  cauHoiChuong: z.string().min(1, 'Thiếu dòng "**Câu hỏi chương:**" ở đầu file'),
-  bai: z
-    .array(Bai)
-    .min(1, 'Không đọc được bài nào — tiêu đề bài phải dạng "### Bài 6.1. Tên bài?"'),
-  tongKet: z.object({
-    canNam: z
-      .array(z.string().min(1))
-      .min(1, 'Thiếu mục "Những điều cần nắm" ở phần Tổng kết chương'),
-    apDungBanThan: z
-      .array(z.string().min(1))
-      .min(1, 'Thiếu mục "Áp dụng cho bản thân" ở phần Tổng kết chương'),
-  }),
+  id: z.string(),
+  tieuDe: z.string(),
+  cauHoi: z.string(),
+  trangThai: TrangThai,
+  phan: z.array(Phan),
 })
 export type Chuong = z.infer<typeof Chuong>
+
+export const Nhanh = z.object({
+  id: z.string(),
+  tieuDe: z.string(),
+  moTa: z.string(),
+  /** Tên icon của lucide-react. Giữ bộ icon một nguồn, không trộn emoji. */
+  icon: z.string(),
+  trangThai: TrangThai,
+  chuong: z.array(Chuong),
+})
+export type Nhanh = z.infer<typeof Nhanh>

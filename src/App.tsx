@@ -1,22 +1,24 @@
 import { Routes, Route, Navigate } from 'react-router'
-import { KiemTraHaTang } from '@/pages/KiemTraHaTang'
-import { XemNoiDung } from '@/pages/XemNoiDung'
+import { Khung } from '@/components/layout/Khung'
+import { TrangLoTrinh } from '@/features/lotrinh/TrangLoTrinh'
+import { TrangPhan } from '@/features/phan/TrangPhan'
+import { TrangLuyenTap, TrangThanhTich, TrangToi } from '@/features/khac/TrangSapCo'
 
 /**
- * Giai đoạn hiện tại: hạ tầng và công cụ, chưa có giao diện thật.
- *
- *   /          Kiểm tra hạ tầng — stack còn chạy đúng không
- *   /noi-dung  Xem trước nội dung — markdown đã được đọc đúng chưa
- *
- * 5 tab thật (Hôm nay / Hành trình / Sổ tay / Áp dụng / Tôi) thêm vào đây
- * khi bắt đầu làm tính năng, theo bản thiết kế đã duyệt.
+ * M1 dựng khung điều hướng và lộ trình.
+ * `/hoc/...` (phiên học, chiếm trọn màn hình) sẽ gắn vào ở M2.
  */
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<KiemTraHaTang />} />
-      <Route path="/noi-dung" element={<XemNoiDung />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <Khung>
+      <Routes>
+        <Route path="/" element={<TrangLoTrinh />} />
+        <Route path="/phan/:idNhanh/:idChuong/:idPhan" element={<TrangPhan />} />
+        <Route path="/luyen-tap" element={<TrangLuyenTap />} />
+        <Route path="/thanh-tich" element={<TrangThanhTich />} />
+        <Route path="/toi" element={<TrangToi />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Khung>
   )
 }

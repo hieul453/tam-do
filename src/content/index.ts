@@ -1,35 +1,67 @@
-import type { Bai, Chuong } from './schema'
+import { Nhanh as NhanhSchema, type Nhanh, type Chuong, type Phan } from './schema'
+import { nhanThuc } from './du-lieu/nhan-thuc'
 
 /**
- * Nội dung bài học, nạp từ các file JSON do `npm run content:build` sinh ra.
+ * Toàn bộ nội dung của app.
  *
- * Thư mục `generated/` không được commit: nó luôn được dựng lại từ
- * `content/*.md` trước khi chạy dev hoặc build. Nhờ vậy markdown trong repo
- * là bản gốc duy nhất, không bao giờ lệch với dữ liệu app đang đọc.
+ * Pilot mở đúng một nhánh. Các nhánh còn lại vẫn hiện trên lộ trình với nhãn
+ * "Sắp có" — người xem thấy được app sẽ lớn tới đâu, thay vì tưởng đây là tất
+ * cả những gì có.
  */
-const cacFile = import.meta.glob<{ default: Chuong }>('./generated/*.json', { eager: true })
+const sapCo = (
+  id: string,
+  tieuDe: string,
+  moTa: string,
+  icon: string,
+): Nhanh => ({ id, tieuDe, moTa, icon, trangThai: 'sap-co', chuong: [] })
 
-export const cacChuong: Chuong[] = Object.values(cacFile)
-  .map((m) => m.default)
-  .sort((a, b) => a.so - b.so)
+export const cacNhanh: Nhanh[] = [
+  nhanThuc,
+  sapCo('phat-trien', 'Tâm lý học phát triển', 'Con người thay đổi thế nào qua đời người', 'Baby'),
+  sapCo('xa-hoi', 'Tâm lý học xã hội', 'Người khác ảnh hưởng ta ra sao', 'Users'),
+  sapCo('nhan-cach', 'Nhân cách', 'Điều gì làm nên "con người riêng" của mỗi người', 'Fingerprint'),
+  sapCo('cam-xuc', 'Cảm xúc và động lực', 'Điều gì thúc đẩy ta hành động', 'Flame'),
+  sapCo('suc-khoe', 'Sức khoẻ tâm thần', 'Khi nào một trải nghiệm trở thành rối loạn', 'HeartPulse'),
+]
 
-export function timChuong(id: string): Chuong | undefined {
-  return cacChuong.find((c) => c.id === id)
-}
-
-export function timBai(idBai: string): { chuong: Chuong; bai: Bai } | undefined {
-  for (const chuong of cacChuong) {
-    const bai = chuong.bai.find((b) => b.id === idBai)
-    if (bai) return { chuong, bai }
+/** Kiểm ngay lúc nạp module: sai cấu trúc thì vỡ ở dev, không âm thầm ra màn hình trống. */
+if (import.meta.env.DEV) {
+  for (const n of cacNhanh) {
+    const kq = NhanhSchema.safeParse(n)
+    if (!kq.success) {
+      console.error(`Nhánh "${n.id}" sai cấu trúc:`, kq.error.issues)
+    }
   }
-  return undefined
 }
 
+export function timNhanh(id: string): Nhanh | undefined {
+  return cacNhanh.find((n) => n.id === id)
+}
+
+export function timChuong(idNhanh: string, idChuong: string): Chuong | undefined {
+  return timNhanh(idNhanh)?.chuong.find((c) => c.id === idChuong)
+}
+
+export function timPhan(
+  idNhanh: string,
+  idChuong: string,
+  idPhan: string,
+): { nhanh: Nhanh; chuong: Chuong; phan: Phan } | undefined {
+  const nhanh = timNhanh(idNhanh)
+  const chuong = nhanh?.chuong.find((c) => c.id === idChuong)
+  const phan = chuong?.phan.find((p) => p.id === idPhan)
+  if (!nhanh || !chuong || !phan) return undefined
+  return { nhanh, chuong, phan }
+}
+
+/** Số liệu cho màn hình tổng quan. */
 export const soLieu = {
-  chuong: cacChuong.length,
-  bai: cacChuong.reduce((n, c) => n + c.bai.length, 0),
-  the: cacChuong.reduce((n, c) => n + c.bai.reduce((m, b) => m + b.hieuNhanh.length, 0), 0),
-  minhHoaCanVe: cacChuong.reduce((n, c) => n + c.bai.reduce((m, b) => m + b.minhHoa.length, 0), 0),
+  nhanhMo: cacNhanh.filter((n) => n.trangThai === 'mo').length,
+  nhanhTong: cacNhanh.length,
+  phanMo: cacNhanh
+    .flatMap((n) => n.chuong)
+    .flatMap((c) => c.phan)
+    .filter((p) => p.trangThai === 'mo').length,
 }
 
-export type { Bai, Chuong }
+export type { Nhanh, Chuong, Phan }
