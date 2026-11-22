@@ -15,24 +15,42 @@
   --color-vien: #e7e7ea;
   --color-vien-dam: #d4d4d8;
 
-  /* --- Chữ: 3 bậc là đủ --- */
-  --color-chu: #18181b;
-  --color-chu-phu: #71717a;
-  --color-chu-mo: #a1a1aa;
+  /* --- Chữ: 3 bậc là đủ ---
+     Cả ba bậc đều đạt 4.5:1 trên mọi nền của app, kể cả nền-chìm. Bậc mờ nhất
+     cũ (#a1a1aa) chỉ được 2.5:1 — đọc được khi mắt tốt và màn hình tốt, thế
+     thôi. Đo lại bằng đoạn soát trong ARCHITECTURE.md nếu đổi. */
+  --color-chu: #18181b; /* 16.1:1 trên trắng */
+  --color-chu-phu: #52525b; /* 7.4:1 */
+  --color-chu-mo: #6a6a73; /* 5.3:1 — vẫn nhạt hơn, nhưng đọc được */
 
-  /* --- Màu nhấn: san hô, giữ từ nhận diện cũ --- */
-  --color-nhan: #f2788a; /* mảng lớn, nền nút */
-  --color-nhan-dam: #c8415a; /* chữ trên nền trắng, đạt 4.5:1 */
+  /* --- Màu nhấn: san hô, giữ từ nhận diện cũ ---
+     Hai sắc, và ranh giới giữa chúng là một luật chứ không phải thẩm mỹ:
+
+       --color-nhan      mảng trang trí, nền nhạt, dấu hiệu KHÔNG mang chữ.
+                         Chữ trắng trên nó chỉ được 2.7:1 — không dùng.
+       --color-nhan-dam  bất cứ chỗ nào có chữ trắng đè lên, hoặc một mảng
+                         màu mà người ta PHẢI nhìn thấy (thanh tiến độ, nút
+                         chính, chặng đang học). 5.7:1 với trắng.
+
+     Ngoại lệ duy nhất: ô logo "Ψ". Logo được miễn theo WCAG, và đổi nó là đổi
+     nhận diện chứ không phải sửa lỗi tiếp cận. */
+  --color-nhan: #f2788a;
+  --color-nhan-dam: #b8384f;
+  --color-nhan-vien: #8f2b3d; /* chân nút và vòng ngoài của sắc nhấn */
   --color-nhan-nhat: #fef2f4; /* nền rất nhạt cho vùng được chọn */
 
-  /* --- Màu mang nghĩa --- */
-  --color-dung: #15905a; /* trả lời đúng, đã hoàn thành */
+  /* --- Màu mang nghĩa ---
+     Cả ba đều phải đạt 4.5:1 ở hai vai: làm chữ trên nền trắng, và làm nền
+     cho chữ trắng. Bộ cũ trượt cả ba (4.0 / 4.4 / 3.3). */
+  --color-dung: #11804c; /* trả lời đúng, đã hoàn thành — 5.0:1 trắng, 4.7:1 trên dung-nhat */
+  --color-dung-vien: #0d6b3f; /* chân nút và vòng ngoài của sắc "đúng" */
   --color-dung-nhat: #ecfdf3;
-  --color-sai: #d64550;
+  --color-sai: #c53642; /* 5.3:1 trắng, 4.8:1 trên sai-nhat */
+  --color-sai-vien: #a32e38;
   --color-sai-nhat: #fef2f2;
-  --color-vang: #c77d00; /* streak, nhắc nhở */
+  --color-vang: #a06400; /* streak, nhắc nhở — 4.9:1 */
   --color-vang-nhat: #fffbeb;
-  --color-sau: #6d5ae0; /* nhãn "mới", tầng Đào sâu */
+  --color-sau: #6451d6; /* nhãn "mới", tầng Đào sâu — 5.7:1 trắng, 5.1:1 trên sau-nhat */
   --color-sau-nhat: #f3f1fe;
 
   /* --- Chữ: một họ duy nhất, tương phản bằng cân nặng --- */

@@ -3,9 +3,8 @@ import { Zap, BookOpen, Sprout, Target, ArrowRight } from 'lucide-react'
 import { Nut } from '@/components/ui/Nut'
 import { cn } from '@/lib/cn'
 import { ghiCo } from '@/lib/kho-cuc-bo'
+import { KHOA_DA_CHAO } from './khoa'
 import { useDatMucTieu, useSoLieu, MUC_TIEU } from '@/features/tiendo/duLieu'
-
-export const KHOA_DA_CHAO = 'da-chao'
 
 /**
  * Màn chào lần đầu.

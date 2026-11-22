@@ -31,6 +31,10 @@ export type SoLieuHoc = {
   xpTong: number
   mucTieuXpNgay: number
   daHocHomNay: boolean
+  /** Tổng số phiên đã học, mọi ngày cộng lại. */
+  soPhien: number
+  /** Số ngày khác nhau có học. */
+  soNgayHoc: number
   daXong: PhanDaXong[]
 }
 
@@ -60,6 +64,8 @@ const SO_LIEU_RONG: SoLieuHoc = {
   xpTong: 0,
   mucTieuXpNgay: 20,
   daHocHomNay: false,
+  soPhien: 0,
+  soNgayHoc: 0,
   daXong: [],
 }
 
@@ -172,6 +178,22 @@ export function useGhiNhanLuyenTap() {
       if (!enabled) return null
       return goiRpc('ghi_nhan_luyen_tap', { p_xp: v.xp, p_tim_con_lai: v.timConLai })
     },
+    onSuccess: (sl) => {
+      if (sl) luu(sl)
+    },
+  })
+}
+
+/**
+ * Xoá sạch tiến độ của chính người đang đăng nhập.
+ *
+ * Có để diễn lại bản demo từ đầu mà không phải tạo tài khoản mới. Giữ tài
+ * khoản và mục tiêu ngày — mục tiêu là tuỳ chọn, không phải tiến độ.
+ */
+export function useDatLaiTienDo() {
+  const { enabled, luu } = useChung()
+  return useMutation({
+    mutationFn: async () => (enabled ? goiRpc('dat_lai_tien_do') : null),
     onSuccess: (sl) => {
       if (sl) luu(sl)
     },

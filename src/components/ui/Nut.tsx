@@ -12,11 +12,11 @@ type Kieu = 'chinh' | 'phu' | 'vien' | 'tron' | 'nguy'
 type Co = 'vua' | 'lon'
 
 const KIEU: Record<Kieu, string> = {
-  chinh: 'bg-nhan text-white border-nhan-dam hover:brightness-105',
-  phu: 'bg-dung text-white border-[#0f6f45] hover:brightness-105',
+  chinh: 'bg-nhan-dam text-white border-nhan-vien hover:brightness-110',
+  phu: 'bg-dung text-white border-dung-vien hover:brightness-110',
   vien: 'bg-nen text-chu-phu border-vien-dam hover:bg-nen-dju',
   tron: 'bg-transparent text-chu-phu border-transparent hover:bg-nen-chim',
-  nguy: 'bg-sai text-white border-[#a8343d] hover:brightness-105',
+  nguy: 'bg-sai text-white border-sai-vien hover:brightness-110',
 }
 
 const CO: Record<Co, string> = {

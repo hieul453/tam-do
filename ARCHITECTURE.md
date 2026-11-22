@@ -93,6 +93,7 @@ cần xử lý.
 [0002_tien_do_va_co_che.sql](supabase/migrations/0002_tien_do_va_co_che.sql) — thêm bảng
 `tien_do_phan` và các cột XP / chuỗi / tim.
 [0003_luyen_tap.sql](supabase/migrations/0003_luyen_tap.sql) — hàm `ghi_nhan_luyen_tap`.
+[0004_so_phien.sql](supabase/migrations/0004_so_phien.sql) · [0005_dat_lai_tien_do.sql](supabase/migrations/0005_dat_lai_tien_do.sql).
 RLS bật trên cả 9 bảng, mỗi bảng một policy `auth.uid() = user_id`.
 
 > Thêm bảng mà quên `enable row level security` thì bảng đó mở cho bất kỳ ai có anon key.
@@ -162,6 +163,54 @@ Cờ "đã xem" nằm ở `localStorage`, không ở database: xem lại trên m
 không hại gì, mà đổi lại không phải lo màn hình nháy một nhịp trước khi biết nên hiện gì.
 Mục tiêu ngày thì ghi thẳng xuống database vì đó là tuỳ chọn thật.
 
+## Nhẹ đi một nửa
+
+Bản đầu của M4 gửi đi **425 kB gzip trong một gói duy nhất**. Ba việc, đo từng bước:
+
+| | gzip | |
+|---|---|---|
+| Ban đầu | 425 kB | |
+| Bỏ Zod khỏi bản production | 399 kB | schema chỉ dùng ở dev, nạp bằng `import()` động |
+| Bỏ `import * as Icons` | 189 kB | kéo cả ~1500 icon vào chỉ để tra 6 cái theo tên |
+| Tách gói theo route | **177 kB** | chỉ lộ trình nạp thẳng, còn lại nạp khi mở tới |
+
+Cái thứ hai là bài học đắt nhất: một dòng import trông vô hại chiếm hơn nửa bundle.
+[src/content/icon.ts](src/content/icon.ts) liệt kê tên từng icon, và `noiDung.test.ts`
+canh để thêm nhánh mà quên icon thì CI đỏ.
+
+Phần còn lại chủ yếu là `@supabase/supabase-js` và React — cần ngay lúc khởi động.
+
+## Lưới an toàn
+
+[LuoiAnToan](src/components/LuoiAnToan.tsx) bọc ngoài cùng. Một lỗi render ở bất cứ đâu
+sẽ gỡ sạch cây DOM và để lại màn hình trắng; giữa buổi demo thì đó là hỏng cả buổi. Đã
+kiểm bằng cách cố tình ném lỗi trong màn lộ trình.
+
+Lỗi **không** gửi đi đâu, chỉ nằm ở console máy đó. Khi nào có Sentry thì phải lọc kỹ:
+nhật ký và câu chuyện người dùng kể cho AI có thể lọt vào thông điệp lỗi.
+
+## Màu và khả năng tiếp cận
+
+Soát bằng một đoạn chạy trong trình duyệt, đo tương phản thật của từng nút chữ so với nền
+thật của nó. Kết quả lần đầu: **bảy token màu trượt 4.5:1**, gồm cả bậc chữ mờ (2.5:1) và
+chữ trắng trên màu nhấn (2.7:1). Luật số 9 trong CLAUDE.md đã có từ đầu — chỉ là chưa ai
+đo.
+
+Chữ: ba bậc đổi thành #18181b · #52525b · #6a6a73, đều đạt trên mọi nền của app.
+
+Màu nhấn tách làm hai vai, và ranh giới là luật chứ không phải thẩm mỹ:
+
+- `--color-nhan` (#f2788a) — mảng trang trí, nền nhạt, **không bao giờ đỡ chữ trắng**.
+- `--color-nhan-dam` (#b8384f) — nút chính, đầu chương, chặng đang học, thanh tiến độ:
+  bất cứ chỗ nào có chữ trắng đè lên hoặc một mảng màu người ta phải nhìn thấy.
+
+Ngoại lệ duy nhất là ô logo "Ψ": logo được WCAG miễn, và đổi nó là đổi nhận diện chứ
+không phải sửa lỗi tiếp cận.
+
+Trong phiên học còn hai việc cho người không dùng chuột: sang câu mới thì tiêu điểm về
+thẳng câu hỏi (không thì phải Tab lại từ đầu mỗi câu), và tấm phản hồi mang `role="status"`
+để trình đọc màn hình đọc "Chính xác" ngay khi nó hiện.
+
 ## Đăng nhập
 
 Vào là dùng ngay: `signInAnonymously()` cho `user_id` thật. Muốn giữ tiến độ thì
@@ -216,6 +265,7 @@ cũ. Đã gặp thật. Xử lý ở [src/lib/tu-cap-nhat.ts](src/lib/tu-cap-nha
 | **M2** ✅ | Ba hướng tiếp cận: bài tập Nhanh, bài đọc Đào sâu, Áp dụng + AI |
 | **M3** ✅ | Cơ chế: XP, chuỗi ngày, tim, mục tiêu ngày, màn tổng kết phiên |
 | **M4** ✅ | Hoàn thiện demo: màn chào, âm thanh, hoạt ảnh, Luyện tập, trạng thái rỗng |
+| **M5** ✅ | Sẵn sàng demo: lưới an toàn, bundle nhẹ một nửa, huy hiệu, đặt lại tiến độ, soát tiếp cận |
 
 ## Backlog
 
@@ -234,3 +284,8 @@ Những thứ chưa quyết được, gom lại thay vì chặn tiến độ:
   0001 nhưng chưa dùng). Hiện Luyện tập trộn ngẫu nhiên.
 - `motion` và `marked` nằm trong `package.json` mà không chỗ nào import. Không vào
   bundle, nhưng nên gỡ nếu không có kế hoạch dùng.
+- Huy hiệu suy ra từ số liệu nên không biết "đạt lúc nào" — chưa báo được khoảnh khắc vừa
+  đạt. Muốn có thì phải ghi lại thời điểm.
+- Gói đầu tiên còn 177 kB gzip, phần lớn là `@supabase/supabase-js`. Hoãn nạp nó tới sau
+  lần vẽ đầu sẽ nhanh hơn nữa, nhưng phải đổi cách `AuthProvider` khởi động.
+- Chưa đo trên thiết bị thật và mạng thật, mới đo bằng kích thước gói.

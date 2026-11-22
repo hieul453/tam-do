@@ -98,6 +98,10 @@ Xem `src/components/layout/Khung.tsx`.
   truyền câu hỏi và hàm `khiXong` vào, đừng chép bộ chơi ra chỗ khác.
 - Hoạt ảnh viết bằng CSS trong `index.css`. Khối `prefers-reduced-motion` ở đó đã tắt
   giúp; hoạt ảnh bằng JavaScript thì phải tự gọi `matchMedia` để kiểm.
+- **Không `import * as` từ thư viện icon.** Thêm icon thì thêm tên vào
+  `src/content/icon.ts`. Một dòng `import * as Icons from 'lucide-react'` từng chiếm hơn
+  nửa bundle.
+- Chữ trắng chỉ đặt lên `nhan-dam`, không đặt lên `nhan`. Xem khối `@theme` để biết vì sao.
 - Dùng `@/` cho import nội bộ.
 - Server state qua TanStack Query, không tự viết `useEffect` + `fetch`.
 - Chạy `npm run format` trước khi commit; CI kiểm định dạng.
