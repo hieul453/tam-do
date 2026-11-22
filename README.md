@@ -54,7 +54,7 @@ Chi tiết và lý do: [ARCHITECTURE.md](ARCHITECTURE.md).
 | Bản live | [tam-do-nu.vercel.app](https://tam-do-nu.vercel.app) — tự deploy mỗi lần `main` thay đổi |
 | Preview | mỗi pull request có một URL riêng, mở được trên điện thoại |
 | Database | Supabase `crbpqbjdvakhwmoybicw`, region Singapore (`ap-southeast-1`), Postgres 17 |
-| Đăng nhập | ẩn danh đã bật · liên kết thủ công đã bật · Google **chưa** bật |
+| Đăng nhập | ẩn danh · liên kết Google (giữ nguyên `user_id`, không mất tiến độ) |
 | Chi phí | 0 đồng. GitHub public (Actions không giới hạn phút), Supabase Free, Vercel hobby |
 
 **Cách làm việc:** không push thẳng vào `main`. Mỗi thay đổi một nhánh, một pull request,

@@ -49,24 +49,36 @@ khoản Windows. Xem `%LOCALAPPDATA%\ai-tokens\README.md`.
 > **Region không đổi được sau khi tạo.** Lần đầu lỡ tạo ở Tokyo, phải xoá làm lại.
 > Đo thật từ Việt Nam: Singapore ~72ms, Tokyo ~131ms.
 
-### 2c. Đăng nhập Google — chưa làm
+### 2c. Đăng nhập Google ✅
 
-Đây là việc duy nhất còn lại, và phải làm bằng tay vì cần browser:
+Đã bật và đã thử đầu cuối bằng tài khoản thật: bấm nút trên app → đăng nhập Google →
+quay về app với mã người dùng **không đổi**.
 
-1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → tạo
-   **OAuth 2.0 Client ID**, loại *Web application*.
-2. Dán **Authorized redirect URI** mà Supabase hiển thị sẵn trong màn hình cấu hình Google.
-3. Cất hai giá trị vào kho:
+Cấu hình đã dùng, ghi lại để dựng lại khi cần:
+
+- OAuth client loại **Web application** ở [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+- **Authorized redirect URI** — trỏ về Supabase, **không phải** về Vercel:
+
+  ```
+  https://crbpqbjdvakhwmoybicw.supabase.co/auth/v1/callback
+  ```
+
+- **Authorized JavaScript origins**: `https://tam-do-nu.vercel.app` và `http://localhost:5173`
+- Scope: chỉ `email`, `profile`, `openid`
+- Client ID và secret cất trong kho token: `google-client-id`, `google-client-secret`
+
+> **Cái bẫy số một:** dán nhầm domain Vercel vào Authorized redirect URI. Luồng thật là
+> app → Google → **Supabase** → app, nên URI phải trỏ về Supabase.
+>
+> **Cái bẫy số hai:** màn hình đồng ý ở chế độ **Testing** thì chỉ email trong danh sách
+> Test users mới đăng nhập được. Vì chỉ xin scope không nhạy cảm nên **Publish không cần
+> Google duyệt** — bấm là có hiệu lực ngay.
+
+Bật lại bằng một lệnh nếu phải dựng lại:
 
 ```powershell
-& "$env:LOCALAPPDATA\ai-tokens\token.ps1" set google-client-id -EnvVar GOOGLE_CLIENT_ID
+powershell -ExecutionPolicy Bypass -File "D:\tam-do\.git\sb-06-google.ps1"
 ```
-
-```powershell
-& "$env:LOCALAPPDATA\ai-tokens\token.ps1" set google-client-secret -EnvVar GOOGLE_CLIENT_SECRET
-```
-
-Có hai giá trị đó rồi thì bật provider qua API được, không cần bấm thêm.
 
 ### Giới hạn của token Supabase
 
