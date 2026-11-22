@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 import { Zap, Target, Heart, PartyPopper, Flame, CloudOff, Check } from 'lucide-react'
 import { Nut } from '@/components/ui/Nut'
-import { ThanhTienDo } from '@/components/ui/co-ban'
+import { ThanhTienDo, SoDem } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
 import { useSoLieu } from '@/features/tiendo/duLieu'
 
@@ -22,18 +22,26 @@ export function ManTongKet({
   timConLai,
   xp,
   tenPhan,
-  duongDanPhan,
+  tieuDe = 'Xong phần này',
   dangLuu,
   luuThatBai,
+  nhanChinh,
+  duongDanChinh,
+  bamChinh,
 }: {
   tongCau: number
   soSai: number
   timConLai: number
   xp: number
   tenPhan: string
-  duongDanPhan: string
+  /** Dòng lớn nhất màn hình. Phiên ôn không "xong phần" nào cả. */
+  tieuDe?: string
   dangLuu?: boolean
   luuThatBai?: boolean
+  /** Nút chính bên phải: tên, rồi một trong hai cách xử lý bấm. */
+  nhanChinh: string
+  duongDanChinh?: string
+  bamChinh?: () => void
 }) {
   const navigate = useNavigate()
   const { soLieu, luuDuoc } = useSoLieu()
@@ -45,14 +53,22 @@ export function ManTongKet({
     {
       icon: Zap,
       nhan: 'Điểm nhận được',
-      giaTri: `${xp} XP`,
+      giaTri: (
+        <>
+          <SoDem den={xp} /> XP
+        </>
+      ),
       mau: 'text-nhan-dam',
       nen: 'bg-nhan-nhat',
     },
     {
       icon: Target,
       nhan: 'Độ chính xác',
-      giaTri: `${doChinhXac}%`,
+      giaTri: (
+        <>
+          <SoDem den={doChinhXac} />%
+        </>
+      ),
       mau: 'text-dung',
       nen: 'bg-dung-nhat',
     },
@@ -69,12 +85,15 @@ export function ManTongKet({
     <div className="flex min-h-dvh flex-col">
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-4 py-10 text-center">
         <PartyPopper className="mb-4 size-14 text-nhan" strokeWidth={1.8} aria-hidden />
-        <h1 className="text-2xl font-extrabold lg:text-3xl">Xong phần này</h1>
+        <h1 className="text-2xl font-extrabold lg:text-3xl">{tieuDe}</h1>
         <p className="mt-1 mb-8 text-chu-phu">{tenPhan}</p>
 
         <ul className="grid w-full grid-cols-3 gap-3">
-          {o.map(({ icon: Icon, nhan, giaTri, mau, nen }) => (
-            <li key={nhan} className={cn('rounded-lon p-4', nen)}>
+          {o.map(({ icon: Icon, nhan, giaTri, mau, nen }, i) => (
+            <li
+              key={nhan}
+              className={cn('bat-len rounded-lon p-4', nen, ['', 'tre-1', 'tre-2'][i])}
+            >
               <Icon className={cn('mx-auto mb-1.5 size-6', mau)} strokeWidth={2.4} aria-hidden />
               <p className={cn('text-lg font-extrabold tabular-nums', mau)}>{giaTri}</p>
               <p className="text-[0.7rem] font-bold tracking-wide text-chu-phu uppercase">{nhan}</p>
@@ -133,8 +152,8 @@ export function ManTongKet({
           <Nut kieu="vien" co="lon" onClick={() => navigate('/')}>
             Về lộ trình
           </Nut>
-          <Nut co="lon" onClick={() => navigate(duongDanPhan)}>
-            Học sâu hơn phần này
+          <Nut co="lon" onClick={() => (bamChinh ? bamChinh() : navigate(duongDanChinh ?? '/'))}>
+            {nhanChinh}
           </Nut>
         </div>
       </footer>

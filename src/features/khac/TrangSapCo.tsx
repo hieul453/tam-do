@@ -1,11 +1,12 @@
 import type { LucideIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { Dumbbell, Trophy, Flame, Zap, Heart, Hammer, Check } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { Trophy, Flame, Zap, Heart, Hammer, Check, Volume2, VolumeX } from 'lucide-react'
 import { The, Huy, ThanhTienDo } from '@/components/ui/co-ban'
 import { Nut } from '@/components/ui/Nut'
 import { cn } from '@/lib/cn'
 import { useAuth } from '@/lib/auth'
 import { useSoLieu, useDatMucTieu, MUC_TIEU } from '@/features/tiendo/duLieu'
+import { amThanhDangBat, datAmThanh, phatAm } from '@/lib/am-thanh'
 
 /**
  * Các tab chưa làm trong M1.
@@ -67,21 +68,6 @@ function Khung({
   )
 }
 
-export function TrangLuyenTap() {
-  return (
-    <Khung
-      icon={Dumbbell}
-      tieuDe="Luyện tập"
-      moTa="Ôn lại những gì sắp quên, trước khi quên thật"
-      sePhai={[
-        'Ôn giãn cách: thẻ nào sắp rơi khỏi trí nhớ thì nổi lên trước',
-        'Luyện nhanh 5 phút, gom các phần đã học',
-        'Luyện riêng những câu từng trả lời sai',
-      ]}
-    />
-  )
-}
-
 export function TrangThanhTich() {
   const { soLieu, sanSang, luuDuoc } = useSoLieu()
   const so = (n: number) => (sanSang ? n : '–')
@@ -117,11 +103,17 @@ export function TrangThanhTich() {
         ))}
       </ul>
 
-      {!luuDuoc && (
+      {!luuDuoc ? (
         <p className="mb-4 text-xs text-chu-mo">
           Máy chủ lưu trữ chưa được cấu hình, nên chưa có gì để đếm.
         </p>
-      )}
+      ) : sanSang && soLieu.xpTong === 0 ? (
+        <The className="mb-4 bg-nen-dju">
+          <p className="text-sm text-chu-phu">
+            Chưa có gì ở đây. Làm xong một phần là bốn con số trên bắt đầu chạy.
+          </p>
+        </The>
+      ) : null}
     </Khung>
   )
 }
@@ -131,6 +123,7 @@ export function TrangToi() {
   const { soLieu, sanSang, luuDuoc } = useSoLieu()
   const datMucTieu = useDatMucTieu()
   const xongMucTieu = soLieu.xpHomNay >= soLieu.mucTieuXpNgay
+  const [amThanh, datAmThanhState] = useState(amThanhDangBat)
 
   return (
     <div>
@@ -232,6 +225,40 @@ export function TrangToi() {
             Máy chủ lưu trữ chưa được cấu hình, nên chưa đổi được mục tiêu.
           </p>
         )}
+      </The>
+
+      <The className="mb-4">
+        <h2 className="mb-1 text-sm font-bold">Âm thanh</h2>
+        <p className="mb-3 text-sm text-chu-phu">
+          Tiếng ngắn khi trả lời đúng, sai và khi xong phiên. Tắt đi vẫn thấy đủ mọi thứ trên màn
+          hình.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            const moi = !amThanh
+            datAmThanh(moi)
+            datAmThanhState(moi)
+            if (moi) phatAm('dung')
+          }}
+          aria-pressed={amThanh}
+          className={cn(
+            'flex min-h-11 w-full items-center justify-between rounded-vua border-2 px-4 text-sm font-bold transition-colors',
+            amThanh ? 'border-nhan bg-nhan-nhat text-nhan-dam' : 'border-vien text-chu-phu',
+          )}
+        >
+          <span className="flex items-center gap-2">
+            {amThanh ? (
+              <Volume2 className="size-4" aria-hidden />
+            ) : (
+              <VolumeX className="size-4" aria-hidden />
+            )}
+            {amThanh ? 'Đang bật' : 'Đang tắt'}
+          </span>
+          <span className="text-xs font-normal text-chu-mo">
+            {amThanh ? 'chạm để tắt' : 'chạm để bật'}
+          </span>
+        </button>
       </The>
 
       <p className="text-center text-xs leading-relaxed text-chu-mo">

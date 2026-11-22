@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router'
-import { Brain, Dumbbell, Trophy, User, Flame, Heart, Zap, Check } from 'lucide-react'
+import { Brain, Dumbbell, Trophy, User, Flame, Heart, Zap, Check, CloudOff } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { The, ThanhTienDo, ChiSo } from '@/components/ui/co-ban'
 import { Nut } from '@/components/ui/Nut'
@@ -112,7 +112,7 @@ function SidebarWeb() {
 /* ───────────────────────────── Web: cột phải ────────────────────────────── */
 
 function RailWeb() {
-  const { soLieu, sanSang, luuDuoc } = useSoLieu()
+  const { soLieu, sanSang, luuDuoc, loi } = useSoLieu()
   const { laAnDanh, dangTai, lienKetGoogle } = useAuth()
   const datMucTieu = soLieu.xpHomNay >= soLieu.mucTieuXpNgay
 
@@ -166,6 +166,15 @@ function RailWeb() {
         <The className="bg-nen-dju">
           <p className="text-xs leading-relaxed text-chu-phu">
             Máy chủ lưu trữ chưa được cấu hình, nên tiến độ của phiên này không được lưu.
+          </p>
+        </The>
+      )}
+
+      {loi && (
+        <The className="border-sai/30 bg-sai-nhat">
+          <p className="flex items-start gap-2 text-xs leading-relaxed text-sai">
+            <CloudOff className="mt-0.5 size-4 shrink-0" aria-hidden />
+            Chưa đọc được số liệu của bạn. Bài học vẫn mở bình thường; thử tải lại trang.
           </p>
         </The>
       )}
@@ -239,8 +248,8 @@ export function Khung({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
 
   // Phiên học chiếm trọn màn hình: không sidebar, không tab — giống Duolingo,
-  // để người học không bị thứ gì kéo ra khỏi bài.
-  const toanManHinh = pathname.startsWith('/hoc/')
+  // để người học không bị thứ gì kéo ra khỏi bài. Phiên luyện tập cũng vậy.
+  const toanManHinh = pathname.startsWith('/hoc/') || pathname === '/luyen-tap/phien'
   if (toanManHinh) return <>{children}</>
 
   return (

@@ -94,6 +94,10 @@ Xem `src/components/layout/Khung.tsx`.
 - Mỗi tính năng một thư mục trong `src/features/`. Component dùng chung ở `src/components/`.
 - Tiến độ, XP, chuỗi ngày, tim: tất cả đi qua `src/features/tiendo/duLieu.ts`, đừng gọi
   thẳng `supabase.rpc` ở màn hình.
+- Phiên hỏi đáp dùng chung `src/features/hoc/PhienHoc.tsx`. Cần một kiểu phiên mới thì
+  truyền câu hỏi và hàm `khiXong` vào, đừng chép bộ chơi ra chỗ khác.
+- Hoạt ảnh viết bằng CSS trong `index.css`. Khối `prefers-reduced-motion` ở đó đã tắt
+  giúp; hoạt ảnh bằng JavaScript thì phải tự gọi `matchMedia` để kiểm.
 - Dùng `@/` cho import nội bộ.
 - Server state qua TanStack Query, không tự viết `useEffect` + `fetch`.
 - Chạy `npm run format` trước khi commit; CI kiểm định dạng.

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 /**
@@ -113,4 +113,39 @@ export function ChiSo({
       <span className="sr-only">{nhan}</span>
     </span>
   )
+}
+
+/**
+ * Con số đếm từ 0 lên.
+ *
+ * Dùng cho XP ở màn tổng kết: con số nhảy lên làm người ta nhìn nó, mà nhìn
+ * nó thì mới thấy công sức vừa bỏ ra được quy thành cái gì.
+ *
+ * Tự kiểm `prefers-reduced-motion` vì đây là hoạt ảnh bằng JavaScript — khối
+ * CSS ở `index.css` không với tới được.
+ */
+export function SoDem({ den, thoiGian = 750 }: { den: number; thoiGian?: number }) {
+  const giamChuyenDong =
+    typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+  const [so, datSo] = useState(giamChuyenDong ? den : 0)
+
+  useEffect(() => {
+    if (giamChuyenDong) {
+      datSo(den)
+      return
+    }
+    let khung = 0
+    const batDau = performance.now()
+    const buoc = (bayGio: number) => {
+      const p = Math.min(1, (bayGio - batDau) / thoiGian)
+      // Chậm dần về cuối: nhanh lúc đầu cho đã mắt, dừng êm chứ không khựng.
+      datSo(Math.round(den * (1 - Math.pow(1 - p, 3))))
+      if (p < 1) khung = requestAnimationFrame(buoc)
+    }
+    khung = requestAnimationFrame(buoc)
+    return () => cancelAnimationFrame(khung)
+  }, [den, thoiGian, giamChuyenDong])
+
+  return <>{so}</>
 }
