@@ -1,109 +1,102 @@
 # CLAUDE.md — Tâm Đồ
 
-> File này là bộ não chung. Cả hai người làm dự án đều vibe code, nên mọi phiên
-> Claude phải ra cùng một kiểu code. Đọc file này trước khi sửa bất cứ gì.
+> Bộ não chung của dự án. Đọc trước khi sửa bất cứ gì.
 >
-> - Kiến trúc và lý do chọn stack: [ARCHITECTURE.md](ARCHITECTURE.md)
-> - Spec sản phẩm (nội dung, trải nghiệm, màu, linh vật): [docs/SPEC-SAN-PHAM.md](docs/SPEC-SAN-PHAM.md)
-> - Cài đặt và cấp quyền: [docs/SETUP.md](docs/SETUP.md)
-> - **Khuôn soạn bài học: [content/\_khuon-mau-bai-hoc.md](content/_khuon-mau-bai-hoc.md)**
+> - Kiến trúc và lý do chọn: [ARCHITECTURE.md](ARCHITECTURE.md)
+> - Cài đặt, cấp quyền, token: [docs/SETUP.md](docs/SETUP.md)
+> - Tham chiếu sản phẩm gốc (chỉ để tham khảo định hướng): [docs/SPEC-SAN-PHAM.md](docs/SPEC-SAN-PHAM.md)
 
 ## Dự án là gì
 
-Web app PWA tiếng Việt, mobile-first, ôn tập kiến thức tâm lý học. Mỗi bài có 3 tầng:
-⚡ Hiểu nhanh (thẻ vuốt) · 📖 Đào sâu (bài đọc) · 🌱 Áp dụng (thử thách + nhật ký).
-Giai đoạn hiện tại: môn Tâm lý học đại cương, chế độ ôn tập.
+**Một Duolingo cho tâm lý học.** Web app PWA tiếng Việt, mobile-first, học bằng
+những phiên ngắn có cảm giác chơi.
 
 Bản live: https://tam-do-nu.vercel.app
 
-Hai người làm: một người có nền tảng kỹ thuật, một người không. **Viết code cho người
-không có nền tảng kỹ thuật đọc được.** Comment bằng tiếng Việt khi giải thích *vì sao*,
-không comment lại những gì code đã nói rõ.
+Khác Duolingo ở một điểm cốt lõi: mỗi **Phần** có **ba hướng tiếp cận cùng một nội dung**.
+
+| | |
+|---|---|
+| ⚡ **Nhanh** | Mì ăn liền — thẻ lật, câu hỏi ngắn, vài phút |
+| 📖 **Đào sâu** | Học thuật — nghiên cứu thật, dẫn nguồn đầy đủ |
+| 🌱 **Áp dụng** | Đưa vào đời sống, có trợ lý AI tư vấn theo chuyện của chính người dùng |
+
+## Cấu trúc nội dung
+
+```
+Nhánh   (= Section)   Tâm lý học nhận thức, xã hội, phát triển…
+  Chương (= Unit)     Trí nhớ, Chú ý…
+    Phần  (= Node)    một chặng trên lộ trình
+      3 hướng tiếp cận
+```
+
+Nội dung nằm ở `src/content/du-lieu/*.ts`, **không trong database**. Sửa file là xong,
+có history git, sai kiểu thì `npm run typecheck` báo ngay. Schema ở `src/content/schema.ts`.
+
+Pilot mở **một nhánh** (`nhan-thuc`), **một chương** (`tri-nho`), **ba phần**. Mọi thứ khác
+mang `trangThai: 'sap-co'` và vẫn hiện trên lộ trình — người xem thấy app sẽ lớn tới đâu.
 
 ## Lệnh
 
 ```bash
-npm run dev            # dựng lại nội dung rồi chạy local, http://localhost:5173
+npm run dev            # http://localhost:5173
 npm run dev:dienthoai  # mở được từ điện thoại cùng wifi
-npm run content:check  # kiểm tra content/*.md có đúng khuôn không
-npm run content:build  # dựng content/*.md thành JSON cho app
-npm run typecheck      # kiểm tra kiểu
-npm test               # chạy test
-npm run format         # Prettier sửa định dạng
-npm run build          # thử build như khi deploy
-npm run db:push        # đẩy migration lên Supabase
+npm run typecheck
+npm test
+npm run format
+npm run build
 ```
 
-Hai trang hiện có: `/` kiểm tra hạ tầng, `/noi-dung` xem trước nội dung đã soạn.
+## Hai bố cục, khác nhau thật
 
-## Nội dung bài học
+Theo đúng cách Duolingo làm, và đây là yêu cầu sản phẩm chứ không phải tuỳ chọn:
 
-Nội dung là `content/chuong-XX-*.md`, **không nằm trong database**. Script
-`scripts/build-content.ts` đọc markdown, kiểm theo schema `src/content/schema.ts`,
-rồi ghi JSON vào `src/content/generated/` (không commit, luôn dựng lại).
+| | |
+|---|---|
+| **Web ≥1024px** | thanh điều hướng **dọc** bên trái · nội dung giữa · cột phải chứa số liệu và nhắc nhở (xuất hiện từ 1280px) |
+| **Mobile <1024px** | thanh số liệu mỏng trên cùng · nội dung · thanh tab **ngang** dưới cùng |
 
-**Soạn chương mới thì chép khuôn ở [content/\_khuon-mau-bai-hoc.md](content/_khuon-mau-bai-hoc.md).**
-Viết lệch khuôn là CI đỏ, kèm thông báo tiếng Việt chỉ rõ bài nào thiếu mục gì.
-
-Bốn thứ script bắt buộc phải có ở mọi bài:
-
-1. Đủ 3 tầng ⚡ 📖 🌱
-2. Thẻ cuối của Hiểu nhanh là **Kiểm tra (áp dụng)**
-3. Đúng **3** mục trong "3 điều cần nhớ"
-4. Ít nhất một **nguồn đã kiểm chứng**
-
-Sửa nội dung xong, mở `/noi-dung` xem markdown của mình được đọc ra thành gì. Mục nào
-trống hoặc sai chỗ nghĩa là viết lệch khuôn.
-
-## Ngôn ngữ
-
-- Giao diện, nội dung, thông báo lỗi cho người dùng: **tiếng Việt**. Thuật ngữ kèm tiếng Anh trong ngoặc.
-- Tên biến, tên hàm: tiếng Việt không dấu khi nó thuộc miền sản phẩm (`danhSachThe`, `dangTai`,
-  `laAnDanh`), tiếng Anh khi nó là khái niệm kỹ thuật chung (`useState`, `queryClient`, `session`).
-  Đừng trộn nửa vời trong cùng một cái tên.
+Chuyển bằng CSS, không bằng JS — không nhấp nháy lúc tải, không nghe resize, một cây DOM.
+Xem `src/components/layout/Khung.tsx`.
 
 ## Luật không được phá
 
-1. **Không viết mã màu trong component.** Mọi màu, phông, bo góc, bóng đổ nằm ở
-   `src/styles/index.css` trong block `@theme`. Dùng class token: `bg-kem-hong`,
-   `text-ca-cao-nhat`, `rounded-the`, `shadow-mem`.
-2. **Thêm bảng database là phải bật RLS.** Mọi bảng cần
-   `alter table ... enable row level security` và một policy `auth.uid() = user_id`.
-   Quên là dữ liệu người dùng mở cho bất kỳ ai có anon key.
-3. **Nội dung bài học không vào database.** Nội dung là `content/*.md`. Database chỉ giữ
-   dữ liệu của người dùng.
-4. **`service_role` key không bao giờ vào repo** hay vào biến `VITE_*`. Key đó bỏ qua RLS.
-5. **Không commit vào `main`.** Mỗi thay đổi một branch, một pull request, xem bản preview
-   của Vercel rồi mới merge.
-6. **`journal_entries` là dữ liệu nhạy cảm.** Không analytics, không log nội dung, không gửi
-   ra dịch vụ ngoài. Người dùng xoá tài khoản là xoá sạch.
+1. **Không viết mã màu trong component.** Token ở `src/styles/index.css` block `@theme`.
+   Dùng `bg-nhan`, `text-chu-phu`, `rounded-vua`, `border-vien`…
+2. **Màu phải mang nghĩa.** Đây là app minimalism: màu dùng để báo trạng thái
+   (đúng/sai/đã xong/đang khoá), không để trang trí. Thấy mình tô màu cho đẹp là sai hướng.
+3. **Thêm bảng database là phải bật RLS** và một policy `auth.uid() = user_id`.
+4. **`service_role` key và `GEMINI_API_KEY` không bao giờ vào biến `VITE_*`.** Mọi biến
+   `VITE_*` đều lộ trong bundle. Khoá AI gọi qua serverless function, không gọi thẳng từ trình duyệt.
+5. **Không commit vào `main`.** Mỗi thay đổi một nhánh, một pull request, CI xanh rồi mới merge.
+6. **Nhật ký và câu chuyện người dùng kể cho AI là dữ liệu nhạy cảm.** Không log nội dung,
+   không analytics, không gửi đi đâu ngoài lời gọi AI đang phục vụ chính người đó.
 7. **Tôn trọng `prefers-reduced-motion`.** Đã xử lý ở `index.css`; đừng viết animation bỏ qua nó.
-8. **Số liệu nghiên cứu phải có nguồn đã mở thật.** Không bao giờ bịa con số hay tên nghiên cứu
-   trong nội dung bài học. Thiếu nguồn thì ghi là thiếu, đừng điền tạm.
-9. **Đừng sửa `src/content/generated/`.** Thư mục đó do script sinh ra; sửa markdown rồi
-   chạy `npm run content:build`.
+8. **Số liệu nghiên cứu phải có nguồn mở được.** Không bịa con số, không bịa tên nghiên cứu.
+   Thiếu nguồn thì ghi là thiếu.
+9. **Vùng chạm tối thiểu 44px, tương phản chữ tối thiểu 4.5:1.**
+
+## Ngôn ngữ
+
+- Giao diện và nội dung: **tiếng Việt**. Thuật ngữ kèm tiếng Anh trong ngoặc khi cần.
+- Tên biến, hàm: tiếng Việt không dấu khi thuộc miền sản phẩm (`danhSachThe`, `laAnDanh`,
+  `trangThai`), tiếng Anh khi là khái niệm kỹ thuật chung (`useState`, `queryClient`).
+  Không trộn nửa vời trong cùng một tên.
 
 ## Quy ước code
 
-- Mobile-first. Thiết kế cho màn hình 375px trước, rồi mới nới ra.
-- Vùng chạm tối thiểu 44px. Tương phản chữ tối thiểu 4.5:1.
-- Mỗi route một file trong `src/pages/`. Mỗi tính năng một thư mục trong `src/features/`.
-- Dùng `@/` cho import nội bộ: `import { supabase } from '@/lib/supabase'`.
-  Riêng trong `scripts/` thì dùng đường dẫn tương đối — tsx chạy ngoài Vite.
+- Mobile-first: thiết kế cho 375px trước, rồi mới nới ra.
+- Mỗi tính năng một thư mục trong `src/features/`. Component dùng chung ở `src/components/`.
+- Dùng `@/` cho import nội bộ.
 - Server state qua TanStack Query, không tự viết `useEffect` + `fetch`.
-- Chạy `npm run format` trước khi commit. CI kiểm định dạng và sẽ đỏ nếu lệch.
-- **Không thêm thư viện mới nếu chưa bàn.** Mỗi thư viện là một thứ partner phải sống cùng.
+- Chạy `npm run format` trước khi commit; CI kiểm định dạng.
+- **Không thêm thư viện mới nếu chưa bàn.**
 
-**Chưa có ESLint.** TypeScript 7 mới quá, `typescript-eslint` chưa hỗ trợ (peer range dừng ở
-`<6.1.0`). Ép bằng `--legacy-peer-deps` sẽ cho ra CI dở dở ương ương, tệ hơn là không có.
-Hiện dựa vào `tsc --strict` cho đúng sai và Prettier cho định dạng. Thử lại khi
-typescript-eslint ra bản hỗ trợ TS 7.
+**Chưa có ESLint** — TypeScript 7 quá mới, `typescript-eslint` chưa hỗ trợ (peer range dừng
+ở `<6.1.0`). Dựa vào `tsc --strict` và Prettier. Thử lại khi họ ra bản hỗ trợ TS 7.
 
-## Khi nào phải hỏi lại người dùng
+## Khi nào phải hỏi lại
 
-- Trước khi thêm thư viện mới hoặc đổi stack.
-- Trước khi sửa `supabase/migrations/` đã chạy trên database thật (viết migration mới, đừng sửa file cũ).
-- Trước khi đổi bảng màu hay khuôn bài học — đó là quyết định sản phẩm, đã chốt qua nhiều buổi bàn.
-- Khi nội dung bài học thiếu số liệu hoặc nguồn. Đừng tự điền.
-- Trước khi dựng giao diện thật của bài học (3 tab, thẻ vuốt, linh vật) — phải theo bản
-  thiết kế đã duyệt, không tự nghĩ ra.
+- Trước khi thêm thư viện hoặc đổi stack.
+- Trước khi sửa migration đã chạy trên database thật — viết migration mới.
+- Khi nội dung thiếu nguồn. Đừng tự điền.

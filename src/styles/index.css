@@ -1,41 +1,53 @@
 @import 'tailwindcss';
 
 /* ===========================================================================
-   Design token của Tâm Đồ — nguồn duy nhất cho màu, chữ, bo góc, bóng đổ.
-   Lấy từ bảng màu đã chốt (CLAUDE.md mục 9).
-   Đổi màu ở đây là đổi cả app; đừng viết mã màu trực tiếp trong component.
-
-   Tên token bằng tiếng Việt không dấu để cả hai người đọc được:
-   bg-kem-hong, text-ca-cao, bg-san-ho, rounded-the...
+   Tâm Đồ — hệ thiết kế
+   Minimalism: nền trắng, viền mảnh thay cho bóng đổ, đúng một màu nhấn.
+   Màu chỉ dùng khi nó MANG NGHĨA (đúng/sai/đã xong/đang khoá), không trang trí.
+   Đổi màu ở đây là đổi cả app; đừng viết mã màu trong component.
    =========================================================================== */
 
 @theme {
-  /* --- Màu --- */
-  --color-kem-hong: #fff6f1; /* nền toàn app */
-  --color-san-ho: #f2788a; /* màu chính, linh vật Tim */
-  --color-hong-dam: #c24d63; /* nút, liên kết */
-  --color-hong-phan: #f7a8b6; /* linh vật Não */
-  --color-dao: #ffb38a; /* màu phụ */
-  --color-dao-nhat: #ffc9a8; /* màu phụ, dùng cho chuyển màu */
-  --color-vang-bo: #ffe3b0; /* thử thách */
-  --color-xanh-xo-thom: #7fa88b; /* đã hoàn thành */
-  --color-oai-huong: #b7a6ec; /* màu "thế giới" của chương Trí nhớ */
-  --color-man-chin: #6e3443; /* thanh 5 tab */
-  --color-ca-cao: #3d2a2e; /* chữ chính */
-  --color-ca-cao-nhat: #7a5f64; /* chữ phụ */
+  /* --- Nền và viền --- */
+  --color-nen: #ffffff;
+  --color-nen-dju: #fafafa; /* nền phụ, phân tách khối mà không cần viền */
+  --color-nen-chim: #f4f4f5; /* ô bị khoá, thanh tiến độ nền */
+  --color-vien: #e7e7ea;
+  --color-vien-dam: #d4d4d8;
 
-  /* --- Chữ --- */
-  --font-tieu-de: 'Lora', Georgia, serif;
-  --font-than: 'Be Vietnam Pro', system-ui, sans-serif;
+  /* --- Chữ: 3 bậc là đủ --- */
+  --color-chu: #18181b;
+  --color-chu-phu: #71717a;
+  --color-chu-mo: #a1a1aa;
 
-  /* --- Bo góc: thẻ lớn 22-28px theo thiết kế --- */
-  --radius-the: 24px;
-  --radius-the-lon: 28px;
-  --radius-the-nho: 18px;
+  /* --- Màu nhấn: san hô, giữ từ nhận diện cũ --- */
+  --color-nhan: #f2788a; /* mảng lớn, nền nút */
+  --color-nhan-dam: #c8415a; /* chữ trên nền trắng, đạt 4.5:1 */
+  --color-nhan-nhat: #fef2f4; /* nền rất nhạt cho vùng được chọn */
 
-  /* --- Bóng đổ mềm, không viền đen --- */
-  --shadow-mem: 0 2px 8px rgb(194 77 99 / 0.06), 0 8px 24px rgb(194 77 99 / 0.08);
-  --shadow-mem-noi: 0 4px 12px rgb(194 77 99 / 0.1), 0 16px 40px rgb(194 77 99 / 0.12);
+  /* --- Màu mang nghĩa --- */
+  --color-dung: #15905a; /* trả lời đúng, đã hoàn thành */
+  --color-dung-nhat: #ecfdf3;
+  --color-sai: #d64550;
+  --color-sai-nhat: #fef2f2;
+  --color-vang: #c77d00; /* streak, nhắc nhở */
+  --color-vang-nhat: #fffbeb;
+  --color-sau: #6d5ae0; /* nhãn "mới", tầng Đào sâu */
+  --color-sau-nhat: #f3f1fe;
+
+  /* --- Chữ: một họ duy nhất, tương phản bằng cân nặng --- */
+  --font-than: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+
+  /* --- Bo góc --- */
+  --radius-nho: 10px;
+  --radius-vua: 14px;
+  --radius-lon: 20px;
+
+  /* --- Bóng: gần như không dùng. Chỉ cho thứ thật sự nổi lên trên. --- */
+  --shadow-noi: 0 1px 2px rgb(24 24 27 / 0.04), 0 8px 24px rgb(24 24 27 / 0.08);
+
+  /* --- Nút kiểu Duolingo: khối đặc có "chân" dưới, bấm vào lún xuống --- */
+  --chan-nut: 4px;
 }
 
 @layer base {
@@ -44,33 +56,36 @@
   }
 
   body {
-    background-color: var(--color-kem-hong);
-    color: var(--color-ca-cao);
+    background-color: var(--color-nen);
+    color: var(--color-chu);
     font-family: var(--font-than);
     font-weight: 400;
-    line-height: 1.65;
-    /* Mobile-first: chừa chỗ cho tai thỏ và thanh home của iPhone */
-    padding-bottom: env(safe-area-inset-bottom);
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
   }
 
   h1,
   h2,
   h3 {
-    font-family: var(--font-tieu-de);
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
 
-  /* Vùng chạm tối thiểu 44px theo chuẩn tay người */
+  /* Vùng chạm tối thiểu 44px theo chuẩn tay người. */
   button,
   a[role='button'] {
     min-height: 44px;
   }
 
-  /* Tôn trọng người đã tắt hiệu ứng chuyển động trong cài đặt hệ thống.
-     Bắt buộc theo CLAUDE.md mục 9. */
+  /* Viền focus rõ ràng — người dùng bàn phím phải thấy mình đang ở đâu. */
+  :focus-visible {
+    outline: 2px solid var(--color-nhan-dam);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -84,77 +99,25 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Kiểu chữ cho markdown đã render (trang xem trước nội dung).
-   Viết tay thay vì thêm @tailwindcss/typography: chỉ cần vài thẻ, và mỗi thư
-   viện thêm vào là một thứ nữa partner phải sống cùng.
+   Nút khối có "chân": mượn từ Duolingo. Chân dưới làm nút trông bấm được,
+   và lún xuống khi bấm — phản hồi xúc giác bằng mắt, không cần âm thanh.
    --------------------------------------------------------------------------- */
-@layer components {
-  .prose-tamdo > * + * {
-    margin-top: 0.85em;
-  }
+@utility nut-khoi {
+  position: relative;
+  border-bottom-width: var(--chan-nut);
+  transition:
+    transform 80ms ease,
+    border-bottom-width 80ms ease,
+    filter 120ms ease;
 
-  .prose-tamdo strong {
-    font-weight: 600;
-    color: var(--color-ca-cao);
-  }
-
-  .prose-tamdo em {
-    font-style: italic;
-  }
-
-  .prose-tamdo a {
-    color: var(--color-hong-dam);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .prose-tamdo ul,
-  .prose-tamdo ol {
-    padding-left: 1.3em;
-  }
-
-  .prose-tamdo ul {
-    list-style: disc;
-  }
-
-  .prose-tamdo ol {
-    list-style: decimal;
-  }
-
-  .prose-tamdo li + li {
-    margin-top: 0.3em;
-  }
-
-  /* Bảng là thành phần hay gặp nhất trong tầng Đào sâu. Cho cuộn ngang
-     để không vỡ layout trên màn hình điện thoại. */
-  .prose-tamdo table {
-    display: block;
-    overflow-x: auto;
-    /* min-width chứ không phải width: bảng hẹp thì vừa khung, bảng rộng thì
-       cuộn ngang thay vì bóp chữ xuống dòng từng ký tự. */
-    min-width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-
-  .prose-tamdo th,
-  .prose-tamdo td {
-    border: 1px solid color-mix(in srgb, var(--color-hong-phan) 45%, transparent);
-    padding: 0.5rem 0.65rem;
-    text-align: left;
-    vertical-align: top;
-  }
-
-  .prose-tamdo th {
-    background-color: color-mix(in srgb, var(--color-hong-phan) 18%, transparent);
-    font-weight: 600;
+  &:active:not(:disabled) {
+    transform: translateY(var(--chan-nut));
+    border-bottom-width: 0;
   }
 }
 
-/* Mảng màu mờ lan nhẹ trên nền kem hồng (phong cách "ấm áp, dịu dàng") */
-@utility nen-mang-mau {
-  background-image:
-    radial-gradient(60% 50% at 15% 0%, rgb(247 168 182 / 0.35) 0%, transparent 70%),
-    radial-gradient(50% 45% at 90% 12%, rgb(255 201 168 / 0.4) 0%, transparent 70%);
-  background-repeat: no-repeat;
+/* Dải chấm mờ làm nền cho vùng lộ trình, thay cho ảnh minh hoạ nặng nề. */
+@utility nen-cham {
+  background-image: radial-gradient(circle, var(--color-vien) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
