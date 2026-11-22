@@ -12,7 +12,13 @@ import {
 } from './parse-chuong'
 
 const goc = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
-const chuong6 = readFileSync(join(goc, 'content', 'chuong-06-tri-nho.md'), 'utf8')
+// Chuẩn hoá xuống dòng: trên Windows git trả về CRLF, làm mọi phép cắt chuỗi
+// trong test trượt mà không báo gì. phanTichChuong tự chuẩn hoá bên trong nên
+// các test khác không lộ ra lỗi này.
+const chuong6 = readFileSync(join(goc, 'content', 'chuong-06-tri-nho.md'), 'utf8').replace(
+  /\r\n/g,
+  '\n',
+)
 
 /**
  * Các test này khoá lại cách đọc markdown của người soạn nội dung.
@@ -197,5 +203,45 @@ describe('nội dung thiếu mục bắt buộc thì schema phải chặn', () =
     const hong = chuong6.replace(/^\*\*3 điều cần nhớ\*\*$/m, '**Vài điều cần nhớ**')
     const kiem = Chuong.safeParse(phanTichChuong(hong))
     expect(kiem.success).toBe(false)
+  })
+
+  // Người đọc thông báo lỗi là người soạn nội dung, không phải lập trình viên.
+  // Để lọt một thông điệp tiếng Anh của Zod là mất tác dụng của cả cái cổng này.
+  it('thông báo lỗi viết bằng tiếng Việt, không phải nguyên văn của Zod', () => {
+    const truongHop: Array<[string, string, RegExp]> = [
+      [
+        'thiếu một dòng trong 3 điều cần nhớ',
+        chuong6.replace('3. Biết mình quên ở bước nào giúp chọn đúng cách sửa.\n', ''),
+        /đúng 3 gạch đầu dòng/,
+      ],
+      [
+        'thiếu nguồn đã kiểm chứng',
+        chuong6.replace(/^- \*Nguồn đã kiểm chứng:\*.*$/m, ''),
+        /Nguồn đã kiểm chứng/,
+      ],
+      [
+        'thiếu gạch đầu dòng Dùng ngay',
+        chuong6.replace(/^- \*\*Dùng ngay:\*\*.*$/m, ''),
+        /Dùng ngay/,
+      ],
+      [
+        'sai nhãn Câu hỏi chương',
+        chuong6.replace('**Câu hỏi chương:**', '**Câu hỏi:**'),
+        /Câu hỏi chương/,
+      ],
+    ]
+
+    for (const [ten, hong, mong] of truongHop) {
+      const kiem = Chuong.safeParse(phanTichChuong(hong))
+      expect(kiem.success, `"${ten}" lẽ ra phải bị chặn`).toBe(false)
+      if (kiem.success) continue
+
+      const thongDiep = kiem.error.issues.map((i) => i.message).join(' | ')
+      expect(thongDiep, `"${ten}" — thông điệp: ${thongDiep}`).toMatch(mong)
+      // Zod mặc định nói tiếng Anh; nếu thấy mấy chuỗi này là đã lọt.
+      expect(thongDiep, `"${ten}" còn thông điệp tiếng Anh của Zod`).not.toMatch(
+        /Too small|Too big|Invalid input|Required/,
+      )
+    }
   })
 })

@@ -62,29 +62,37 @@ export type Nguon = z.infer<typeof Nguon>
 
 export const DaoSau = z.object({
   /** Câu "Đọc xong bạn sẽ hiểu…" mở đầu tầng Đào sâu. */
-  seHieu: z.string().min(1),
+  seHieu: z
+    .string()
+    .min(1, 'Thiếu dòng in nghiêng "Đọc xong bạn sẽ hiểu…" mở đầu tầng Đào sâu'),
   phutDoc: z.number().int().positive().nullable(),
   /** Toàn bộ phần thân, giữ nguyên markdown để render (bảng, in đậm, liên kết). */
-  than: z.string().min(1),
+  than: z
+    .string()
+    .min(1, 'Tầng Đào sâu đang trống — không có nội dung giữa tiêu đề và "3 điều cần nhớ"'),
   cauChuyen: z.array(CauChuyen),
   /** Hộp ⚠️ hoặc 🇻🇳 "Cập nhật kiến thức". */
   capNhat: z.string().nullable(),
   tranhCai: z.string().nullable(),
-  baDieuCanNho: z.array(z.string().min(1)).length(3),
+  baDieuCanNho: z
+    .array(z.string().min(1))
+    .length(3, 'Mục "3 điều cần nhớ" phải có đúng 3 gạch đầu dòng, không hơn không kém'),
   thuatNgu: z.array(ThuatNgu),
   lienKet: z.array(z.string()),
-  nguon: z.array(Nguon).min(1),
+  nguon: z
+    .array(Nguon)
+    .min(1, 'Thiếu mục "Nguồn đã kiểm chứng" trong phần Mở rộng — mọi bài đều phải dẫn nguồn'),
 })
 export type DaoSau = z.infer<typeof DaoSau>
 
 export const ApDung = z.object({
   thuThach: z.object({
     /** Nguyên văn nhãn, ví dụ "Thử thách 3 ngày" — thời hạn nằm trong đó. */
-    nhan: z.string().min(1),
-    noiDung: z.string().min(1),
+    nhan: z.string().min(1, 'Thiếu gạch đầu dòng "Thử thách …" trong tầng Áp dụng'),
+    noiDung: z.string().min(1, 'Thử thách chưa có nội dung'),
   }),
-  tuSoi: z.string().min(1),
-  dungNgay: z.string().min(1),
+  tuSoi: z.string().min(1, 'Thiếu gạch đầu dòng "Câu hỏi tự soi" trong tầng Áp dụng'),
+  dungNgay: z.string().min(1, 'Thiếu gạch đầu dòng "Dùng ngay" trong tầng Áp dụng'),
   /** Chỉ có ở các bài liên quan sức khỏe tâm thần. */
   timChuyenGia: z.string().nullable(),
 })
@@ -99,7 +107,9 @@ export const Bai = z
     nhan: z.array(NhanBai),
     /** Mô tả các hình cần vẽ, lấy từ dòng "🎨 Minh họa:". */
     minhHoa: z.array(z.string()),
-    hieuNhanh: z.array(The).min(3),
+    hieuNhanh: z
+      .array(The)
+      .min(3, 'Tầng Hiểu nhanh cần ít nhất 3 thẻ (mỗi gạch đầu dòng đánh số là một thẻ)'),
     daoSau: DaoSau,
     apDung: ApDung,
   })
@@ -114,11 +124,17 @@ export const Chuong = z.object({
   id: z.string(), // tlhdc-06
   so: z.number().int().positive(),
   tieuDe: z.string().min(1),
-  cauHoiChuong: z.string().min(1),
-  bai: z.array(Bai).min(1),
+  cauHoiChuong: z.string().min(1, 'Thiếu dòng "**Câu hỏi chương:**" ở đầu file'),
+  bai: z
+    .array(Bai)
+    .min(1, 'Không đọc được bài nào — tiêu đề bài phải dạng "### Bài 6.1. Tên bài?"'),
   tongKet: z.object({
-    canNam: z.array(z.string().min(1)).min(1),
-    apDungBanThan: z.array(z.string().min(1)).min(1),
+    canNam: z
+      .array(z.string().min(1))
+      .min(1, 'Thiếu mục "Những điều cần nắm" ở phần Tổng kết chương'),
+    apDungBanThan: z
+      .array(z.string().min(1))
+      .min(1, 'Thiếu mục "Áp dụng cho bản thân" ở phần Tổng kết chương'),
   }),
 })
 export type Chuong = z.infer<typeof Chuong>
