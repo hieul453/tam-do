@@ -52,7 +52,6 @@ Các nhà tâm lý học mô tả trí nhớ bằng ba quá trình. **Mã hóa**
 
 1. Trí nhớ gồm 3 bước: mã hóa, lưu trữ, truy xuất.
 2. Ca H.M. cho thấy các bước này dựa trên những vùng não khác nhau và có thể hỏng riêng lẻ.
-3. Biết mình quên ở bước nào giúp chọn đúng cách sửa.
 
 **Mở rộng** *(trong app: chạm để xem)*
 
