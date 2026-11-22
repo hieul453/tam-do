@@ -159,6 +159,25 @@ export function useGhiNhanPhien() {
   })
 }
 
+/**
+ * Ghi một phiên luyện tập.
+ *
+ * Tách khỏi `useGhiNhanPhien` vì luyện tập trộn câu từ nhiều phần nên không
+ * thuộc phần nào — nó chỉ cộng XP và giữ chuỗi ngày.
+ */
+export function useGhiNhanLuyenTap() {
+  const { enabled, luu } = useChung()
+  return useMutation({
+    mutationFn: async (v: { xp: number; timConLai: number }) => {
+      if (!enabled) return null
+      return goiRpc('ghi_nhan_luyen_tap', { p_xp: v.xp, p_tim_con_lai: v.timConLai })
+    },
+    onSuccess: (sl) => {
+      if (sl) luu(sl)
+    },
+  })
+}
+
 export function useNapLaiTim() {
   const { enabled, luu } = useChung()
   return useMutation({

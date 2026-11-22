@@ -121,3 +121,54 @@
   background-image: radial-gradient(circle, var(--color-vien) 1px, transparent 1px);
   background-size: 22px 22px;
 }
+
+/* ---------------------------------------------------------------------------
+   Hoạt ảnh lúc xuất hiện.
+
+   Viết bằng CSS chứ không bằng thư viện: khối `prefers-reduced-motion` ở trên
+   đã rút mọi animation về 0,01ms nên không phải nhớ xử lý riêng ở từng chỗ, và
+   bundle không nặng thêm một byte nào.
+   --------------------------------------------------------------------------- */
+@keyframes hien-len {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bat-len {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  70% {
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility hien-len {
+  animation: hien-len 220ms ease-out both;
+}
+
+@utility bat-len {
+  animation: bat-len 320ms cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+
+/* Trễ để các ô hiện lần lượt chứ không ập ra cùng lúc. */
+@utility tre-1 {
+  animation-delay: 70ms;
+}
+@utility tre-2 {
+  animation-delay: 140ms;
+}
+@utility tre-3 {
+  animation-delay: 210ms;
+}

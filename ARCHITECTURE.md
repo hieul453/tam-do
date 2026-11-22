@@ -91,8 +91,9 @@ cần xử lý.
 
 [0001_khoi_tao.sql](supabase/migrations/0001_khoi_tao.sql) — 8 bảng.
 [0002_tien_do_va_co_che.sql](supabase/migrations/0002_tien_do_va_co_che.sql) — thêm bảng
-`tien_do_phan` và các cột XP / chuỗi / tim. RLS bật trên cả 9 bảng, mỗi bảng một policy
-`auth.uid() = user_id`.
+`tien_do_phan` và các cột XP / chuỗi / tim.
+[0003_luyen_tap.sql](supabase/migrations/0003_luyen_tap.sql) — hàm `ghi_nhan_luyen_tap`.
+RLS bật trên cả 9 bảng, mỗi bảng một policy `auth.uid() = user_id`.
 
 > Thêm bảng mà quên `enable row level security` thì bảng đó mở cho bất kỳ ai có anon key.
 
@@ -124,6 +125,42 @@ bên hiện 0. Bài đọc bỏ trống tham số này.
 
 Kiểm bằng cách đánh thẳng vào database bằng chính khoá anon công khai:
 `node .git/sb-07-test-rls-m3.mjs` — 25 phép thử, gồm cả RLS lẫn các ca biên của chuỗi ngày.
+
+## Một bộ chơi, hai nơi dùng
+
+`src/features/hoc/PhienHoc.tsx` là bộ chơi hỏi đáp. Phiên NHANH của một phần
+([TrangHoc](src/features/hoc/TrangHoc.tsx)) và phiên ôn
+([TrangPhienLuyenTap](src/features/luyentap/TrangPhienLuyenTap.tsx)) chỉ khác nhau ở chỗ
+lấy câu hỏi từ đâu và ghi kết quả vào đâu — cách chơi phải giống hệt, nếu không người học
+phải học lại giao diện.
+
+Luyện tập chỉ lấy câu của phần **đã làm xong hướng Nhanh**. Lấy cả phần chưa mở thì người
+ta sai hết, mà sai vì chưa được dạy thì không dạy được gì. Chưa phải ôn giãn cách — muốn
+thế phải lưu từng câu trả lời sai, và màn hình nói thẳng điều đó thay vì giả vờ thông minh.
+
+Hai route chiếm trọn màn hình: `/hoc/…` và `/luyen-tap/phien`. `Khung` nhận ra theo
+đường dẫn rồi tự ẩn thanh điều hướng.
+
+## Âm thanh và hoạt ảnh
+
+**Âm thanh tổng hợp tại chỗ bằng Web Audio** ([src/lib/am-thanh.ts](src/lib/am-thanh.ts)),
+không dùng file. Backlog trước đây vướng ở chỗ phải tìm nguồn miễn phí có giấy phép rõ
+ràng — vài nốt sine thì trình duyệt tự tạo được: không thêm byte nào vào bundle, không có
+gì để xin phép. Tắt được ở trang Tôi; mọi thứ âm thanh báo đều đã có trên màn hình rồi.
+
+**Hoạt ảnh viết bằng CSS**, không bằng thư viện. Khối `prefers-reduced-motion` trong
+`index.css` rút mọi animation về 0,01ms, nên không phải nhớ xử lý riêng ở từng chỗ. Chỗ
+duy nhất phải tự kiểm là `SoDem` (đếm XP bằng JavaScript) — nó gọi `matchMedia` lấy.
+
+## Màn chào lần đầu
+
+[ManChao](src/features/chao/ManChao.tsx), ba bước: app là gì · ba hướng tiếp cận · chọn
+mục tiêu ngày. Bước hai là bước đáng giá nhất — không nói thì người ta bấm vào phần đầu
+tiên rồi tưởng đây là app thẻ lật thường.
+
+Cờ "đã xem" nằm ở `localStorage`, không ở database: xem lại trên máy thứ hai thì cũng
+không hại gì, mà đổi lại không phải lo màn hình nháy một nhịp trước khi biết nên hiện gì.
+Mục tiêu ngày thì ghi thẳng xuống database vì đó là tuỳ chọn thật.
 
 ## Đăng nhập
 
@@ -178,7 +215,7 @@ cũ. Đã gặp thật. Xử lý ở [src/lib/tu-cap-nhat.ts](src/lib/tu-cap-nha
 | **M1** ✅ | Hệ thiết kế · hai bố cục · màn hình lộ trình · màn chọn hướng tiếp cận |
 | **M2** ✅ | Ba hướng tiếp cận: bài tập Nhanh, bài đọc Đào sâu, Áp dụng + AI |
 | **M3** ✅ | Cơ chế: XP, chuỗi ngày, tim, mục tiêu ngày, màn tổng kết phiên |
-| **M4** | Hoàn thiện demo: onboarding, âm thanh, hoạt ảnh, trạng thái rỗng |
+| **M4** ✅ | Hoàn thiện demo: màn chào, âm thanh, hoạt ảnh, Luyện tập, trạng thái rỗng |
 
 ## Backlog
 
@@ -193,3 +230,7 @@ Những thứ chưa quyết được, gom lại thay vì chặn tiến độ:
   màn tổng kết (tính XP phía client) sẽ nói khác database, nên để nguyên và ghi lại.
 - Trợ lý AI mất khoảng 10 giây cho gợi ý đầu tiên vì các model tốt đang đông. Chấp nhận
   được cho bản pilot; muốn nhanh hơn thì phải trả tiền hạn mức.
+- Ôn giãn cách thật: phải lưu từng câu trả lời đúng/sai (bảng `card_reviews` đã có sẵn từ
+  0001 nhưng chưa dùng). Hiện Luyện tập trộn ngẫu nhiên.
+- `motion` và `marked` nằm trong `package.json` mà không chỗ nào import. Không vào
+  bundle, nhưng nên gỡ nếu không có kế hoạch dùng.
