@@ -24,6 +24,8 @@ const soLieu = (daXong: SoLieuHoc['daXong']): SoLieuHoc => ({
   xpTong: 0,
   mucTieuXpNgay: 20,
   daHocHomNay: true,
+  soPhien: 1,
+  soNgayHoc: 1,
   daXong,
 })
 

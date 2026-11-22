@@ -195,7 +195,9 @@ export function TrangDaoSau() {
                     href={n.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-nhan-dam underline"
+                    // py-3 kéo vùng chạm lên trên 44px; -my-1 lấy lại bớt
+                    // chiều cao đã thêm để danh sách không giãn ra quá.
+                    className="-my-1 inline-flex items-center gap-1 py-3 font-bold text-nhan-dam underline"
                   >
                     {n.tenNgan}
                     <ExternalLink className="size-3.5" aria-hidden />

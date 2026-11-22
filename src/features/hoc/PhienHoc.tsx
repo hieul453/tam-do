@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { X, Heart, Check, Info, RotateCcw } from 'lucide-react'
 import type { BaiTap } from '@/content/schema'
@@ -59,12 +59,26 @@ export function PhienHoc({
   const [hoiThoat, setHoiThoat] = useState(false)
 
   const datTraLoi = useCallback((t: TraLoi) => setTraLoi(t), [])
+  const oCauHoi = useRef<HTMLHeadingElement>(null)
 
   // Đồng bộ một lần lúc vào bài. Sau đó tim do phiên học tự quản, và chỉ chốt
   // lại xuống database khi phiên kết thúc.
   useEffect(() => {
     setTim((cu) => (cu === null && sanSang ? soLieu.tim : cu))
   }, [sanSang, soLieu.tim])
+
+  // Sang câu mới thì đưa tiêu điểm về câu hỏi.
+  //
+  // Không làm thì sau mỗi lần bấm "Tiếp tục", tiêu điểm rơi về đầu trang:
+  // người dùng bàn phím phải Tab lại từ đầu mỗi câu, còn trình đọc màn hình
+  // thì đọc lại cả thanh trên thay vì đọc câu hỏi mới.
+  // `daVao` chỉ lật một lần, lúc biết được số tim và câu hỏi đầu tiên hiện
+  // ra. Để `tim` thẳng vào danh sách phụ thuộc thì mỗi lần trả lời sai, tiêu
+  // điểm lại bị giật khỏi nút Tiếp tục về tiêu đề.
+  const daVao = tim !== null
+  useEffect(() => {
+    if (daVao) oCauHoi.current?.focus()
+  }, [chiSo, daVao])
 
   // Chờ biết số tim thật trước khi vào câu đầu: vào trước rồi sửa số sau là
   // người học thấy tim nhảy, tưởng mình vừa mất một cái.
@@ -147,7 +161,15 @@ export function PhienHoc({
 
       {/* Bài tập */}
       <main className="mx-auto w-full max-w-xl flex-1 px-4 py-4 lg:py-10">
-        <h1 className="mb-6 text-xl font-extrabold lg:text-2xl">{cauHoiCua(bt)}</h1>
+        {/* tabIndex -1: nhận được tiêu điểm bằng mã, nhưng không chen vào
+            thứ tự Tab của người dùng. */}
+        <h1
+          ref={oCauHoi}
+          tabIndex={-1}
+          className="mb-6 text-xl font-extrabold focus:outline-none lg:text-2xl"
+        >
+          {cauHoiCua(bt)}
+        </h1>
         <RenderBaiTap bt={bt} traLoi={traLoi} datTraLoi={datTraLoi} daKhoa={ketQua !== null} />
       </main>
 
@@ -164,8 +186,14 @@ export function PhienHoc({
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="mx-auto w-full max-w-xl px-4 py-4 lg:py-5">
+          {/* role=status: trình đọc màn hình đọc "Chính xác" / "Chưa đúng"
+              ngay khi nó hiện ra, không cần người dùng đi tìm. */}
           {ketQua && (
-            <div key={`${chiSo}-${ketQua}`} className="hien-len mb-4 flex items-start gap-3">
+            <div
+              key={`${chiSo}-${ketQua}`}
+              role="status"
+              className="hien-len mb-4 flex items-start gap-3"
+            >
               <span
                 className={cn(
                   'grid size-9 shrink-0 place-items-center rounded-full bg-nen',

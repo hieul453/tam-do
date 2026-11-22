@@ -86,7 +86,7 @@ export function ThanhTienDo({
       <div
         className={cn(
           'h-full rounded-full transition-[width] duration-500 ease-out',
-          mau === 'dung' ? 'bg-dung' : 'bg-nhan',
+          mau === 'dung' ? 'bg-dung' : 'bg-nhan-dam',
         )}
         style={{ width: `${phanTram}%` }}
       />

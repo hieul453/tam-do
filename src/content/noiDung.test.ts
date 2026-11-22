@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Nhanh as NhanhSchema } from './schema'
 import { cacNhanh, timPhan } from './index'
+import { ICON_NHANH } from './icon'
 
 /**
  * Nội dung nằm trong file `.ts` chứ không trong database, nên sai cấu trúc chỉ
@@ -50,6 +51,16 @@ describe('cấu trúc nội dung', () => {
     for (const n of cacNhanh) {
       if (n.trangThai === 'mo') expect(n.chuong.length, n.id).toBeGreaterThan(0)
       else expect(n.chuong.length, n.id).toBe(0)
+    }
+  })
+})
+
+describe('icon', () => {
+  it('mọi nhánh đều có icon trong bảng liệt kê tên', () => {
+    // Bảng ở `icon.ts` phải liệt kê từng cái: `import * as` từ lucide-react
+    // kéo cả ~1500 icon vào bundle. Thêm nhánh mà quên icon thì đỏ ở đây.
+    for (const n of cacNhanh) {
+      expect(Object.keys(ICON_NHANH), `nhánh "${n.id}" dùng icon "${n.icon}"`).toContain(n.icon)
     }
   })
 })

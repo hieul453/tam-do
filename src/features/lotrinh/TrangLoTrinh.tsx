@@ -1,10 +1,10 @@
 import { Link } from 'react-router'
-import * as Icons from 'lucide-react'
 import { Check, Lock, Star } from 'lucide-react'
 import { cacNhanh, type Chuong, type Nhanh, type Phan } from '@/content'
 import { The, Huy } from '@/components/ui/co-ban'
 import { cn } from '@/lib/cn'
 import { useSoLieu, soHuongDaXong, khoaPhan, type SoLieuHoc } from '@/features/tiendo/duLieu'
+import { iconNhanh } from '@/content/icon'
 
 /**
  * Màn hình lộ trình — màn hình chính của app.
@@ -23,7 +23,7 @@ import { useSoLieu, soHuongDaXong, khoaPhan, type SoLieuHoc } from '@/features/t
 const LECH = [0, 38, 58, 38, 0, -38, -58, -38]
 
 function IconNhanh({ ten, className }: { ten: string; className?: string }) {
-  const Co = (Icons as unknown as Record<string, Icons.LucideIcon>)[ten] ?? Icons.Circle
+  const Co = iconNhanh(ten)
   return <Co className={className} strokeWidth={2.2} aria-hidden />
 }
 
@@ -37,8 +37,8 @@ function IconNhanh({ ten, className }: { ten: string; className?: string }) {
 type Dang = 'xong' | 'hien-tai' | 'mo' | 'khoa'
 
 const DANG: Record<Dang, { vong: string; icon: string }> = {
-  xong: { vong: 'border-[#0f6f45] bg-dung text-white', icon: 'text-white' },
-  'hien-tai': { vong: 'border-nhan-dam bg-nhan text-white', icon: 'text-white' },
+  xong: { vong: 'border-dung-vien bg-dung text-white', icon: 'text-white' },
+  'hien-tai': { vong: 'border-nhan-vien bg-nhan-dam text-white', icon: 'text-white' },
   mo: { vong: 'border-vien-dam bg-nen text-nhan-dam', icon: 'text-nhan-dam' },
   khoa: { vong: 'border-vien bg-nen-chim text-chu-mo', icon: 'text-chu-mo' },
 }
@@ -202,7 +202,7 @@ function KhoiChuong({
       <header
         className={cn(
           'sticky top-[3.6rem] z-10 mb-8 rounded-vua px-4 py-3 lg:top-4',
-          mo ? 'bg-nhan text-white' : 'border border-vien bg-nen-dju text-chu-phu',
+          mo ? 'bg-nhan-dam text-white' : 'border border-vien bg-nen-dju text-chu-phu',
         )}
       >
         <div className="flex items-start justify-between gap-3">

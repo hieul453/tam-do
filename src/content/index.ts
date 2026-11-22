@@ -1,4 +1,4 @@
-import { Nhanh as NhanhSchema, type Nhanh, type Chuong, type Phan } from './schema'
+import type { Nhanh, Chuong, Phan } from './schema'
 import { nhanThuc } from './du-lieu/nhan-thuc'
 
 /**
@@ -24,14 +24,22 @@ export const cacNhanh: Nhanh[] = [
   sapCo('suc-khoe', 'Sức khoẻ tâm thần', 'Khi nào một trải nghiệm trở thành rối loạn', 'HeartPulse'),
 ]
 
-/** Kiểm ngay lúc nạp module: sai cấu trúc thì vỡ ở dev, không âm thầm ra màn hình trống. */
+/**
+ * Kiểm ngay lúc nạp module: sai cấu trúc thì vỡ ở dev, không âm thầm ra màn hình trống.
+ *
+ * Nạp schema bằng `import()` động chứ không import thẳng ở đầu file. Lý do rất thực tế:
+ * import thẳng thì Zod đi vào cả bản production dù ở đó không ai gọi tới nó. Ở dev thì
+ * nhánh này vẫn chạy như cũ; CI vẫn có `noiDung.test.ts` kiểm đúng bộ schema đó.
+ */
 if (import.meta.env.DEV) {
-  for (const n of cacNhanh) {
-    const kq = NhanhSchema.safeParse(n)
-    if (!kq.success) {
-      console.error(`Nhánh "${n.id}" sai cấu trúc:`, kq.error.issues)
+  void import('./schema').then(({ Nhanh: NhanhSchema }) => {
+    for (const n of cacNhanh) {
+      const kq = NhanhSchema.safeParse(n)
+      if (!kq.success) {
+        console.error(`Nhánh "${n.id}" sai cấu trúc:`, kq.error.issues)
+      }
     }
-  }
+  })
 }
 
 export function timNhanh(id: string): Nhanh | undefined {
