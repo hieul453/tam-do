@@ -5,6 +5,9 @@
 > từng yêu cầu — kèm chỗ nào ngành thiết kế **có** cơ chế tương đương với code,
 > chỗ nào **không có** và phải chấp nhận.
 
+> Prompt đặt hàng, chép thẳng đưa cho AI khác:
+> [PROMPT-LINH-VAT.md](PROMPT-LINH-VAT.md).
+
 ## 0. Vì sao phải dịch
 
 Yêu cầu gốc viết bằng tiếng lập trình: *tùy biến*, *reuse*, *đổi phụ kiện chéo*,
