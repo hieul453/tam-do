@@ -65,7 +65,7 @@ tay chân, có biểu cảm). Chúng **không sống ở vỏ app**: thanh đi�
 danh sách vẫn trống trải như trên. Chúng sống trong nội dung, trong lúc chuyển
 cảnh, và trong những thứ làm ngoài app. Hướng đang theo là **ảnh raster, sinh
 khi cần**; hợp đồng phong cách để mọi AI sinh ra đúng hai nhân vật này:
-[LINH-VAT.md](LINH-VAT.md).
+[linh-vat/LINH-VAT.md](linh-vat/LINH-VAT.md).
 
 Ranh giới giữa tối giản và nghèo nàn: **vỏ app gọn, nội dung sống động.** Thanh
 điều hướng, màn danh sách, thanh tiến độ — ít màu, ít thứ, ít quyết định. Bên
