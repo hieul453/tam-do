@@ -1,8 +1,8 @@
 name: Kiểm tra
 
 # Chạy trên mọi pull request và mọi push vào main.
-# Mục đích: không ai — kể cả AI — merge được code hỏng hay nội dung lệch khuôn
-# vào bản live.
+# Mục đích: không ai — kể cả AI — merge được code hỏng vào bản live.
+# Thêm biến môi trường cho bước build ở đây khi app cần tới chúng.
 on:
   pull_request:
   push:
@@ -33,8 +33,3 @@ jobs:
 
       - name: Thử build
         run: npm run build
-        env:
-          # Giá trị giả, chỉ để build chạy được.
-          # Giá trị thật nằm trong Vercel Environment Variables.
-          VITE_SUPABASE_URL: https://vi-du.supabase.co
-          VITE_SUPABASE_ANON_KEY: khoa-gia-cho-ci

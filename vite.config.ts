@@ -6,9 +6,12 @@ import { fileURLToPath } from 'node:url'
 import { execSync } from 'node:child_process'
 
 /**
- * Mã commit của bản đang build, để hiện trên trang Kiểm tra hạ tầng.
- * Có dòng đó thì nhìn phát biết ngay trình duyệt đang chạy bản nào — chính là
- * thứ đã giúp phát hiện service worker phục vụ bundle cũ.
+ * Mã commit của bản đang build.
+ *
+ * Giữ lại từ vòng trước vì nó đã cứu một lần: hiện mã này ở đâu đó trong app
+ * thì nhìn phát biết trình duyệt đang chạy bản nào. Chính là thứ đã lộ ra
+ * chuyện service worker phục vụ bundle cũ sau khi deploy — không có nó thì
+ * chỉ thấy "sửa rồi mà không thấy đổi" và đoán mò.
  *
  * Trên Vercel thì lấy từ biến môi trường; chạy local thì hỏi git.
  */
@@ -32,25 +35,27 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Tâm Đồ',
-        short_name: 'Tâm Đồ',
-        description: 'Bản đồ tâm lý học của riêng bạn',
+        name: 'Dự án mới',
+        short_name: 'Dự án mới',
         lang: 'vi',
         start_url: '/',
         display: 'standalone',
-        background_color: '#FFF6F1',
-        theme_color: '#F2788A',
-        // Tạm dùng SVG cho mọi cỡ. Khi có logo chính thức thì xuất thêm
-        // icon-192.png / icon-512.png / apple-touch-icon.png (iOS cần PNG).
+        // Khớp với nền thật của app; lệch thì màn khởi động chớp một nhịp.
+        background_color: '#ffffff',
+        theme_color: '#ffffff',
+        // iOS KHÔNG nhận SVG cho "thêm vào màn hình chính". Khi có logo chính
+        // thức thì xuất thêm PNG 192 và 512 — xem docs/BAI-HOC.md.
         icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
     }),
   ],
   resolve: {
+    // fileURLToPath chứ không phải new URL(...).pathname: trên Windows cái sau
+    // trả về '/D:/...' và mọi import '@/...' hỏng hết.
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   server: {
-    // Cho phép mở từ điện thoại trong cùng wifi: npm run dev -- --host
+    // Mở được từ điện thoại trong cùng wifi: npm run dev:dienthoai
     port: 5173,
   },
 })
