@@ -1,7 +1,7 @@
 # Linh vật Não và Tim — hợp đồng phong cách
 
-
-> prompt bên dưới, điền dòng `REQUEST` cuối cùng.
+> **Mỗi lần nhờ AI sinh ảnh:** đính kèm `anh-goc.webp` nằm cạnh file này, chép
+> khối prompt bên dưới, điền dòng `REQUEST` cuối cùng.
 >
 > Ảnh đính kèm là thứ giữ phong cách, không phải chữ. Thiếu ảnh thì prompt này chỉ còn một nửa tác dụng.
 
@@ -46,6 +46,12 @@ waist, hips, neck, jointed fingers, gradient, shading, soft shadow, 3D,
 texture, blush cheeks, eye catch light, coloured outline, variable line
 weight, text, watermark, frame.
 
+GIVE ME 3–5 VERSIONS of this request, as separate images — not one sheet,
+not one image split into panels. Identical characters, identical style and
+colours across all of them. What differs is the IDEA: another gag, another
+pose, another piece of staging. Five jitters of the same drawing is a failed
+answer. Number them in your reply, never inside the image.
+
 REQUEST:
 ```
 
@@ -63,10 +69,7 @@ chịu nghe cảm xúc; Tim đeo kính là cảm xúc đang cố lý trí.
 
 ## Nhận ảnh về thì soi bốn thứ
 
-1. **Không có hình người** — chỉ một khối thân cộng bốn nét tay chân. Thấy vai,
-   ngực, eo, hay một cái đầu đặt trên một thân người là trượt.
-2. **Màu bệt và nét đều** — thấy chuyển sắc, bóng mềm hay nét lúc dày lúc mỏng
-   là trượt.
-3. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất
-   cái này là hai nhân vật trông như hai nhà khác nhau.
+1. **Không có hình người** — chỉ một khối thân cộng bốn nét tay chân. Thấy vai, ngực, eo, hay một cái đầu đặt trên một thân người là trượt.
+2. **Màu bệt và nét đều** — thấy chuyển sắc, bóng mềm hay nét lúc dày lúc mỏng là trượt.
+3. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất cái này là hai nhân vật trông như hai nhà khác nhau.
 4. **Không có chữ trong ảnh** — kể cả chữ nhỏ trong bong bóng thoại.
