@@ -57,8 +57,14 @@ trượt về phía bốn cái này hơn.
 ## 4. Minimalism
 
 Giao diện tối giản. Cụ thể là **không** mang theo bất cứ thứ gì sau đây từ các
-bản thiết kế cũ: linh vật, mảng màu mờ trang trí, biểu tượng kiểu sticker, bản
-đồ vùng đất, "màu thế giới" riêng cho từng chương.
+bản thiết kế cũ: mảng màu mờ trang trí, bản đồ vùng đất, "màu thế giới" riêng
+cho từng chương.
+
+**Hai linh vật Não và Tim đã chốt** (25/11/2026 — nét truyện tranh, có mắt, có
+tay chân, có biểu cảm). Chúng **không sống ở vỏ app**: thanh điều hướng và màn
+danh sách vẫn trống trải như trên. Chúng sống trong nội dung, trong lúc chuyển
+cảnh, và trong những thứ làm ngoài app. Yêu cầu đã dịch sang ngôn ngữ thiết kế
+và danh sách tài nguyên phải có: [LINH-VAT.md](LINH-VAT.md).
 
 Ranh giới giữa tối giản và nghèo nàn: **vỏ app gọn, nội dung sống động.** Thanh
 điều hướng, màn danh sách, thanh tiến độ — ít màu, ít thứ, ít quyết định. Bên
