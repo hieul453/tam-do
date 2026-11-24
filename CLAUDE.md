@@ -2,6 +2,7 @@
 
 > Bộ não chung của dự án. Đọc trước khi sửa bất cứ gì.
 >
+> - **App này là gì, và không được là gì: [docs/CONCEPT.md](docs/CONCEPT.md)**
 > - Những cái bẫy đã mất thời gian thật để tìm ra: [docs/BAI-HOC.md](docs/BAI-HOC.md)
 > - Cài đặt, cấp quyền, token: [docs/SETUP.md](docs/SETUP.md)
 
@@ -18,8 +19,30 @@ git log --oneline            # M1 → M5
 git show <commit>:<file>
 ```
 
-Chưa quyết định sẽ dựng gì tiếp. **Phần mô tả sản phẩm ở dưới sẽ được viết lại
-khi có hướng mới** — đừng suy đoán rồi làm theo suy đoán đó.
+## Vòng hai: đang ở bước nào
+
+**Core concept đã chốt** (24/11/2026, qua ba vòng phỏng vấn):
+[docs/CONCEPT.md](docs/CONCEPT.md). Đó là nguồn sự thật về sản phẩm — mọi quyết
+định thiết kế và kỹ thuật phải đối chiếu được về đó.
+
+Tóm tắt một đoạn: app học tâm lý học cho **sinh viên ngành tâm lý**, có khung
+kiến thức riêng không neo vào giáo trình nào. Lý do người ta mở nó ra là **được
+trải nghiệm, không chỉ được đọc** — tự làm thí nghiệm trên chính mình, kéo thử
+tham số của một mô hình. Giao diện tối giản ở vỏ, sống động ở nội dung.
+
+**Bước tiếp theo là system design cho một lát cắt dọc**, không phải blueprint
+toàn hệ thống, và **chưa code**. Thứ tự đã thống nhất:
+
+1. ~~Chốt core concept~~ ✅
+2. Một bài học đặc tả trọn vẹn + system design cho đúng lát cắt đó
+3. Dựng lát cắt cho chạy thật
+4. Tổng quát hoá, sau khi đã biết cái gì thật sự cần tổng quát
+
+> **Mục 11 của CONCEPT.md liệt kê mười câu chưa có đáp án.** Gặp một trong số
+> đó thì hỏi, đừng suy đoán rồi làm theo suy đoán.
+>
+> Câu chặn đường gần nhất: **ai xem bản đầu tiên, và khi nào** — nó quyết định
+> bài học nào được chọn làm lát cắt dọc.
 
 ## Stack
 
