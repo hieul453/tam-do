@@ -63,8 +63,9 @@ cho từng chương.
 **Hai linh vật Não và Tim đã chốt** (25/11/2026 — nét truyện tranh, có mắt, có
 tay chân, có biểu cảm). Chúng **không sống ở vỏ app**: thanh điều hướng và màn
 danh sách vẫn trống trải như trên. Chúng sống trong nội dung, trong lúc chuyển
-cảnh, và trong những thứ làm ngoài app. Yêu cầu đã dịch sang ngôn ngữ thiết kế
-và danh sách tài nguyên phải có: [LINH-VAT.md](LINH-VAT.md).
+cảnh, và trong những thứ làm ngoài app. Hướng đang theo là **ảnh raster, sinh
+khi cần**; hợp đồng phong cách để mọi AI sinh ra đúng hai nhân vật này:
+[LINH-VAT.md](LINH-VAT.md).
 
 Ranh giới giữa tối giản và nghèo nàn: **vỏ app gọn, nội dung sống động.** Thanh
 điều hướng, màn danh sách, thanh tiến độ — ít màu, ít thứ, ít quyết định. Bên
