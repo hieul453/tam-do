@@ -63,7 +63,7 @@ Cấu hình đã dùng, ghi lại để dựng lại khi cần:
   https://crbpqbjdvakhwmoybicw.supabase.co/auth/v1/callback
   ```
 
-- **Authorized JavaScript origins**: `https://tam-do-nu.vercel.app` và `http://localhost:5173`
+- **Authorized JavaScript origins**: tên miền Vercel của dự án và `http://localhost:5173`
 - Scope: chỉ `email`, `profile`, `openid`
 - Client ID và secret cất trong kho token: `google-client-id`, `google-client-secret`
 
@@ -139,6 +139,11 @@ Khoảng 30 phút setup.
 npm run dev
 ```
 
-Mở `http://localhost:5173`, trang **Kiểm tra hạ tầng** phải xanh cả 5 dòng.
+Mở `http://localhost:5173`. Bộ khung hiện chỉ có một trang trống — chạy được
+nghĩa là toolchain ổn.
 
-Hoặc mở thẳng bản live: **https://tam-do-nu.vercel.app**
+Muốn kiểm hạ tầng thật thì chạy một câu SQL:
+
+```powershell
+node scripts/sql.mjs -e "select now()"
+```
