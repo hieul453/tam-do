@@ -146,7 +146,8 @@ no waist, no hips, no neck.
 
 PROPORTIONS — taking the brain's body height as 10 units: the heart's body is
 9.3 tall and 9.4 wide; the brain's is 12.4 wide. Both characters' eyes are the
-same size, centres 4.2 apart, centred at 58% of body height from the bottom.
+same size, centres 4.2 apart, centred at 52% of the brain's body height from
+the bottom and 57% of the heart's.
 The body outline is thin, about 0.2 units.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
@@ -256,7 +257,8 @@ no waist, no hips, no neck.
 
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body
 height as 10 units: the heart's body is 9.3 tall, but BOTH characters have the
-same eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height
+same eyes — 2.6 across, centres 4.2 apart, centred at 52% of the brain's
+body height
 measured from the bottom. The body outline is thin, about 0.2 units. A heart with
 smaller eyes than the brain is a failed drawing.
 
