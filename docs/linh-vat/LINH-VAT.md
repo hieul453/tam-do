@@ -13,8 +13,8 @@
 > Dùng tạm được, nhưng **bảng tỉ lệ bên dưới mới là chuẩn**, không phải ảnh cũ.
 > Sinh ba ảnh mới theo đúng đặc tả rồi mới bỏ `anh-goc.webp` đi.
 >
-> Ba yêu cầu để sinh chúng đã viết sẵn, chép thẳng được: mục
-> [Ba yêu cầu để sinh ba ảnh tham chiếu](#ba-yêu-cầu-để-sinh-ba-ảnh-tham-chiếu).
+> **Sinh chúng thì theo [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md)** — prompt
+> chép thẳng được, đã tính tới chuyện ảnh duy nhất đang có là ảnh hỏng.
 > Ảnh nhận về thì soi bằng [`to-mau-ty-le.svg`](to-mau-ty-le.svg) — tờ mẫu tỉ lệ
 > cho người duyệt, **không phải ảnh để đính kèm**.
 
@@ -202,9 +202,14 @@ REQUEST:
 Chép khối prompt ở trên, **xoá khối `GIVE ME 3–5 VERSIONS`**, thay bằng
 `GIVE ME ONE IMAGE.`, rồi dán một trong ba đoạn dưới vào sau `REQUEST:`.
 
-Đính kèm `anh-goc.webp` làm ảnh phong cách cho cả ba lần — nó là thứ duy nhất
-đang có. Nhưng **bảng tỉ lệ mới là chuẩn**, nên trong cả ba yêu cầu đều có câu
-bắt đo lại, và người duyệt phải soi bằng tờ mẫu tỉ lệ chứ không bằng ảnh cũ.
+**Bảng tỉ lệ mới là chuẩn**, không phải ảnh cũ — nên trong cả ba yêu cầu đều có
+câu bắt đo lại, và người duyệt soi bằng tờ mẫu tỉ lệ chứ không bằng `anh-goc.webp`.
+
+> **Sinh lần đầu thì đọc [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md) thay vì
+> mục này.** Ba yêu cầu ở đây giả định đã có ảnh tham chiếu sạch để đính kèm —
+> lần đầu thì chưa có, chỉ có `anh-goc.webp` đang hỏng ba chỗ. File kia có bản
+> prompt chép thẳng được, đã gán vai cho từng tệp và liệt kê sẵn lỗi của ảnh cũ,
+> cộng thứ tự sinh nối tiếp để ba ảnh không lệch nhau.
 
 ### 1 · `tham-chieu-doi.png`
 
