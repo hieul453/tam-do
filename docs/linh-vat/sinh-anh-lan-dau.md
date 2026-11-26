@@ -132,8 +132,9 @@ WHAT NEITHER ATTACHMENT GETS RIGHT — fix these five:
 4. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
    if it were a solid object turned slightly. Draw it flat and straight on,
    like everything else in the picture.
-5. THE BRAIN'S EYES SIT TOO LOW. Their centres belong at 58% of the body height
-   measured from the bottom, which is where the heart's already are.
+5. THE HEART'S BODY COLOUR IS A LITTLE TOO DARK AND ITS OUTLINE TOO DARK TOO.
+   The body is #D46B76 and its outline #8F404A — both a touch lighter than the
+   attachment has them.
 
 HOW THE BODY IS BUILT — unchanged from the attachments, stated so you do not
 drift: each character is ONE shape plus four lines. The brain shape is the
@@ -352,7 +353,7 @@ anatomy. This is not a person and not a person in costume: nothing sits on top
 of a body, and there are no shoulders, no chest, no waist, no hips, no neck.
 
 PROPORTIONS — measure, do not eyeball. Taking the body height as 10 units: eyes
-2.6 across, centres 4.2 apart, centred at 58% of body height measured from the
+2.6 across, centres 4.2 apart, centred at 52% of body height measured from the
 bottom. Body outline about 0.2 units thick. Arms 5.5 long, attached at 55% of body height from
 the bottom. Legs 3.8 long.
 
@@ -443,7 +444,7 @@ of a body, and there are no shoulders, no chest, no waist, no hips, no neck.
 PROPORTIONS — measure, do not eyeball. This is the critical part of this
 image. In tham-chieu-doi.png the heart's body is 9.3 units tall where the
 brain's is 10 — but their eyes are IDENTICAL: 2.6 across, centres 4.2 apart,
-centred at 58% of body height from the bottom. Keep the
+centred at 57% of body height from the bottom. Keep the
 eyes at exactly that size. Arms 5.5 long, attached at 55% of body height from
 the bottom. Legs 3.8 long.
 
