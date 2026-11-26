@@ -356,8 +356,11 @@ const doi = !!(thanNao && thanTim);
 let ben, phai;
 if (doi) {
   const giua = (thanNao.x1 + thanTim.x0) / 2;
-  ben = trang.filter((m) => m.cx < giua).sort((a, b) => a.cx - b.cx);
-  phai = trang.filter((m) => m.cx >= giua).sort((a, b) => a.cx - b.cx);
+  // Giữ đúng hai mảng to nhất mỗi bên. Ở ảnh phân giải cao, đốm sáng trong con
+  // ngươi cũng đủ to để lọt ngưỡng, và nó kéo cỡ mắt trung bình xuống còn nửa.
+  const hai = (l) => l.sort((a, b) => b.dem - a.dem).slice(0, 2).sort((a, b) => a.cx - b.cx);
+  ben = hai(trang.filter((m) => m.cx < giua));
+  phai = hai(trang.filter((m) => m.cx >= giua));
 } else {
   ben = trang.slice(0, 2).sort((a, b) => a.cx - b.cx);
   phai = [];
