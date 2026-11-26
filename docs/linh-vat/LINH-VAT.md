@@ -22,7 +22,9 @@
 > `anh-goc.webp` giữ lại làm tư liệu — bảng màu và bảng tỉ lệ trong file này
 > đều đo ra từ nó. Đừng đính nó vào prompt nữa.
 >
-> Cách sinh ba ảnh này: [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md).
+> Cách sinh ra chúng — bốn vòng prompt và chỗ vấp của từng vòng — nằm trong
+> lịch sử git:
+> `git show 5022bd9:docs/linh-vat/sinh-anh-lan-dau.md`
 
 ## Ba ảnh tham chiếu
 
@@ -241,84 +243,6 @@ pose, another piece of staging. Five jitters of the same drawing is a failed
 answer. Number them in your reply, never inside the image.
 
 REQUEST:
-```
-
-## Ba yêu cầu để sinh ba ảnh tham chiếu
-
-Chép khối prompt ở trên, **xoá khối `GIVE ME 3–5 VERSIONS`**, thay bằng
-`GIVE ME ONE IMAGE.`, rồi dán một trong ba đoạn dưới vào sau `REQUEST:`.
-
-**Bảng tỉ lệ mới là chuẩn**, không phải ảnh cũ — nên trong cả ba yêu cầu đều có
-câu bắt đo lại, và người duyệt soi bằng tờ mẫu tỉ lệ chứ không bằng `anh-goc.webp`.
-
-> **Sinh lần đầu thì đọc [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md) thay vì
-> mục này.** Ba yêu cầu ở đây giả định đã có ảnh tham chiếu sạch để đính kèm —
-> lần đầu thì chưa có, chỉ có `anh-goc.webp` đang hỏng ba chỗ. File kia có bản
-> prompt chép thẳng được, đã gán vai cho từng tệp và liệt kê sẵn lỗi của ảnh cũ,
-> cộng thứ tự sinh nối tiếp để ba ảnh không lệch nhau.
-
-### 1 · `tham-chieu-doi.png`
-
-```
-This image becomes the canonical style reference for every future request, so
-it must show line quality and the size relationship between the two clearly.
-Give them the whole frame.
-
-Both characters standing on one shared ground line, facing the viewer, LIGHTLY
-performed: weight on one leg, one small hand gesture each, mouths in an easy
-closed smile. Brain on the left with its glasses, heart on the right with its
-headphones. No gag, no props, no scene, no interaction between them — this is a
-portrait of the pair, not a joke.
-
-Fill the frame: the pair should be about 70% of the image height, with empty
-cream on all four sides and neither character touching any edge.
-Flat cream background. Each character has its flat ellipse shadow on the
-ground. Nothing else exists in this image.
-
-Square image, as large as you can produce.
-
-Re-measure before you finish: the heart's body is 9.3 tall where the brain's is
-10, but their eyes are the same size. Each glasses lens is clearly wider than
-the eye inside it.
-```
-
-### 2 · `tham-chieu-nao.png`
-
-```
-The BRAIN alone, nothing else in the frame.
-
-Facing the viewer, lightly performed: weight on one leg, one hand making a
-small gesture, easy closed smile, glasses on. No props, no gag, no scene.
-
-Fill the frame: about 70% of the image height, empty cream on all four sides,
-not touching any edge. Flat cream background, its flat ellipse shadow on the
-ground, nothing else.
-
-Square image, as large as you can produce.
-
-The glasses are the thing to get right here: rims exactly as thick as the body
-outline, each lens clearly wider than the eye inside it, a visible ring of
-white between pupil and rim.
-```
-
-### 3 · `tham-chieu-tim.png`
-
-```
-The HEART alone, nothing else in the frame.
-
-Facing the viewer, lightly performed: weight on one leg, one hand making a
-small gesture, easy closed smile, headphones on. No props, no gag, no scene.
-
-Fill the frame: about 70% of the image height, empty cream on all four sides,
-not touching any edge. Flat cream background, its flat ellipse shadow on the
-ground, nothing else.
-
-Square image, as large as you can produce.
-
-The eyes are the thing to get right here. This character's body is smaller than
-the brain's, and the eyes must NOT shrink with it: same diameter, same spacing,
-same size as the brain's eyes. If the face looks smaller than the brain's face,
-redraw it.
 ```
 
 ## Luật phụ kiện
