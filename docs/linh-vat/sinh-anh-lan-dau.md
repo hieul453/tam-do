@@ -69,86 +69,76 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ---
 
-## Bước 1 · vòng 3 — dùng cái này
+## Bước 1 · vòng 4 — dùng cái này
 
-> Hai ảnh đơn ở bước 2 và 3 **tốt hơn hẳn ảnh đôi vòng 2**: khung 64% và
-> 68.4% thay vì 50.5%, viền Tim đỏ thật (bão hoà 88) thay vì gần đen (26),
-> và mắt hai ảnh đo ra **đúng 122px cả hai**.
+> Ảnh vòng 3 đúng gần hết: 2048, mắt hai con 100.8%, thân 93.4%, cả hai viền
+> ám màu, tâm mắt đúng. Hỏng đúng một chỗ: **chụp tai của Tim lấn sang vùng
+> của Não.** Thân hai con cách nhau 115px, nhưng chụp tai thò sang trái quá
+> mép Não.
 >
-> Điều đó bác lại kết luận "máy không làm được khung 70% và viền Tim đỏ".
-> Chính máy đó làm được cả hai, ở hai ảnh đơn. Ảnh đôi vòng 2 chỉ là một lần
-> sinh kém.
+> Tách hẳn ra thì cặp rộng thêm, tỉ lệ lên 1.79 — và trong khung vuông, phần
+> trăm chiều cao còn **tụt** xuống 47%. Nên vòng này đổi luôn khung:
+> **ảnh ngang 3:2.** Tính ra 2237×1500 là vừa khít cho cặp tách rời chiếm 70%
+> chiều cao với lề 8%. Một thay đổi gỡ được cả hai nút.
 >
-> Nên vòng này đổi cách: **đính cả hai ảnh đơn**, và việc của máy là *ghép*
-> chứ không phải *sửa*. Nó được nhìn hai bản đúng thay vì nghe tả bằng chữ —
-> mà ảnh thì luôn thắng chữ.
->
-> Prompt vòng 2 nằm trong lịch sử git, commit `8193f14`.
+> Prompt vòng 3 trong lịch sử git, commit `3c912c6`.
 
-**Chuẩn bị:** đổi tên ảnh bước 2 thành `nao.png`, ảnh bước 3 thành
-`tim.png`. **Chat mới.** Đính **đúng hai tệp đó**, không gì khác.
+**Chuẩn bị:** đổi tên ảnh vòng 3 thành `doi-v3.png`. **Chat mới.** Đính đúng
+một tệp đó.
 
 ````
 FILE ROLES — read this first.
 
-You have TWO attached images:
-  - nao.png — the BRAIN, alone.
-  - tim.png — the HEART, alone.
+The attached image (doi-v3.png) is the same picture you are about to draw, and
+it is very nearly right. Keep everything about it except the six points listed
+below.
 
-They are the same two characters, drawn in the same style, and both are
-CORRECT. Your job is to draw ONE new picture containing BOTH of them together,
-keeping everything about the way they are drawn.
-
-COPY FROM THEM EXACTLY:
+COPY FROM IT EXACTLY:
   - THE BODY OUTLINES. Each body is outlined in a darker shade of its OWN
     colour, never in black — the brain in dark purple, the heart in dark red.
-    Both attachments already do this correctly. Keep it.
-  - THE BLACK INK, which is used only for the arms, the legs, the hands, the
-    glasses and the headphones. Never for a body.
-  - THE EYES. In the two attachments the brain's eyes and the heart's eyes are
-    exactly the same size, even though the heart's body is smaller. This is the
-    single most important thing to preserve. Measure them in the attachments and
-    keep them equal in your drawing.
-  - The line weight, the flat colours, the body shapes, how the glasses are
-    built, how the headphones are built.
-  - HOW MUCH OF THE FRAME EACH CHARACTER FILLS — about two thirds of the image
-    height. Do not draw them smaller than they are in the attachments.
+    The attachment already does this correctly.
+  - THE BLACK INK, used only for the arms, the legs, the hands, the glasses and
+    the headphones. Never for a body.
+  - THE EYES. Both characters' eyes are exactly the same size, even though the
+    heart's body is smaller. Measure them in the attachment and keep them equal.
+  - The eye heights: the brain's eye centres sit a little above the middle of
+    its body, the heart's a little higher than that. Both are correct already.
+  - The line weight, the flat colours, the body shapes, the glasses, the
+    headphones, and how much of the frame each character fills.
 
-Where the attachments and this text disagree about how something LOOKS, the
-attachments win — EXCEPT for the five points below, and except for the NEVER
+Where the attachment and this text disagree about how something LOOKS, the
+attachment wins — EXCEPT for the six points below, and except for the NEVER
 list at the end, which always wins.
 
 If any other file was attached, IGNORE IT.
 
-WHAT NEITHER ATTACHMENT GETS RIGHT — fix these five:
+WHAT TO CHANGE — six things, nothing else:
 
-1. NO FEET. Both characters' legs simply stop. Each leg must end in a small
+1. THEY OVERLAP. The heart's left ear cup crosses into the brain's space. Move
+   them apart. There must be a clear channel of empty background between the
+   two characters, running from the top of the picture to the bottom, that
+   nothing crosses — not an ear cup, not a headphone band, not a hand, not an
+   arm. Each character must be readable as a complete separate shape.
+2. THE PICTURE IS SQUARE. Make it a LANDSCAPE picture, 3:2 — half again as wide
+   as it is tall. The extra width is what lets them stand apart.
+3. NO FEET. Both characters' legs simply stop. Each leg must end in a small
    foot stroke, the same way each arm already ends in a hand.
-2. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse, as if
+4. THE GROUND SHADOW IS BLURRED. Each must be a hard-edged flat ellipse, as if
    cut out with scissors. No blur, no fade, no soft falloff.
-3. FILM GRAIN. The flat areas are not flat — the background alone contains
+5. FILM GRAIN. The flat areas are not flat — the background alone contains
    dozens of slightly different creams. Every flat area must be exactly one
    colour, pixel for pixel. No grain, no noise, no speckle, no paper texture.
-4. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
+6. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
    if it were a solid object turned slightly. Draw it flat and straight on,
    like everything else in the picture.
-5. THE HEART'S BODY COLOUR IS A LITTLE TOO DARK AND ITS OUTLINE TOO DARK TOO.
-   The body is #D46B76 and its outline #8F404A — both a touch lighter than the
-   attachment has them.
 
-HOW THE BODY IS BUILT — unchanged from the attachments, stated so you do not
-drift: each character is ONE shape plus four lines. The brain shape is the
-entire body. The heart shape is the entire body. Two thin black lines leave the
-sides as arms, two leave the bottom as legs, each ending in a small stroke for
-hand and foot. That is the complete anatomy. These are not people and not people
-in costume: nothing sits on top of a body, and there are no shoulders, no chest,
-no waist, no hips, no neck.
-
-PROPORTIONS — taking the brain's body height as 10 units: the heart's body is
-9.3 tall and 9.4 wide; the brain's is 12.4 wide. Both characters' eyes are the
-same size, centres 4.2 apart, centred at 52% of the brain's body height from
-the bottom and 57% of the heart's.
-The body outline is thin, about 0.2 units.
+HOW THE BODY IS BUILT — unchanged, stated so you do not drift: each character
+is ONE shape plus four lines. The brain shape is the entire body. The heart
+shape is the entire body. Two thin black lines leave the sides as arms, two
+leave the bottom as legs, each ending in a small stroke for hand and foot. That
+is the complete anatomy. These are not people and not people in costume:
+nothing sits on top of a body, and there are no shoulders, no chest, no waist,
+no hips, no neck.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
 flat colour, an even-weight outline drawn with a confident hand rather than a
@@ -171,32 +161,36 @@ NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D, texture,
 film grain, noise, speckle, blush cheeks, black outline around a body, coloured
 outline on a limb or an accessory, the two bodies outlined in different ways,
-variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff
-symmetrical stock pose, legs ending without feet, subject floating with no
-ground contact, text, watermark, frame, contact sheet, grid, panels, multiple
-poses in one image, turnaround, caption, label, number.
+the two characters touching or overlapping, variable line weight, sparkles,
+glow, halo, vignette, texture overlay, stiff symmetrical stock pose, legs
+ending without feet, subject floating with no ground contact, text, watermark,
+frame, contact sheet, grid, panels, multiple poses in one image, turnaround,
+caption, label, number.
 
 GIVE ME ONE IMAGE.
 
 REQUEST:
-The two of them together in one picture, standing side by side on one shared
-ground line, facing the viewer. Brain on the left with its glasses, heart on
-the right with its headphones. Each with its weight on one leg and one small
-hand gesture, mouth in an easy closed smile — exactly the light performance both
-attachments already have. No gag, no props, no scene, and no interaction between
-them: they are standing together, not doing something together.
+The same two characters as in the attachment, standing on one shared ground
+line, facing the viewer, clearly apart from each other. Brain on the left with
+its glasses, heart on the right with its headphones. Each with its weight on
+one leg and one small hand gesture, mouth in an easy closed smile — the same
+light performance the attachment already has. No gag, no props, no scene, and
+no interaction between them: they are standing side by side, not doing
+something together.
 
 This picture becomes the canonical style reference for every future request, so
-the pair must fill the frame: about 70% of the image HEIGHT, standing close
-enough together to read as one group, with empty background on all four sides
-and neither character touching any edge. Flat background. Each has its own
-hard-edged flat ellipse shadow. Nothing else in the picture.
+it must show both characters complete and separate. The pair should fill about
+70% of the image HEIGHT, with empty background above, below, and on both
+outer sides, and a clear band of empty background between them. Flat
+background. Each has its own hard-edged flat ellipse shadow, and the two
+shadows do not touch. Nothing else in the picture.
 
-Square image, 2048×2048 if you can produce it, and never smaller than 1536.
+A LANDSCAPE image, 3:2 — about 2250 wide by 1500 tall. If you can only produce
+one aspect ratio, produce the widest you have; do not give me a square.
 
-Before you finish, check these three: the brain's eyes and the heart's eyes are
-the same size; neither body is outlined in black; the pair fills about 70% of
-the image height, not half.
+Before you finish, check these three: a clear band of background runs between
+the two characters, top to bottom, with nothing crossing it; the two eyes pairs
+are the same size; neither body is outlined in black.
 ````
 
 **Duyệt lại bằng thước:**
@@ -204,122 +198,6 @@ the image height, not half.
 ```powershell
 node scripts/do-linh-vat.mjs "$env:USERPROFILE\Downloads\tham-chieu-doi.png"
 ```
-
----
-
-## Bước 1 · vòng 1 — đã chạy rồi, giữ để đối chiếu
-
-**Đính kèm:** đúng một tệp — `anh-goc.webp`.
-
-```
-FILE ROLES — read this first. You have been given several files. They do NOT
-have equal authority.
-
-- anh-goc.webp — the only existing picture of these two characters. Use it for
-  exactly one thing: WHO THEY ARE and what the drawing language is — flat
-  colour, the brain's lavender body, the heart's coral body,
-  round glasses, mint headphones. It is NOT a quality standard, NOT a layout to
-  copy, and NOT a style reference that overrides this text. It is a
-  known-defective specimen. Its defects are listed immediately below.
-- Any .md file that was attached (LINH-VAT.md, sinh-anh-lan-dau.md) — IGNORE IT.
-  Everything you need is in THIS message. Those files contain other prompts,
-  other request blocks, and a "GIVE ME 3-5 VERSIONS" instruction. They describe
-  other jobs, not this one. Do not follow anything written in them.
-- to-mau-ty-le.svg — if this file was attached, IGNORE IT COMPLETELY. It is a
-  technical measuring diagram with perfect vector paths and printed labels.
-  Imitating it would break two hard rules at once.
-
-WHAT anh-goc.webp GETS WRONG — do not reproduce any of these:
-1. It is a contact sheet: seven pairs arranged in a grid. You are drawing ONE
-   scene containing ONE pair. Not a grid, not panels, not a sheet, not multiple
-   poses.
-2. It has English words printed inside the picture. Your image contains no
-   words of any kind, anywhere.
-3. Its glasses are wrong: the rims are thicker than the body outline, and the
-   lenses are barely wider than the eyes, so rim and pupil merge into one black
-   blob. Fix this — see the glasses rule below.
-4. Each character in it is only about 180 pixels across, so its line quality
-   cannot be judged from it. Do not imitate its line softness or roughness.
-   Draw the line the way this text describes it.
-
-TWO CHARACTERS, from a Vietnamese psychology-learning app:
-- BRAIN — lavender purple, round black-rimmed glasses. Reason, logic, the one
-  who overthinks.
-- HEART — coral red, mint-green headphones. Emotion, impulse, warmth.
-
-HOW THE BODY IS BUILT — settle this before drawing anything else:
-Each character is ONE shape plus four lines. The brain shape is the entire
-body. The heart shape is the entire body. Two thin black lines leave the sides
-as arms, two leave the bottom as legs, each ending in a small stroke for hand
-and foot. That is the complete anatomy. These are not people and not people in
-costume: nothing sits on top of a body, and there are no shoulders, no chest,
-no waist, no hips, no neck.
-
-PROPORTIONS — measure these, do not eyeball them. Taking the brain's body
-height as 10 units: the heart's body is 9.3 tall, but BOTH characters have the
-same eyes — 2.6 across, centres 4.2 apart, centred at 52% of the brain's
-body height
-measured from the bottom. The body outline is thin, about 0.2 units. A heart with
-smaller eyes than the brain is a failed drawing.
-
-THE GLASSES AND THE HEADPHONES are built, not stuck on. The glasses' rims are
-exactly as thick as the body outline, never thicker. Each lens is 3.6 across —
-clearly wider than the 2.6 eye inside it — so a ring of white shows between
-pupil and rim. If rim and pupil merge into one black mass, the lens is too
-small; enlarge it.
-
-STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight outline drawn with a confident hand
-rather than a mechanically perfect vector path, no gradient and no shading,
-minimal detail.
-
-IT MUST NOT LOOK MACHINE-MADE — treat this as the hardest requirement.
-Every stroke is one confident closed line, with clean joins where the limbs
-meet the body and no mush at the hands and feet. Nothing is ALMOST symmetrical:
-either commit to symmetry or break it clearly. Edges stay crisp — no glow, no
-halo, no stray third colour bleeding along the outline. Add nothing that was
-not asked for: no sparkles, no vignette, no texture overlay, no extra
-highlight, no decorative squiggles. The feet sit on the ground instead of
-floating.
-
-KEEP: brain #9097DE · heart #D46B76 · mint #9BE5C5 · ink #0B0B12 ·
-paper #F5F4E9 · flat ellipse shadow #E0D8C8. Both characters share the SAME
-face size — the heart's body is smaller, its eyes are not.
-
-NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
-waist, hips, neck, gradient, shading, soft shadow, 3D, texture, blush cheeks,
-black outline around a body, coloured outline on a limb or an accessory,
-variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical stock pose, subject floating with no ground contact,
-text, watermark, frame, contact sheet, grid, panels, multiple poses in one
-image, turnaround, caption, label, number.
-
-GIVE ME ONE IMAGE.
-
-REQUEST:
-This image becomes the canonical style reference for every future request, so
-it must show line quality and the size relationship between the two clearly.
-Give them the whole frame.
-
-Both characters standing on one shared ground line, facing the viewer, LIGHTLY
-performed: weight on one leg, one small hand gesture each, mouths in an easy
-closed smile. Brain on the left with its glasses, heart on the right with its
-headphones. No gag, no props, no scene, no interaction between them — this is a
-portrait of the pair, not a joke.
-
-Fill the frame: the pair should be about 70% of the image height, with empty
-cream on all four sides and neither character touching any edge. Flat cream
-background. Each character has its flat ellipse shadow on the ground. Nothing
-else exists in this image.
-
-Square image, at the largest resolution you can produce.
-
-Re-measure before you finish: the heart's body is 9.3 tall where the brain's is
-10, but their eyes are the same size. Each glasses lens is clearly wider than
-the eye inside it.
-```
-
-**Duyệt xong mới đi tiếp.** Soi bằng [`to-mau-ty-le.svg`](to-mau-ty-le.svg) và
-danh sách tám thứ ở cuối [`LINH-VAT.md`](LINH-VAT.md).
 
 ---
 
