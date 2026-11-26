@@ -69,70 +69,73 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ---
 
-## Bước 1 · vòng 2 — dùng cái này
+## Bước 1 · vòng 3 — dùng cái này
 
-> Vòng 1 đã chạy, đo bằng `scripts/do-linh-vat.mjs` thì trượt tám chỗ. Nhưng
-> nó **đúng bốn thứ khó nhất**: nhân vật là ai, kính dựng đúng, mắt hai con
-> bằng nhau 97.3%, và viền thân Não đúng là tím ám chứ không phải mực. Nên nó
-> lên làm ảnh tham chiếu cho vòng này — kèm danh sách lỗi, đúng cách ta đã làm
-> với `anh-goc.webp`.
+> Hai ảnh đơn ở bước 2 và 3 **tốt hơn hẳn ảnh đôi vòng 2**: khung 64% và
+> 68.4% thay vì 50.5%, viền Tim đỏ thật (bão hoà 88) thay vì gần đen (26),
+> và mắt hai ảnh đo ra **đúng 122px cả hai**.
 >
-> **Sinh mới chứ không sửa tiếp trong chat cũ.** Lý do dứt khoát: nhân vật
-> đang chiếm 50% khung, cần 70%. Chế độ sửa chỉ phóng pixel đã có, mất đúng
-> cái độ phân giải ta đi sinh lại để lấy. Thêm nữa nhiễu và bóng mềm nằm ở
-> tầng render — mỗi lượt sửa là một lượt render lại, đắp y nguyên hai thứ đó,
-> cộng trôi màu tích luỹ.
+> Điều đó bác lại kết luận "máy không làm được khung 70% và viền Tim đỏ".
+> Chính máy đó làm được cả hai, ở hai ảnh đơn. Ảnh đôi vòng 2 chỉ là một lần
+> sinh kém.
+>
+> Nên vòng này đổi cách: **đính cả hai ảnh đơn**, và việc của máy là *ghép*
+> chứ không phải *sửa*. Nó được nhìn hai bản đúng thay vì nghe tả bằng chữ —
+> mà ảnh thì luôn thắng chữ.
+>
+> Prompt vòng 2 nằm trong lịch sử git, commit `8193f14`.
 
-**Chuẩn bị:** đổi tên ảnh vòng 1 thành `vong-1.png`. **Chat mới.** Đính đúng
-một tệp — `vong-1.png`.
+**Chuẩn bị:** đổi tên ảnh bước 2 thành `nao.png`, ảnh bước 3 thành
+`tim.png`. **Chat mới.** Đính **đúng hai tệp đó**, không gì khác.
 
 ````
 FILE ROLES — read this first.
 
-The attached image (vong-1.png) is a previous attempt at exactly this picture.
-It gets the important things RIGHT, and you must keep them unchanged:
-  - who the two characters are, and their colours
-  - how the glasses are built: the rim is thin, each lens is clearly wider than
-    the eye inside it, and a ring of white shows between pupil and rim
-  - BOTH CHARACTERS HAVE THE SAME EYE SIZE, even though the heart's body is
-    smaller. This is the hardest thing to get right and it is already correct.
-    Do not change it.
+You have TWO attached images:
+  - nao.png — the BRAIN, alone.
+  - tim.png — the HEART, alone.
 
-Where the image and this text disagree about how something LOOKS, the image
-wins — EXCEPT for the eight defects listed below, and except for the NEVER list
-at the end, which always wins.
+They are the same two characters, drawn in the same style, and both are
+CORRECT. Your job is to draw ONE new picture containing BOTH of them together,
+keeping everything about the way they are drawn.
 
-If any .md, .svg or other file was also attached, IGNORE IT.
+COPY FROM THEM EXACTLY:
+  - THE BODY OUTLINES. Each body is outlined in a darker shade of its OWN
+    colour, never in black — the brain in dark purple, the heart in dark red.
+    Both attachments already do this correctly. Keep it.
+  - THE BLACK INK, which is used only for the arms, the legs, the hands, the
+    glasses and the headphones. Never for a body.
+  - THE EYES. In the two attachments the brain's eyes and the heart's eyes are
+    exactly the same size, even though the heart's body is smaller. This is the
+    single most important thing to preserve. Measure them in the attachments and
+    keep them equal in your drawing.
+  - The line weight, the flat colours, the body shapes, how the glasses are
+    built, how the headphones are built.
+  - HOW MUCH OF THE FRAME EACH CHARACTER FILLS — about two thirds of the image
+    height. Do not draw them smaller than they are in the attachments.
 
-WHAT THE ATTACHED IMAGE GETS WRONG — fix every one of these:
+Where the attachments and this text disagree about how something LOOKS, the
+attachments win — EXCEPT for the five points below, and except for the NEVER
+list at the end, which always wins.
 
-1. THE HEART'S BODY OUTLINE TURNED BLACK. It must not be black. Each BODY is
-   outlined in a darker shade of its own colour: the brain in #5F66AC, the
-   heart in #8F404A. The brain in the attached image already has this right —
-   its outline is dark purple. The heart does not: along its top edge the
-   outline has gone to black ink. Give the heart the same treatment the brain
-   already has, in dark red.
-   Only the things ATTACHED to a body are black ink #0B0B12: the arms, the
-   legs, the hands, the feet, the glasses, the headphones. Never the body.
-2. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse of solid
-   #E0D8C8, as if cut out with scissors. No blur, no fade, no soft falloff.
-3. THE WHOLE IMAGE HAS FILM GRAIN. The flat areas are not flat — the background
-   alone contains dozens of slightly different creams. Every flat area must be
-   exactly one single colour, pixel for pixel. No grain, no noise, no speckle,
-   no paper texture.
-4. THE CHARACTERS ARE TOO SMALL — about 50% of the frame height. Make them
-   about 70%. Less empty space above and below, more character.
-5. THERE ARE NO FEET. The legs simply stop. Each leg must end in a small foot
-   stroke, the same way each arm ends in a hand.
-6. THE FEET SINK INTO THE SHADOW. Both characters stand ON one shared ground
-   line, with the shadow lying underneath them — not wrapped around their ankles.
-7. THE POSE IS STIFF: both stand straight with arms hanging. Each character puts
-   its weight on one leg and makes one small gesture with one hand.
-8. THE COMPOSITION IS TOO WIDE. The two are spread far apart with big empty
-   bands at top and bottom. Bring them closer together and let them fill the
-   height instead of the width.
+If any other file was attached, IGNORE IT.
 
-HOW THE BODY IS BUILT — unchanged from the attached image, stated so you do not
+WHAT NEITHER ATTACHMENT GETS RIGHT — fix these five:
+
+1. NO FEET. Both characters' legs simply stop. Each leg must end in a small
+   foot stroke, the same way each arm already ends in a hand.
+2. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse, as if
+   cut out with scissors. No blur, no fade, no soft falloff.
+3. FILM GRAIN. The flat areas are not flat — the background alone contains
+   dozens of slightly different creams. Every flat area must be exactly one
+   colour, pixel for pixel. No grain, no noise, no speckle, no paper texture.
+4. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
+   if it were a solid object turned slightly. Draw it flat and straight on,
+   like everything else in the picture.
+5. THE BRAIN'S EYES SIT TOO LOW. Their centres belong at 58% of the body height
+   measured from the bottom, which is where the heart's already are.
+
+HOW THE BODY IS BUILT — unchanged from the attachments, stated so you do not
 drift: each character is ONE shape plus four lines. The brain shape is the
 entire body. The heart shape is the entire body. Two thin black lines leave the
 sides as arms, two leave the bottom as legs, each ending in a small stroke for
@@ -140,11 +143,10 @@ hand and foot. That is the complete anatomy. These are not people and not people
 in costume: nothing sits on top of a body, and there are no shoulders, no chest,
 no waist, no hips, no neck.
 
-PROPORTIONS — measure these, do not eyeball them. Taking the brain's body height
-as 10 units: the heart's body is 9.3 tall, but BOTH characters have the same
-eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height measured
-from the bottom. The body outline is thin, about 0.2 units. The brain's body is
-12.4 wide against its 10 of height; the heart's is 9.4 wide against its 9.3.
+PROPORTIONS — taking the brain's body height as 10 units: the heart's body is
+9.3 tall and 9.4 wide; the brain's is 12.4 wide. Both characters' eyes are the
+same size, centres 4.2 apart, centred at 58% of body height from the bottom.
+The body outline is thin, about 0.2 units.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
 flat colour, an even-weight outline drawn with a confident hand rather than a
@@ -154,15 +156,14 @@ IT MUST NOT LOOK MACHINE-MADE — treat this as the hardest requirement. Every
 stroke is one confident closed line, with clean joins where the limbs meet the
 body and no mush at the hands and feet. Nothing is ALMOST symmetrical: either
 commit to symmetry or break it clearly. Edges stay crisp — no glow, no halo, no
-stray third colour bleeding along the outline. Add nothing that was not asked
+stray third colour bleeding along an outline. Add nothing that was not asked
 for: no sparkles, no vignette, no texture overlay, no extra highlight, no
 decorative squiggles.
 
 KEEP, as exact flat colours: brain body #9097DE outlined #5F66AC · heart body
 #D46B76 outlined #8F404A · mint #9BE5C5 · ink #0B0B12 for the limbs, the
 glasses and the headphones · background #F5F4E9 · ground shadow #E0D8C8. Eight
-colours, nothing else, each one perfectly flat. Both characters share the SAME
-face size — the heart's body is smaller, its eyes are not.
+colours, nothing else, each one perfectly flat across its whole area.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D, texture,
@@ -176,27 +177,24 @@ poses in one image, turnaround, caption, label, number.
 GIVE ME ONE IMAGE.
 
 REQUEST:
-This image becomes the canonical style reference for every future request, so
-it must show line quality and the size relationship between the two clearly.
+The two of them together in one picture, standing side by side on one shared
+ground line, facing the viewer. Brain on the left with its glasses, heart on
+the right with its headphones. Each with its weight on one leg and one small
+hand gesture, mouth in an easy closed smile — exactly the light performance both
+attachments already have. No gag, no props, no scene, and no interaction between
+them: they are standing together, not doing something together.
 
-Both characters standing on one shared ground line, facing the viewer, LIGHTLY
-performed: each with its weight on one leg, one small hand gesture each, mouths
-in an easy closed smile. Brain on the left with its glasses, heart on the right
-with its headphones. No gag, no props, no scene, no interaction between them —
-this is a portrait of the pair, not a joke.
+This picture becomes the canonical style reference for every future request, so
+the pair must fill the frame: about 70% of the image HEIGHT, standing close
+enough together to read as one group, with empty background on all four sides
+and neither character touching any edge. Flat background. Each has its own
+hard-edged flat ellipse shadow. Nothing else in the picture.
 
-Fill the frame: the pair should be about 70% of the image HEIGHT, standing close
-enough together that they read as one group, with empty background on all four
-sides and neither character touching any edge. Flat background. Each character
-has its hard-edged flat ellipse shadow on the ground. Nothing else exists in
-this image.
+Square image, 2048×2048 if you can produce it, and never smaller than 1536.
 
-Square image, at the largest resolution you can produce.
-
-Before you finish, check these four: each body is outlined in a darker shade of
-its own colour and NEITHER is outlined in black; the limbs, glasses and
-headphones ARE black; the ground shadows have hard edges; every flat area is
-exactly one colour.
+Before you finish, check these three: the brain's eyes and the heart's eyes are
+the same size; neither body is outlined in black; the pair fills about 70% of
+the image height, not half.
 ````
 
 **Duyệt lại bằng thước:**
@@ -524,46 +522,6 @@ Còn ba thứ phải tự nhìn:
 - **Tư thế có diễn không** hay đứng đơ tay buông
 - **Thu nhỏ còn 32px có đọc được không** — phép thử rẻ bắt được gần hết lỗi
   còn lại. Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
-
-## Dọn hậu kỳ
-
-Sau hai vòng prompt rất cụ thể, **bốn lỗi không nhúc nhích**: nhiễu, bóng mềm,
-viền Tim đen, khung hình. Riêng khung hình gần như không đổi một chữ số thập
-phân — 50.4% rồi 50.5%. Đó không phải máy hiểu nhầm, đó là máy **không làm
-được**. Và độ phân giải còn tụt 2048 → 1024, tức là ép thêm thì vỡ chỗ khác.
-
-Ba lỗi đầu nằm ở tầng render, nhưng chúng deterministic. Nên sửa bằng script:
-
-```powershell
-node scriptsdon-anh-linh-vat.mjs .ong-2.png .da-don.png
-```
-
-Nó làm ba việc:
-
-1. **Ép mọi pixel về đúng chín màu chuẩn.** Việc này một phát giết sạch nhiễu,
-   làm bóng thành ellipse mép cứng, san phẳng mọi chỗ đổ bóng, và kéo nền về
-   đúng `#F5F4E9`. Đo bản vòng 2: 15.717 màu còn 568, nền lệch 0.0.
-2. **Đổi viền thân Tim từ mực sang `#8F404A`** nếu máy bôi đen.
-3. **Làm mềm ranh giới 1px** để mảng bệt mà mép không răng cưa.
-
-Hai chi tiết kỹ thuật đáng nhớ, vì cả hai đều từng làm hỏng kết quả:
-
-- **So màu theo sắc, không theo khoảng cách RGB.** Máy hay thêm bóng, tức một
-  sắc độ tối hơn của chính màu đó. Đo bằng RGB thì bạc hà tối (`#7BAA98`) lại
-  gần màu thân Não hơn gần bạc hà — chụp tai bị ép thành **tím**. Tách sáng
-  khỏi sắc rồi hạ trọng số sáng thì bóng của một màu rơi về đúng màu gốc.
-- **Phân biệt viền với tay chân bằng cách bắn tia.** Viền ôm quanh thân nên
-  bắn tám tia ra là trúng thân ở nhiều hướng; gốc chân chỉ trúng đúng một
-  hướng — hướng nó cắm vào. Lấy mốc ba hướng. Không có phép này thì gốc hai
-  chân Tim bị nhuộm đỏ.
-
-**Việc script không làm được:** bàn chân và độ phân giải. Hai thứ đó phải xin
-máy sinh lại.
-
-**Và một hệ quả phải nói rõ:** dấu ghi nguồn ở góc chỉ lệch nền 8 mức sáng, nên
-bước ép màu **xoá luôn nó**. Script không có đoạn nào nhắm vào watermark — nó
-rơi ra vì quá nhạt so với nền. Muốn giữ dấu thì đừng chạy script này, hoặc sinh
-ảnh ở nơi không đóng dấu ngay từ đầu.
 
 ## Watermark
 
