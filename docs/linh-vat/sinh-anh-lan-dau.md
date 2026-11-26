@@ -71,74 +71,89 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ## Bước 1 · vòng 4 — dùng cái này
 
-> Ảnh vòng 3 đúng gần hết: 2048, mắt hai con 100.8%, thân 93.4%, cả hai viền
-> ám màu, tâm mắt đúng. Hỏng đúng một chỗ: **chụp tai của Tim lấn sang vùng
-> của Não.** Thân hai con cách nhau 115px, nhưng chụp tai thò sang trái quá
-> mép Não.
+> **Chỗ chồng nhau ở vòng 3 là do một câu trong prompt, không phải do máy.**
+> Vòng 3 có câu `standing close enough together to read as one group`. Máy làm
+> đúng lời: nó kéo hai con sát lại, và chụp tai của Tim lấn sang vùng Não 13px.
 >
-> Tách hẳn ra thì cặp rộng thêm, tỉ lệ lên 1.79 — và trong khung vuông, phần
-> trăm chiều cao còn **tụt** xuống 47%. Nên vòng này đổi luôn khung:
-> **ảnh ngang 3:2.** Tính ra 2237×1500 là vừa khít cho cặp tách rời chiếm 70%
-> chiều cao với lề 8%. Một thay đổi gỡ được cả hai nút.
+> Nên vòng 4 **vẫn sinh từ hai ảnh đơn**, chỉ đổi đúng câu đó. Đính ảnh đôi
+> vòng 3 vào để sửa là sai gấp đôi: nó cho máy *nhìn thấy* hai con đang chạm
+> nhau, mà quy tắc ưu tiên ghi rõ ảnh thắng chữ — tức là vừa viết "tách ra"
+> vừa đưa bằng chứng ngược lại.
+>
+> Hai ảnh đơn thì mỗi con đứng một mình giữa nền trống. Đó chính là bố cục cần
+> lặp lại. Và vòng 3 vốn cũng sinh từ hai ảnh đơn, cho kết quả tốt nhất từ
+> trước tới giờ — nên đường này đã kiểm chứng rồi.
+>
+> Đổi thêm một thứ: **khung ngang 3:2.** Tách hẳn ra thì cặp rộng thêm, tỉ lệ
+> lên 1.79, và trong khung vuông phần trăm chiều cao còn *tụt* từ 51% xuống
+> 47%. Ngang 3:2 — khoảng 2250×1500 — thì cặp tách rời chiếm đúng 70% với lề 8%.
 >
 > Prompt vòng 3 trong lịch sử git, commit `3c912c6`.
 
-**Chuẩn bị:** đổi tên ảnh vòng 3 thành `doi-v3.png`. **Chat mới.** Đính đúng
-một tệp đó.
+**Chuẩn bị:** ảnh bước 2 tên `nao.png`, ảnh bước 3 tên `tim.png`.
+**Chat mới.** Đính **đúng hai tệp đó**, không đính ảnh đôi nào.
 
 ````
 FILE ROLES — read this first.
 
-The attached image (doi-v3.png) is the same picture you are about to draw, and
-it is very nearly right. Keep everything about it except the six points listed
-below.
+You have TWO attached images:
+  - nao.png — the BRAIN, alone.
+  - tim.png — the HEART, alone.
 
-COPY FROM IT EXACTLY:
+They are the same two characters, drawn in the same style, and both are
+CORRECT. Your job is to draw ONE new picture containing BOTH of them, standing
+well apart from each other, keeping everything about the way they are drawn.
+
+COPY FROM THEM EXACTLY:
   - THE BODY OUTLINES. Each body is outlined in a darker shade of its OWN
     colour, never in black — the brain in dark purple, the heart in dark red.
-    The attachment already does this correctly.
+    Both attachments already do this correctly. Keep it.
   - THE BLACK INK, used only for the arms, the legs, the hands, the glasses and
     the headphones. Never for a body.
-  - THE EYES. Both characters' eyes are exactly the same size, even though the
-    heart's body is smaller. Measure them in the attachment and keep them equal.
-  - The eye heights: the brain's eye centres sit a little above the middle of
-    its body, the heart's a little higher than that. Both are correct already.
-  - The line weight, the flat colours, the body shapes, the glasses, the
-    headphones, and how much of the frame each character fills.
+  - THE EYES. In the two attachments the brain's eyes and the heart's eyes are
+    exactly the same size, even though the heart's body is smaller. This is the
+    single most important thing to preserve. Measure them in the attachments and
+    keep them equal in your drawing.
+  - THE EYE HEIGHTS. In nao.png the eye centres sit slightly above the middle of
+    the body; in tim.png slightly higher than that. Both are already right.
+  - The line weight, the flat colours, the body shapes, how the glasses are
+    built, how the headphones are built, and how much of the frame each
+    character fills.
 
-Where the attachment and this text disagree about how something LOOKS, the
-attachment wins — EXCEPT for the six points below, and except for the NEVER
+Where the attachments and this text disagree about how something LOOKS, the
+attachments win — EXCEPT for the five points below, and except for the NEVER
 list at the end, which always wins.
 
 If any other file was attached, IGNORE IT.
 
-WHAT TO CHANGE — six things, nothing else:
+WHAT NEITHER ATTACHMENT GETS RIGHT — fix these five:
 
-1. THEY OVERLAP. The heart's left ear cup crosses into the brain's space. Move
-   them apart. There must be a clear channel of empty background between the
-   two characters, running from the top of the picture to the bottom, that
-   nothing crosses — not an ear cup, not a headphone band, not a hand, not an
-   arm. Each character must be readable as a complete separate shape.
-2. THE PICTURE IS SQUARE. Make it a LANDSCAPE picture, 3:2 — half again as wide
-   as it is tall. The extra width is what lets them stand apart.
-3. NO FEET. Both characters' legs simply stop. Each leg must end in a small
+1. NO FEET. Both characters' legs simply stop. Each leg must end in a small
    foot stroke, the same way each arm already ends in a hand.
-4. THE GROUND SHADOW IS BLURRED. Each must be a hard-edged flat ellipse, as if
+2. THE GROUND SHADOW IS BLURRED. Each must be a hard-edged flat ellipse, as if
    cut out with scissors. No blur, no fade, no soft falloff.
-5. FILM GRAIN. The flat areas are not flat — the background alone contains
+3. FILM GRAIN. The flat areas are not flat — the background alone contains
    dozens of slightly different creams. Every flat area must be exactly one
    colour, pixel for pixel. No grain, no noise, no speckle, no paper texture.
-6. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
+4. THE HEART'S EAR CUP IS DRAWN IN PERSPECTIVE — you can see the side of it, as
    if it were a solid object turned slightly. Draw it flat and straight on,
    like everything else in the picture.
+5. THE HEART IS A LITTLE TOO DARK. Its body is #D46B76 and its outline #8F404A,
+   both a touch lighter than tim.png has them.
 
-HOW THE BODY IS BUILT — unchanged, stated so you do not drift: each character
-is ONE shape plus four lines. The brain shape is the entire body. The heart
-shape is the entire body. Two thin black lines leave the sides as arms, two
-leave the bottom as legs, each ending in a small stroke for hand and foot. That
-is the complete anatomy. These are not people and not people in costume:
-nothing sits on top of a body, and there are no shoulders, no chest, no waist,
-no hips, no neck.
+HOW THE BODY IS BUILT — unchanged from the attachments, stated so you do not
+drift: each character is ONE shape plus four lines. The brain shape is the
+entire body. The heart shape is the entire body. Two thin black lines leave the
+sides as arms, two leave the bottom as legs, each ending in a small stroke for
+hand and foot. That is the complete anatomy. These are not people and not people
+in costume: nothing sits on top of a body, and there are no shoulders, no chest,
+no waist, no hips, no neck.
+
+PROPORTIONS — taking the brain's body height as 10 units: the heart's body is
+9.3 tall and 9.4 wide; the brain's is 12.4 wide. Both characters' eyes are the
+same size, 2.6 across, centres 4.2 apart; the brain's eye centres sit at 52% of
+its body height from the bottom, the heart's at 57% of its own. The body outline
+is thin, about 0.2 units. They share one ground line.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
 flat colour, an even-weight outline drawn with a confident hand rather than a
@@ -170,26 +185,31 @@ caption, label, number.
 GIVE ME ONE IMAGE.
 
 REQUEST:
-The same two characters as in the attachment, standing on one shared ground
-line, facing the viewer, clearly apart from each other. Brain on the left with
-its glasses, heart on the right with its headphones. Each with its weight on
-one leg and one small hand gesture, mouth in an easy closed smile — the same
-light performance the attachment already has. No gag, no props, no scene, and
-no interaction between them: they are standing side by side, not doing
-something together.
+The two of them in one picture, standing on one shared ground line, facing the
+viewer, WELL APART from each other. Brain on the left with its glasses, heart on
+the right with its headphones. Each with its weight on one leg and one small
+hand gesture, mouth in an easy closed smile — exactly the light performance both
+attachments already have. No gag, no props, no scene, and no interaction between
+them: they are standing side by side, not doing something together.
+
+THEY MUST NOT TOUCH. A clear band of empty background runs between them, from
+the top of the picture to the bottom, and nothing crosses it — not an ear cup,
+not a headphone band, not a hand, not an arm, not a shadow. Each character must
+read as a complete, separate shape you could cut out on its own. The band should
+be roughly as wide as the heart's head.
 
 This picture becomes the canonical style reference for every future request, so
-it must show both characters complete and separate. The pair should fill about
-70% of the image HEIGHT, with empty background above, below, and on both
-outer sides, and a clear band of empty background between them. Flat
-background. Each has its own hard-edged flat ellipse shadow, and the two
-shadows do not touch. Nothing else in the picture.
+the pair should fill about 70% of the image HEIGHT, with empty background above,
+below and on both outer sides, and neither character touching any edge. Flat
+background. Each has its own hard-edged flat ellipse shadow, and the two shadows
+do not touch either. Nothing else in the picture.
 
-A LANDSCAPE image, 3:2 — about 2250 wide by 1500 tall. If you can only produce
-one aspect ratio, produce the widest you have; do not give me a square.
+A LANDSCAPE image, 3:2 — about 2250 wide by 1500 tall. The extra width is what
+lets them stand apart. If you can only produce one aspect ratio, produce the
+widest you have; do not give me a square.
 
 Before you finish, check these three: a clear band of background runs between
-the two characters, top to bottom, with nothing crossing it; the two eyes pairs
+the two characters, top to bottom, with nothing crossing it; both pairs of eyes
 are the same size; neither body is outlined in black.
 ````
 
