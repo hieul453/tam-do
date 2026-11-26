@@ -311,11 +311,17 @@ function doVien(nhan, than, chuan, dayChuan) {
   sang.sort((a, b) => a - b);
   const tv = sang[sang.length >> 1];
   const top = [...mau.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
-  const c = ganNhat(...top[0][0].slice(1).match(/../g).map((v) => parseInt(v, 16)));
-  const dat = tv >= 60 && tv <= 140;
-  console.log(`${nhan} — viền thân: độ sáng trung vị ${tv.toFixed(0)}  ${top.map(([k, n]) => `${k}×${n}`).join(' · ')}`);
-  console.log(`   chuẩn ${chuan}, độ sáng 85–115 · ${dat ? 'ĐẠT — ám màu' : tv < 60 ? '⚠ TRƯỢT — đang là MỰC ĐEN' : '⚠ TRƯỢT — quá nhạt, gần như không có viền'}`);
-  if (c.ten === 'muc') console.log('   ⚠ màu hay gặp nhất rơi vào nhóm mực');
+  // Mực thì xám và tối. Ám màu thì tối nhưng CÓ màu — phân biệt bằng độ bão hoà,
+  // nếu chỉ nhìn độ sáng thì một viền đỏ rất sẫm bị kết tội oan là mực.
+  const [r0, g0, b0] = top[0][0].slice(1).match(/../g).map((v) => parseInt(v, 16));
+  const bao = Math.max(r0, g0, b0) - Math.min(r0, g0, b0);
+  let ket;
+  if (bao < 25) ket = '⚠ TRƯỢT — xám và tối, tức là MỰC ĐEN chứ không phải ám màu';
+  else if (tv > 140) ket = '⚠ TRƯỢT — quá nhạt, gần như không có viền';
+  else if (tv < 72) ket = `~ SÁT — đúng họ màu nhưng sẫm quá (${tv.toFixed(0)} so với ~89 của ${chuan})`;
+  else ket = 'ĐẠT — ám màu';
+  console.log(`${nhan} — viền thân: độ sáng trung vị ${tv.toFixed(0)}, bão hoà ${bao}  ${top.map(([k, n]) => `${k}×${n}`).join(' · ')}`);
+  console.log(`   chuẩn ${chuan} · ${ket}`);
 }
 console.log('\nVIỀN THÂN  (phải ám màu, không được là mực)');
 doVien('Não', thanNao, '#5F66AC', 0.19);
@@ -333,26 +339,51 @@ trang.forEach((m, i) => {
   console.log(`  ${i + 1}. tâm (${m.cx.toFixed(0)}, ${m.cy.toFixed(0)})  ${m.rong}×${m.cao}  đường kính ~${d.toFixed(0)}`);
 });
 
-const giua = thanNao && thanTim ? (thanNao.x1 + thanTim.x0) / 2 : w / 2;
-const ben = trang.filter((m) => m.cx < giua).sort((a, b) => a.cx - b.cx);
-const phai = trang.filter((m) => m.cx >= giua).sort((a, b) => a.cx - b.cx);
 const dk = (l) => l.reduce((s, m) => s + (m.rong + m.cao) / 2, 0) / (l.length || 1);
-if (ben.length && phai.length) {
+
+// Ảnh đôi thì chia trái/phải; ảnh một nhân vật thì cả bốn mảng đều của nó.
+const doi = !!(thanNao && thanTim);
+let ben, phai;
+if (doi) {
+  const giua = (thanNao.x1 + thanTim.x0) / 2;
+  ben = trang.filter((m) => m.cx < giua).sort((a, b) => a.cx - b.cx);
+  phai = trang.filter((m) => m.cx >= giua).sort((a, b) => a.cx - b.cx);
+} else {
+  ben = trang.slice(0, 2).sort((a, b) => a.cx - b.cx);
+  phai = [];
+}
+
+function khoangMat(nhan, mat, than) {
+  if (!than) return;
+  const d = dk(mat);
+  if (mat.length >= 2) {
+    const cach = Math.abs(mat[1].cx - mat[0].cx);
+    console.log(`${nhan}: mắt ~${d.toFixed(0)}px, hai mắt cách tâm-tâm ${cach.toFixed(0)}px = ` +
+                `${(cach / d).toFixed(2)}× đường kính  (chuẩn 4.2/2.6 = 1.62)`);
+    const lech = Math.abs(mat[0].rong - mat[1].rong) / d;
+    if (lech > 0.08) console.log(`  ⚠ hai mắt của chính nó đã lệch nhau ${(lech * 100).toFixed(0)}%`);
+  }
+  // 2.6 là tính theo thân Não. Thân Tim cao 9.3 nên cùng cỡ mắt sẽ ra 2.6 × 10/9.3 = 2.80.
+  const mong = nhan === 'Tim' ? 2.6 * 10 / 9.3 : 2.6;
+  const dv = d / than.cao * 10;
+  console.log(`${nhan}: đường kính mắt = ${dv.toFixed(2)} đơn vị theo thân của chính nó  (chuẩn ${mong.toFixed(2)})` +
+              `${Math.abs(dv - mong) <= 0.3 ? '  ĐẠT' : '  ⚠ TRƯỢT'}`);
+  console.log(`${nhan}: tâm mắt ở ${((than.y1 - mat[0].cy) / than.cao * 100).toFixed(0)}% chiều cao thân tính từ đáy  (chuẩn 58%)`);
+}
+
+if (doi && ben.length && phai.length) {
   const a = dk(ben), b = dk(phai);
   const tl = b / a;
   const dat = Math.abs(tl - 1) <= 0.08;
   console.log(`\nMắt Não ~${a.toFixed(0)}px · mắt Tim ~${b.toFixed(0)}px → Tim / Não = ${(tl * 100).toFixed(1)}%`);
   console.log(`  chuẩn 100% (thân nhỏ hơn, mắt thì không)  ${dat ? 'ĐẠT' : '⚠ TRƯỢT'}`);
-  if (ben.length >= 2) {
-    const cach = Math.abs(ben[1].cx - ben[0].cx);
-    console.log(`Não: hai mắt cách tâm-tâm ${cach.toFixed(0)}px = ${(cach / a).toFixed(2)}× đường kính mắt  (chuẩn 4.2/2.6 = 1.62)`);
-  }
-  if (phai.length >= 2) {
-    const cach = Math.abs(phai[1].cx - phai[0].cx);
-    console.log(`Tim: hai mắt cách tâm-tâm ${cach.toFixed(0)}px = ${(cach / b).toFixed(2)}× đường kính mắt  (chuẩn 1.62)`);
-  }
-  if (thanNao) console.log(`Não: tâm mắt ở ${((thanNao.y1 - ben[0].cy) / thanNao.cao * 100).toFixed(0)}% chiều cao thân tính từ đáy  (chuẩn 58%)`);
-  if (thanTim) console.log(`Tim: tâm mắt ở ${((thanTim.y1 - phai[0].cy) / thanTim.cao * 100).toFixed(0)}% chiều cao thân tính từ đáy  (chuẩn 58%)`);
+  khoangMat('Não', ben, thanNao);
+  khoangMat('Tim', phai, thanTim);
+} else if (ben.length) {
+  console.log(`\nẢnh một nhân vật — không so được hai con, đo theo đơn vị thân:`);
+  khoangMat(thanNao ? 'Não' : 'Tim', ben, thanNao || thanTim);
+  console.log(`  So cỡ mắt giữa hai ảnh đơn: cả hai phải ra cùng số px nếu cùng cỡ ảnh,`);
+  console.log(`  và cùng ~2.6 đơn vị dù thân Tim nhỏ hơn.`);
 }
 
 // --- quét ngang qua tâm mắt Não: đọc kính
@@ -390,7 +421,7 @@ function netVien(nhan, than) {
   if (!day.length) return console.log(`${nhan} — không đọc được nét viền`);
   day.sort((a, b) => a - b);
   const tv = day[day.length >> 1];
-  console.log(`${nhan} — nét viền ~${tv}px = ${(tv / than.cao * 10).toFixed(2)} đơn vị  (chuẩn 0.45)` +
+  console.log(`${nhan} — nét viền ~${tv}px = ${(tv / than.cao * 10).toFixed(2)} đơn vị  (chuẩn ${nhan === 'Tim' ? '0.26' : '0.19'})` +
               `   [${day.length} lát cắt, ${day[0]}–${day[day.length - 1]}]`);
 }
 console.log('\nNÉT VIỀN');
