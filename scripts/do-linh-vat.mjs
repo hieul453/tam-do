@@ -215,9 +215,15 @@ const laNen = (x, y) => {
   const [r, g, b] = tai(x, y);
   return Math.hypot(r - nr, g - ng, b - nb) < 14;
 };
-const o = Math.round(Math.min(w, h) * 0.12);
-const goc = hopBao(w, h, (x, y) => x >= w - o && y >= h - o && !laNen(x, y));
-console.log(`\nGÓC DƯỚI PHẢI  ô ${o}×${o}px:`);
+// Ngưỡng phải NHẠY: watermark của máy sinh ảnh chỉ lệch nền vài mức sáng.
+// Ngưỡng 14 từng báo "sạch" cho một ảnh vẫn còn dấu, lệch có 8 mức.
+const o = Math.round(Math.min(w, h) * 0.17);
+const goc = hopBao(w, h, (x, y) => {
+  if (x < w - o || y < h - o) return false;
+  const [r, g, b] = tai(x, y);
+  return Math.hypot(r - nr, g - ng, b - nb) > 5;
+});
+console.log(`\nGÓC DƯỚI PHẢI  ô ${o}×${o}px, ngưỡng lệch 5 mức sáng:`);
 if (!goc) console.log('  sạch');
 else console.log(`  ⚠ CÓ ${goc.dem} pixel khác nền, ở x ${goc.x0}–${goc.x1}, y ${goc.y0}–${goc.y1}` +
                  `  (${goc.rong}×${goc.cao}) — nhiều khả năng là watermark`);
@@ -267,11 +273,53 @@ if (thanNao) console.log(`Não  cao ${thanNao.cao}  rộng ${thanNao.rong}   (x 
 if (thanTim) console.log(`Tim  cao ${thanTim.cao}  rộng ${thanTim.rong}   (x ${thanTim.x0}–${thanTim.x1}, y ${thanTim.y0}–${thanTim.y1})`);
 if (thanNao && thanTim) {
   const tl = thanTim.cao / thanNao.cao;
-  const dat = Math.abs(tl - 0.88) <= 0.04;
-  console.log(`Tim / Não = ${(tl * 100).toFixed(1)}%   (chuẩn 88%, chấp nhận 84–92%)  ${dat ? 'ĐẠT' : '⚠ TRƯỢT'}`);
+  const dat = Math.abs(tl - 0.93) <= 0.04;
+  console.log(`Tim / Não = ${(tl * 100).toFixed(1)}%   (chuẩn 93%, chấp nhận 89–97%)  ${dat ? 'ĐẠT' : '⚠ TRƯỢT'}`);
 }
 doBet('Não', thanNao, 'nao');
 doBet('Tim', thanTim, 'tim');
+
+// --- viền thân: phải ám màu, không được là mực
+// Đi từ mép thân ra ngoài, nhặt pixel sẫm nhất. Dưới độ sáng 40 là mực — sai.
+function doVien(nhan, than, chuan, dayChuan) {
+  if (!than) return;
+  const sang = [], mau = new Map(), xa = Math.max(4, Math.round(than.cao * 0.06));
+  const laThan = (x, y) => {
+    const [r, g, b] = tai(x, y);
+    const k = ganNhat(r, g, b);
+    return (k.ten === 'nao' || k.ten === 'tim') && k.khoangCach < 60;
+  };
+  for (let y = than.y0 + Math.round(than.cao * 0.12); y < than.y1 - than.cao * 0.12; y += 3) {
+    for (const huong of [-1, 1]) {
+      // tìm mép thân trên dòng này
+      let mep = -1;
+      if (huong < 0) { for (let x = than.x0 - xa; x <= than.x1; x++) if (x >= 0 && laThan(x, y)) { mep = x; break; } }
+      else { for (let x = Math.min(w - 1, than.x1 + xa); x >= than.x0; x--) if (laThan(x, y)) { mep = x; break; } }
+      if (mep < 0) continue;
+      let toiNhat = null, toiL = 999;
+      for (let d = -2; d <= xa; d++) {
+        const x = mep + huong * -d;          // đi ra ngoài thân
+        if (x < 0 || x >= w) continue;
+        const [r, g, b] = tai(x, y);
+        const l = 0.299 * r + 0.587 * g + 0.114 * b;
+        if (l < toiL) { toiL = l; toiNhat = hex(r, g, b); }
+      }
+      if (toiNhat && toiL < 200) { sang.push(toiL); mau.set(toiNhat, (mau.get(toiNhat) || 0) + 1); }
+    }
+  }
+  if (!sang.length) return console.log(`${nhan} — không đọc được viền`);
+  sang.sort((a, b) => a - b);
+  const tv = sang[sang.length >> 1];
+  const top = [...mau.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const c = ganNhat(...top[0][0].slice(1).match(/../g).map((v) => parseInt(v, 16)));
+  const dat = tv >= 60 && tv <= 140;
+  console.log(`${nhan} — viền thân: độ sáng trung vị ${tv.toFixed(0)}  ${top.map(([k, n]) => `${k}×${n}`).join(' · ')}`);
+  console.log(`   chuẩn ${chuan}, độ sáng 85–115 · ${dat ? 'ĐẠT — ám màu' : tv < 60 ? '⚠ TRƯỢT — đang là MỰC ĐEN' : '⚠ TRƯỢT — quá nhạt, gần như không có viền'}`);
+  if (c.ten === 'muc') console.log('   ⚠ màu hay gặp nhất rơi vào nhóm mực');
+}
+console.log('\nVIỀN THÂN  (phải ám màu, không được là mực)');
+doVien('Não', thanNao, '#5F66AC', 0.19);
+doVien('Tim', thanTim, '#8F404A', 0.26);
 
 // --- mắt: các mảng trắng, trừ watermark ra
 const laTrang = (x, y) => {
