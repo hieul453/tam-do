@@ -71,16 +71,17 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ## Bước 1 · vòng 2 — dùng cái này
 
-> Vòng 1 đã chạy, đo bằng `scripts/do-linh-vat.mjs` thì trượt chín chỗ. Nhưng
-> nó **đúng ba thứ khó nhất**: nhân vật là ai, kính dựng đúng, và mắt hai con
-> bằng nhau 97.3%. Nên nó lên làm ảnh tham chiếu cho vòng này — kèm danh sách
-> lỗi, đúng cách ta đã làm với `anh-goc.webp`.
+> Vòng 1 đã chạy, đo bằng `scripts/do-linh-vat.mjs` thì trượt tám chỗ. Nhưng
+> nó **đúng bốn thứ khó nhất**: nhân vật là ai, kính dựng đúng, mắt hai con
+> bằng nhau 97.3%, và viền thân Não đúng là tím ám chứ không phải mực. Nên nó
+> lên làm ảnh tham chiếu cho vòng này — kèm danh sách lỗi, đúng cách ta đã làm
+> với `anh-goc.webp`.
 >
 > **Sinh mới chứ không sửa tiếp trong chat cũ.** Lý do dứt khoát: nhân vật
 > đang chiếm 50% khung, cần 70%. Chế độ sửa chỉ phóng pixel đã có, mất đúng
-> cái độ phân giải ta đi sinh lại để lấy. Thêm nữa nhiễu, bóng mềm và đổ bóng
-> nằm ở tầng render — mỗi lượt sửa là một lượt render lại, đắp y nguyên mấy
-> thứ đó, cộng trôi màu tích luỹ.
+> cái độ phân giải ta đi sinh lại để lấy. Thêm nữa nhiễu và bóng mềm nằm ở
+> tầng render — mỗi lượt sửa là một lượt render lại, đắp y nguyên hai thứ đó,
+> cộng trôi màu tích luỹ.
 
 **Chuẩn bị:** đổi tên ảnh vòng 1 thành `vong-1.png`. **Chat mới.** Đính đúng
 một tệp — `vong-1.png`.
@@ -142,13 +143,12 @@ no waist, no hips, no neck.
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body height
 as 10 units: the heart's body is 9.3 tall, but BOTH characters have the same
 eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height measured
-from the bottom. The body outline is thin, about 0.2 units. The brain's body
-is 11.5 wide against its 10 of height — wider than tall, but only slightly.
+from the bottom. The body outline is thin, about 0.2 units. The brain's body is
+12.4 wide against its 10 of height; the heart's is 9.4 wide against its 9.3.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight outline drawn with a confident hand rather
-than a mechanically perfect vector path, no gradient and no shading, minimal
-detail.
+flat colour, an even-weight outline drawn with a confident hand rather than a
+mechanically perfect vector path, no gradient and no shading, minimal detail.
 
 IT MUST NOT LOOK MACHINE-MADE — treat this as the hardest requirement. Every
 stroke is one confident closed line, with clean joins where the limbs meet the
@@ -161,15 +161,15 @@ decorative squiggles.
 KEEP, as exact flat colours: brain body #9097DE outlined #5F66AC · heart body
 #D46B76 outlined #8F404A · mint #9BE5C5 · ink #0B0B12 for the limbs, the
 glasses and the headphones · background #F5F4E9 · ground shadow #E0D8C8. Eight
-colours, nothing else, each one perfectly flat. Both characters share the SAME face size — the
-heart's body is smaller, its eyes are not.
+colours, nothing else, each one perfectly flat. Both characters share the SAME
+face size — the heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D, texture,
 film grain, noise, speckle, blush cheeks, black outline around a body, coloured
 outline on a limb or an accessory, the two bodies outlined in different ways,
-variable line weight, sparkles, glow, halo, vignette, texture overlay,
-stiff symmetrical stock pose, legs ending without feet, subject floating with no
+variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff
+symmetrical stock pose, legs ending without feet, subject floating with no
 ground contact, text, watermark, frame, contact sheet, grid, panels, multiple
 poses in one image, turnaround, caption, label, number.
 
@@ -510,9 +510,9 @@ node scripts/do-linh-vat.mjs "$env:USERPROFILE\Downloads\tham-chieu-doi.png"
 ```
 
 Vòng 1 cho thấy vì sao thứ tự đó quan trọng. Nhìn bằng mắt thì "đẹp hơn hẳn
-bản cũ". Đo xong ra chín chỗ trượt, trong đó **ba chỗ mắt thường không bắt
-được**: viền thân Não là tím sẫm chứ không phải mực, nhiễu grain phủ toàn ảnh,
-và watermark ở góc.
+bản cũ". Đo xong ra tám chỗ trượt, trong đó **hai chỗ mắt thường không bắt
+được**: nhiễu grain phủ toàn ảnh, và watermark ở góc. Thước cũng bác lại ba
+kết luận tôi rút ra bằng mắt — xem phần viền hai tầng trong LINH-VAT.md.
 
 Thước đọc được: kích thước, bảng màu, độ bệt của từng thân, khung hình và lề,
 tỉ lệ thân Tim trên thân Não, cỡ mắt hai bên, lát cắt qua kính, bề dày nét
