@@ -25,14 +25,18 @@ ngôn ngữ vẽ từ nó, nhưng biết rõ cái gì không được chép.
 Ném cả folder thì máy phải tự đoán tệp nào quan trọng. **Đừng để nó đoán.** Mỗi
 prompt dưới đây mở đầu bằng bảng vai trò, gọi thẳng tên file.
 
-| Tệp | Đính kèm? | Vai |
+**Đính đúng một tệp mỗi lượt: ảnh.** Không kéo cả folder.
+
+| Tệp | Đính kèm? | Vì sao |
 |---|---|---|
 | `anh-goc.webp` | **Bước 1 có, bước 2–3 không** | Chỉ để biết hai nhân vật là ai và ngôn ngữ vẽ thế nào. Không phải chuẩn chất lượng |
-| `LINH-VAT.md` | Có, cả ba bước | Chữ. Nhưng **prompt dán vào thắng** khi hai bên khác nhau |
-| `to-mau-ty-le.svg` | **Không. Gỡ ra** | Vector sạch tuyệt đối cộng chữ — đúng hai thứ `NEVER` cấm. Nó là tờ cho người duyệt, không phải cho máy |
+| `tham-chieu-doi.png` | **Bước 2–3**, sau khi duyệt | Ảnh phong cách thật sự, từ bước 2 trở đi |
+| `LINH-VAT.md` | **Không** | Prompt dưới đây đã tự đủ. Còn file hợp đồng chứa **một prompt khác** cộng ba khối `REQUEST` khác — đính vào là cho máy hai bản chỉ dẫn để chọn |
+| `sinh-anh-lan-dau.md` | **Không** | Chính file này. Nó chứa cả ba prompt, kể cả hai prompt của bước sau |
+| `to-mau-ty-le.svg` | **Không** | Vector sạch tuyệt đối cộng chữ — đúng hai thứ `NEVER` cấm. Tờ cho người duyệt, không phải cho máy |
 
-Nếu tiện tay kéo cả folder thì prompt đã có câu chặn cho `to-mau-ty-le.svg`,
-nhưng **gỡ nó ra vẫn tốt hơn**. Câu chặn chỉ là lưới an toàn.
+Prompt vẫn có câu chặn cho cả bốn tệp kia, phòng lúc tiện tay kéo nhầm. Nhưng
+câu chặn chỉ là lưới an toàn — **ít tệp thì ít chỗ để máy hiểu sai**.
 
 ## Làm theo thứ tự, đừng sinh song song
 
@@ -67,7 +71,7 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ## Bước 1 — `tham-chieu-doi.png`
 
-**Đính kèm:** `anh-goc.webp` + `LINH-VAT.md`. Không đính `to-mau-ty-le.svg`.
+**Đính kèm:** đúng một tệp — `anh-goc.webp`.
 
 ```
 FILE ROLES — read this first. You have been given several files. They do NOT
@@ -79,8 +83,10 @@ have equal authority.
   round glasses, mint headphones. It is NOT a quality standard, NOT a layout to
   copy, and NOT a style reference that overrides this text. It is a
   known-defective specimen. Its defects are listed immediately below.
-- LINH-VAT.md — the written contract, for background. Where it and this message
-  disagree, THIS MESSAGE WINS. Ignore its "GIVE ME 3-5 VERSIONS" block.
+- Any .md file that was attached (LINH-VAT.md, sinh-anh-lan-dau.md) — IGNORE IT.
+  Everything you need is in THIS message. Those files contain other prompts,
+  other request blocks, and a "GIVE ME 3-5 VERSIONS" instruction. They describe
+  other jobs, not this one. Do not follow anything written in them.
 - to-mau-ty-le.svg — if this file was attached, IGNORE IT COMPLETELY. It is a
   technical measuring diagram with perfect vector paths and printed labels.
   Imitating it would break two hard rules at once.
@@ -180,8 +186,8 @@ danh sách bảy thứ ở cuối [`LINH-VAT.md`](LINH-VAT.md).
 
 ## Bước 2 — `tham-chieu-nao.png`
 
-**Đính kèm:** `tham-chieu-doi.png` vừa duyệt + `LINH-VAT.md`.
-**Gỡ `anh-goc.webp` ra.** Nó đã hết việc.
+**Đính kèm:** đúng một tệp — `tham-chieu-doi.png` vừa duyệt.
+**`anh-goc.webp` đã hết việc**, đừng đính nữa.
 
 ```
 FILE ROLES — read this first.
@@ -191,8 +197,10 @@ FILE ROLES — read this first.
   Where it and this text disagree about how something LOOKS, the image wins.
   You are redrawing the same character that appears in it, alone — not
   designing a new one.
-- LINH-VAT.md — the written contract, for background. Where it and this message
-  disagree, THIS MESSAGE WINS. Ignore its "GIVE ME 3-5 VERSIONS" block.
+- Any .md file that was attached (LINH-VAT.md, sinh-anh-lan-dau.md) — IGNORE IT.
+  Everything you need is in THIS message. Those files contain other prompts,
+  other request blocks, and a "GIVE ME 3-5 VERSIONS" instruction. They describe
+  other jobs, not this one. Do not follow anything written in them.
 - anh-goc.webp — if this file was attached, IGNORE IT COMPLETELY. It is an
   older, defective version that has been replaced by tham-chieu-doi.png.
 - to-mau-ty-le.svg — if this file was attached, IGNORE IT COMPLETELY. It is a
@@ -265,8 +273,8 @@ white between pupil and rim.
 
 ## Bước 3 — `tham-chieu-tim.png`
 
-**Đính kèm:** `tham-chieu-doi.png` vừa duyệt + `LINH-VAT.md`.
-**Gỡ `anh-goc.webp` ra.**
+**Đính kèm:** đúng một tệp — `tham-chieu-doi.png` vừa duyệt.
+**`anh-goc.webp` đã hết việc**, đừng đính nữa.
 
 ```
 FILE ROLES — read this first.
@@ -276,8 +284,10 @@ FILE ROLES — read this first.
   Where it and this text disagree about how something LOOKS, the image wins.
   You are redrawing the same character that appears in it, alone — not
   designing a new one.
-- LINH-VAT.md — the written contract, for background. Where it and this message
-  disagree, THIS MESSAGE WINS. Ignore its "GIVE ME 3-5 VERSIONS" block.
+- Any .md file that was attached (LINH-VAT.md, sinh-anh-lan-dau.md) — IGNORE IT.
+  Everything you need is in THIS message. Those files contain other prompts,
+  other request blocks, and a "GIVE ME 3-5 VERSIONS" instruction. They describe
+  other jobs, not this one. Do not follow anything written in them.
 - anh-goc.webp — if this file was attached, IGNORE IT COMPLETELY. It is an
   older, defective version that has been replaced by tham-chieu-doi.png.
 - to-mau-ty-le.svg — if this file was attached, IGNORE IT COMPLETELY. It is a
