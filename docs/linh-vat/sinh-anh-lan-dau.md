@@ -45,9 +45,9 @@ tương lai thừa kế luôn chỗ lệch đó — và lúc ấy không còn g�
 
 Nên sinh nối tiếp, không sinh song song:
 
-1. **Ảnh đôi trước.** Đính `anh-goc.webp`. Duyệt kỹ bằng
-   [`to-mau-ty-le.svg`](to-mau-ty-le.svg) và danh sách bảy thứ trong hợp đồng.
-   Chưa đạt thì sinh lại, **chưa được đi tiếp**.
+1. **Ảnh đôi trước.** Duyệt bằng `scripts/do-linh-vat.mjs` và danh sách bảy
+   thứ trong hợp đồng. Chưa đạt thì sinh lại, **chưa được đi tiếp** — mỗi vòng
+   lấy ảnh vòng trước làm tham chiếu, kèm danh sách lỗi đo được.
 2. **Ảnh Não**, đính **ảnh đôi vừa duyệt** — không đính `anh-goc.webp` nữa.
 3. **Ảnh Tim**, cũng đính ảnh đôi vừa duyệt.
 
@@ -69,7 +69,144 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ---
 
-## Bước 1 — `tham-chieu-doi.png`
+## Bước 1 · vòng 2 — dùng cái này
+
+> Vòng 1 đã chạy, đo bằng `scripts/do-linh-vat.mjs` thì trượt chín chỗ. Nhưng
+> nó **đúng ba thứ khó nhất**: nhân vật là ai, kính dựng đúng, và mắt hai con
+> bằng nhau 97.3%. Nên nó lên làm ảnh tham chiếu cho vòng này — kèm danh sách
+> lỗi, đúng cách ta đã làm với `anh-goc.webp`.
+>
+> **Sinh mới chứ không sửa tiếp trong chat cũ.** Lý do dứt khoát: nhân vật
+> đang chiếm 50% khung, cần 70%. Chế độ sửa chỉ phóng pixel đã có, mất đúng
+> cái độ phân giải ta đi sinh lại để lấy. Thêm nữa nhiễu, bóng mềm và đổ bóng
+> nằm ở tầng render — mỗi lượt sửa là một lượt render lại, đắp y nguyên mấy
+> thứ đó, cộng trôi màu tích luỹ.
+
+**Chuẩn bị:** đổi tên ảnh vòng 1 thành `vong-1.png`. **Chat mới.** Đính đúng
+một tệp — `vong-1.png`.
+
+````
+FILE ROLES — read this first.
+
+The attached image (vong-1.png) is a previous attempt at exactly this picture.
+It gets the important things RIGHT, and you must keep them unchanged:
+  - who the two characters are, and their colours
+  - how the glasses are built: the rim is thin, each lens is clearly wider than
+    the eye inside it, and a ring of white shows between pupil and rim
+  - BOTH CHARACTERS HAVE THE SAME EYE SIZE, even though the heart's body is
+    smaller. This is the hardest thing to get right and it is already correct.
+    Do not change it.
+
+Where the image and this text disagree about how something LOOKS, the image
+wins — EXCEPT for the nine defects listed below, and except for the NEVER list
+at the end, which always wins.
+
+If any .md, .svg or other file was also attached, IGNORE IT.
+
+WHAT THE ATTACHED IMAGE GETS WRONG — fix every one of these:
+
+1. THE TWO OUTLINES DO NOT MATCH. The heart has a true black ink outline. The
+   brain does not — its outline is dark purple. Both characters must have the
+   SAME outline: black ink #0B0B12, the same thickness on both. A purple
+   outline on one and a black outline on the other makes them look like they
+   came from two different artists.
+2. THE BODIES ARE SHADED. Each body has a darker band of its own colour running
+   along the inside of its outline. Remove it. Each body is ONE flat colour from
+   edge to edge — no darker rim, no inner glow, no form shading, nothing that
+   suggests a light source.
+3. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse of solid
+   #E0D8C8, as if cut out with scissors. No blur, no fade, no soft falloff.
+4. THE WHOLE IMAGE HAS FILM GRAIN. The flat areas are not flat — the background
+   alone contains dozens of slightly different creams. Every flat area must be
+   exactly one single colour, pixel for pixel. No grain, no noise, no speckle,
+   no paper texture.
+5. THE CHARACTERS ARE TOO SMALL — about 50% of the frame height. Make them
+   about 70%. Less empty space above and below, more character.
+6. THERE ARE NO FEET. The legs simply stop. Each leg must end in a small foot
+   stroke, the same way each arm ends in a hand.
+7. THE FEET SINK INTO THE SHADOW. Both characters stand ON one shared ground
+   line, with the shadow lying underneath them — not wrapped around their ankles.
+8. THE POSE IS STIFF: both stand straight with arms hanging. Each character puts
+   its weight on one leg and makes one small gesture with one hand.
+9. THE COMPOSITION IS TOO WIDE. The two are spread far apart with big empty
+   bands at top and bottom. Bring them closer together and let them fill the
+   height instead of the width.
+
+HOW THE BODY IS BUILT — unchanged from the attached image, stated so you do not
+drift: each character is ONE shape plus four lines. The brain shape is the
+entire body. The heart shape is the entire body. Two thin black lines leave the
+sides as arms, two leave the bottom as legs, each ending in a small stroke for
+hand and foot. That is the complete anatomy. These are not people and not people
+in costume: nothing sits on top of a body, and there are no shoulders, no chest,
+no waist, no hips, no neck.
+
+PROPORTIONS — measure these, do not eyeball them. Taking the brain's body height
+as 10 units: the heart's body is 8.8 tall, but BOTH characters have the same
+eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height measured
+from the bottom. The outline is 0.45 thick, the same on both. The brain's body
+is 11.5 wide against its 10 of height — wider than tall, but only slightly.
+
+STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
+flat colour, an even-weight black ink outline drawn with a confident hand rather
+than a mechanically perfect vector path, no gradient and no shading, minimal
+detail.
+
+IT MUST NOT LOOK MACHINE-MADE — treat this as the hardest requirement. Every
+stroke is one confident closed line, with clean joins where the limbs meet the
+body and no mush at the hands and feet. Nothing is ALMOST symmetrical: either
+commit to symmetry or break it clearly. Edges stay crisp — no glow, no halo, no
+stray third colour bleeding along the outline. Add nothing that was not asked
+for: no sparkles, no vignette, no texture overlay, no extra highlight, no
+decorative squiggles.
+
+KEEP, as exact flat colours: brain #9097DE · heart #D46B76 · mint #9BE5C5 ·
+ink #0B0B12 · background #F5F4E9 · ground shadow #E0D8C8. Six colours, nothing
+else, each one perfectly flat. Both characters share the SAME face size — the
+heart's body is smaller, its eyes are not.
+
+NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
+waist, hips, neck, gradient, shading, soft shadow, blurred shadow, inner shadow,
+darker rim inside the outline, 3D, texture, film grain, noise, speckle, blush
+cheeks, coloured outline, purple outline, variable line weight, two characters
+with different outline colours, sparkles, glow, halo, vignette, texture overlay,
+stiff symmetrical stock pose, legs ending without feet, subject floating with no
+ground contact, text, watermark, frame, contact sheet, grid, panels, multiple
+poses in one image, turnaround, caption, label, number.
+
+GIVE ME ONE IMAGE.
+
+REQUEST:
+This image becomes the canonical style reference for every future request, so
+it must show line quality and the size relationship between the two clearly.
+
+Both characters standing on one shared ground line, facing the viewer, LIGHTLY
+performed: each with its weight on one leg, one small hand gesture each, mouths
+in an easy closed smile. Brain on the left with its glasses, heart on the right
+with its headphones. No gag, no props, no scene, no interaction between them —
+this is a portrait of the pair, not a joke.
+
+Fill the frame: the pair should be about 70% of the image HEIGHT, standing close
+enough together that they read as one group, with empty background on all four
+sides and neither character touching any edge. Flat background. Each character
+has its hard-edged flat ellipse shadow on the ground. Nothing else exists in
+this image.
+
+Square image, at the largest resolution you can produce.
+
+Before you finish, check these four: both characters have the same black ink
+outline; neither body has a darker band inside its edge; the ground shadows have
+hard edges; every flat area is exactly one colour.
+````
+
+**Duyệt lại bằng thước:**
+
+```powershell
+node scripts/do-linh-vat.mjs "$env:USERPROFILE\Downloads\tham-chieu-doi.png"
+```
+
+---
+
+## Bước 1 · vòng 1 — đã chạy rồi, giữ để đối chiếu
 
 **Đính kèm:** đúng một tệp — `anh-goc.webp`.
 
@@ -361,18 +498,34 @@ than the brain's face, redraw it.
 
 ## Nhận ảnh về thì làm gì
 
-Soi theo danh sách bảy thứ ở cuối [`LINH-VAT.md`](LINH-VAT.md), mở
-[`to-mau-ty-le.svg`](to-mau-ty-le.svg) cạnh bên để đo.
+**Chạy thước trước, mắt sau:**
 
-Hai lỗi dễ bỏ sót nhất, vì mắt thường không bắt được:
+```powershell
+node scripts/do-linh-vat.mjs "$env:USERPROFILE\Downloads\tham-chieu-doi.png"
+```
 
-- **Mắt Tim co theo thân.** Đặt ảnh Não và ảnh Tim cạnh nhau, so hai cặp mắt.
-  Lệch cỡ là trượt, không cần đo tiếp.
-- **Kính bít mắt.** Phóng to chỗ mắt Não. Phải thấy một vành trắng giữa con
-  ngươi và gọng. Dính thành khối đen là tròng quá nhỏ.
+Vòng 1 cho thấy vì sao thứ tự đó quan trọng. Nhìn bằng mắt thì "đẹp hơn hẳn
+bản cũ". Đo xong ra chín chỗ trượt, trong đó **ba chỗ mắt thường không bắt
+được**: viền thân Não là tím sẫm chứ không phải mực, nhiễu grain phủ toàn ảnh,
+và watermark ở góc.
 
-Và một phép thử rẻ bắt được gần hết mọi lỗi còn lại: **thu nhỏ ảnh còn 32px.**
-Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
+Thước đọc được: kích thước, bảng màu, độ bệt của từng thân, khung hình và lề,
+tỉ lệ thân Tim trên thân Não, cỡ mắt hai bên, lát cắt qua kính, bề dày nét
+viền, và watermark góc dưới phải.
+
+Còn ba thứ phải tự nhìn:
+
+- **Chân có bàn chân không**, và có đứng trên bóng không hay cắm vào giữa bóng
+- **Tư thế có diễn không** hay đứng đơ tay buông
+- **Thu nhỏ còn 32px có đọc được không** — phép thử rẻ bắt được gần hết lỗi
+  còn lại. Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
+
+## Watermark
+
+Gemini đóng một ngôi sao bốn cánh ~96px ở góc dưới phải. Đó là **dấu ghi
+nguồn — đừng xoá.** Cách sạch là sinh ở nơi không đóng dấu; thử AI Studio xem
+ảnh ra có sao không. Chưa ai kiểm, nên cứ thử rồi chạy thước, dòng
+`GÓC DƯỚI PHẢI` sẽ nói ngay.
 
 Đạt rồi thì:
 
