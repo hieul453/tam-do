@@ -43,41 +43,53 @@
 
   <!-- bảng màu + đơn vị -->
   <g transform="translate(40, 116)">
-    <text class="nho" x="0" y="0">Bảng màu — không thêm màu thứ bảy</text>
+    <text class="nho" x="0" y="0">Bảng màu</text>
     <g transform="translate(0, 10)">
-      <rect x="0" y="0" width="86" height="26" rx="5" fill="#9097DE" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="43" y="18" text-anchor="middle" fill="#0B0B12">#9097DE</text>
-      <rect x="94" y="0" width="86" height="26" rx="5" fill="#D46B76" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="137" y="18" text-anchor="middle" fill="#0B0B12">#D46B76</text>
-      <rect x="188" y="0" width="86" height="26" rx="5" fill="#9BE5C5" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="231" y="18" text-anchor="middle" fill="#0B0B12">#9BE5C5</text>
-      <rect x="282" y="0" width="86" height="26" rx="5" fill="#0B0B12" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="325" y="18" text-anchor="middle" fill="#F5F4E9">#0B0B12</text>
-      <rect x="376" y="0" width="86" height="26" rx="5" fill="#F5F4E9" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="419" y="18" text-anchor="middle" fill="#0B0B12">#F5F4E9</text>
-      <rect x="470" y="0" width="86" height="26" rx="5" fill="#E0D8C8" stroke="#0B0B12" stroke-width="1.2" />
-      <text class="nho" x="513" y="18" text-anchor="middle" fill="#0B0B12">#E0D8C8</text>
+      <rect x="0" y="0" width="72" height="24" rx="5" fill="#9097DE" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="36" y="16.5" text-anchor="middle" fill="#0B0B12" font-size="10.5">#9097DE</text>
+      <text class="nho" x="36" y="38" text-anchor="middle" font-size="10.5">thân Não</text>
+      <rect x="78" y="0" width="72" height="24" rx="5" fill="#5F66AC" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="114" y="16.5" text-anchor="middle" fill="#F5F4E9" font-size="10.5">#5F66AC</text>
+      <text class="nho" x="114" y="38" text-anchor="middle" font-size="10.5">viền Não</text>
+      <rect x="156" y="0" width="72" height="24" rx="5" fill="#D46B76" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="192" y="16.5" text-anchor="middle" fill="#0B0B12" font-size="10.5">#D46B76</text>
+      <text class="nho" x="192" y="38" text-anchor="middle" font-size="10.5">thân Tim</text>
+      <rect x="234" y="0" width="72" height="24" rx="5" fill="#8F404A" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="270" y="16.5" text-anchor="middle" fill="#F5F4E9" font-size="10.5">#8F404A</text>
+      <text class="nho" x="270" y="38" text-anchor="middle" font-size="10.5">viền Tim</text>
+      <rect x="312" y="0" width="72" height="24" rx="5" fill="#9BE5C5" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="348" y="16.5" text-anchor="middle" fill="#0B0B12" font-size="10.5">#9BE5C5</text>
+      <text class="nho" x="348" y="38" text-anchor="middle" font-size="10.5">bạc hà</text>
+      <rect x="390" y="0" width="72" height="24" rx="5" fill="#0B0B12" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="426" y="16.5" text-anchor="middle" fill="#F5F4E9" font-size="10.5">#0B0B12</text>
+      <text class="nho" x="426" y="38" text-anchor="middle" font-size="10.5">mực</text>
+      <rect x="468" y="0" width="72" height="24" rx="5" fill="#F5F4E9" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="504" y="16.5" text-anchor="middle" fill="#0B0B12" font-size="10.5">#F5F4E9</text>
+      <text class="nho" x="504" y="38" text-anchor="middle" font-size="10.5">giấy</text>
+      <rect x="546" y="0" width="72" height="24" rx="5" fill="#E0D8C8" stroke="#0B0B12" stroke-width="1.2" />
+      <text class="nho" x="582" y="16.5" text-anchor="middle" fill="#0B0B12" font-size="10.5">#E0D8C8</text>
+      <text class="nho" x="582" y="38" text-anchor="middle" font-size="10.5">bóng</text>
     </g>
-    <text class="nho" x="580" y="14">Đơn vị: chiều cao thân Não = 10.</text>
-    <text class="nho" x="580" y="32">Mọi số trên tờ này tính theo đơn vị đó.</text>
+    <text class="nho" x="648" y="22">Tám màu, không thêm màu thứ chín.</text>
+    <text class="nho" x="648" y="40">Đơn vị: chiều cao thân Não = 10.</text>
   </g>
 
   <!-- mặt đất chung -->
   <line class="dat" x1="60" y1="520" x2="1110" y2="520" />
 
   <!-- ===================== NÃO ===================== -->
-  <!-- hộp bao 11.5 × 10 → 230 × 200 ; đáy y=444 ; đỉnh y=244 ; tâm x=350 -->
+  <!-- hộp bao 12.4 × 10 → 248 × 200 ; đáy y=444 ; đỉnh y=244 ; tâm x=350 -->
   <g>
     <ellipse cx="350" cy="520" rx="110" ry="15" fill="#E0D8C8" />
-    <rect x="235" y="244" width="230" height="200" rx="14" fill="#9097DE" opacity=".12" />
-    <rect class="hop" x="235" y="244" width="230" height="200" rx="14" />
+    <rect x="226" y="244" width="248" height="200" rx="14" fill="#9097DE" opacity=".12" />
+    <rect class="hop" x="226" y="244" width="248" height="200" rx="14" />
 
     <!-- trục chân 3.8 → 76 -->
     <line class="truc" x1="305" y1="444" x2="302" y2="520" />
     <line class="truc" x1="395" y1="444" x2="398" y2="520" />
     <!-- trục tay 5.5 → 110, gắn ở 55% chiều cao thân tính từ đáy → y = 444-110 = 334 -->
-    <line class="truc" x1="235" y1="334" x2="131" y2="366" />
-    <line class="truc" x1="465" y1="334" x2="569" y2="366" />
+    <line class="truc" x1="226" y1="334" x2="122" y2="366" />
+    <line class="truc" x1="474" y1="334" x2="578" y2="366" />
 
     <!-- mắt: d 2.6 → 52, tâm cách tâm 4.2 → 84, tâm ở 58% → y = 444-116 = 328 -->
     <circle class="net" cx="308" cy="328" r="26" />
@@ -97,8 +109,8 @@
   <text class="so" x="166" y="272" text-anchor="end">10</text>
   <text class="nho" x="166" y="288" text-anchor="end">thân cao</text>
 
-  <line class="kich" x1="235" y1="214" x2="465" y2="214" />
-  <text class="so" x="350" y="206" text-anchor="middle">11.5 · thân rộng</text>
+  <line class="kich" x1="226" y1="214" x2="474" y2="214" />
+  <text class="so" x="350" y="206" text-anchor="middle">12.4 · thân rộng</text>
 
   <text class="nho" x="350" y="256" text-anchor="middle">tâm mắt cách tâm mắt</text>
   <line class="kich" x1="308" y1="276" x2="392" y2="276" />
@@ -115,64 +127,64 @@
   <text class="so" x="500" y="392">58%</text>
   <text class="nho" x="500" y="407">tâm mắt, tính từ đáy thân</text>
 
-  <line class="kich" x1="131" y1="392" x2="235" y2="392" />
-  <text class="so" x="183" y="410" text-anchor="middle">5.5 · tay</text>
+  <line class="kich" x1="122" y1="392" x2="226" y2="392" />
+  <text class="so" x="174" y="410" text-anchor="middle">5.5 · tay</text>
 
   <line class="kich" x1="560" y1="444" x2="560" y2="520" />
   <text class="so" x="570" y="486">3.8</text>
   <text class="nho" x="570" y="501">chân</text>
 
   <!-- ===================== TIM ===================== -->
-  <!-- hộp bao 9.6 × 8.8 → 192 × 176 ; đáy y=444 ; đỉnh y=268 ; tâm x=860 -->
+  <!-- hộp bao 9.4 × 9.3 → 188 × 186 ; đáy y=444 ; đỉnh y=258 ; tâm x=860 -->
   <g>
     <ellipse cx="860" cy="520" rx="95" ry="14" fill="#E0D8C8" />
-    <rect x="764" y="268" width="192" height="176" rx="13" fill="#D46B76" opacity=".12" />
-    <rect class="hop" x="764" y="268" width="192" height="176" rx="13" />
+    <rect x="766" y="258" width="188" height="186" rx="13" fill="#D46B76" opacity=".12" />
+    <rect class="hop" x="766" y="258" width="188" height="186" rx="13" />
 
     <line class="truc" x1="822" y1="444" x2="819" y2="520" />
     <line class="truc" x1="898" y1="444" x2="901" y2="520" />
     <!-- trục tay gắn ở 55% của 176 = 97 → y = 444-97 = 347 -->
-    <line class="truc" x1="764" y1="347" x2="660" y2="379" />
-    <line class="truc" x1="956" y1="347" x2="1060" y2="379" />
+    <line class="truc" x1="766" y1="342" x2="662" y2="374" />
+    <line class="truc" x1="954" y1="342" x2="1058" y2="374" />
 
     <!-- mắt GIỐNG HỆT Não: d 52, cách 84. tâm ở 58% của 176 = 102 → y = 444-102 = 342 -->
-    <circle class="net" cx="818" cy="342" r="26" />
-    <circle class="net" cx="902" cy="342" r="26" />
-    <circle cx="818" cy="342" r="13" fill="#0B0B12" />
-    <circle cx="902" cy="342" r="13" fill="#0B0B12" />
+    <circle class="net" cx="818" cy="336" r="26" />
+    <circle class="net" cx="902" cy="336" r="26" />
+    <circle cx="818" cy="336" r="13" fill="#0B0B12" />
+    <circle cx="902" cy="336" r="13" fill="#0B0B12" />
     <!-- chụp tai d 2.8 → 56 -->
-    <circle class="net" cx="764" cy="330" r="28" stroke-dasharray="5 4" opacity=".75" />
-    <circle class="net" cx="956" cy="330" r="28" stroke-dasharray="5 4" opacity=".75" />
+    <circle class="net" cx="766" cy="324" r="28" stroke-dasharray="5 4" opacity=".75" />
+    <circle class="net" cx="954" cy="324" r="28" stroke-dasharray="5 4" opacity=".75" />
 
     <text class="nhan" x="860" y="562" text-anchor="middle" font-weight="700">TIM</text>
-    <text class="nho" x="860" y="581" text-anchor="middle">thân bằng 88% Não · mắt bằng 100% Não</text>
+    <text class="nho" x="860" y="581" text-anchor="middle">thân bằng 93% Não · mắt bằng 100% Não</text>
   </g>
 
-  <line class="kich" x1="724" y1="268" x2="724" y2="444" />
-  <text class="so" x="715" y="296" text-anchor="end">8.8</text>
+  <line class="kich" x1="724" y1="258" x2="724" y2="444" />
+  <text class="so" x="715" y="296" text-anchor="end">9.3</text>
   <text class="nho" x="715" y="312" text-anchor="end">thân cao</text>
 
-  <line class="kich" x1="764" y1="238" x2="956" y2="238" />
-  <text class="so" x="860" y="230" text-anchor="middle">9.6 · thân rộng</text>
+  <line class="kich" x1="766" y1="228" x2="954" y2="228" />
+  <text class="so" x="860" y="220" text-anchor="middle">9.4 · thân rộng</text>
 
-  <line class="kich" x1="818" y1="290" x2="902" y2="290" />
-  <text class="so" x="860" y="282" text-anchor="middle">4.2</text>
+  <line class="kich" x1="818" y1="284" x2="902" y2="284" />
+  <text class="so" x="860" y="276" text-anchor="middle">4.2</text>
 
-  <line class="kich" x1="792" y1="342" x2="844" y2="342" />
+  <line class="kich" x1="792" y1="336" x2="844" y2="336" />
   <text class="so" x="818" y="396" text-anchor="middle">2.6 · mắt</text>
 
-  <line class="kich" x1="992" y1="330" x2="1048" y2="330" />
-  <text class="so" x="1056" y="327">2.8</text>
-  <text class="nho" x="1056" y="342">chụp tai</text>
+  <line class="kich" x1="990" y1="324" x2="1046" y2="324" />
+  <text class="so" x="1054" y="321">2.8</text>
+  <text class="nho" x="1054" y="336">chụp tai</text>
 
   <!-- ===================== hai hộp ghi chú ===================== -->
   <g>
     <rect x="40" y="606" width="560" height="110" rx="10" fill="#FFFFFF" opacity=".45" />
     <rect x="40" y="606" width="560" height="110" rx="10" fill="none" stroke="#0B0B12" stroke-width="1.3" />
     <text class="nhan" x="60" y="629" font-weight="700">Số còn lại — không vẽ trên tờ này</text>
-    <text class="nho" x="60" y="651">Nét viền: 0.45 trên cả hai. Gọng kính dày đúng bằng nét viền, không dày hơn.</text>
-    <text class="nho" x="60" y="670">Điểm gắn tay: 55% chiều cao thân, tính từ đáy.</text>
-    <text class="nho" x="60" y="689">Bóng: ellipse bẹt, rộng 11 (Não) · 9.5 (Tim). Không mờ dần, không đổ theo nguồn sáng.</text>
+    <text class="nho" x="60" y="651">Viền THÂN ám màu: Não #5F66AC dày 0.19 · Tim #8F404A dày 0.26. Không bao giờ đen.</text>
+    <text class="nho" x="60" y="670">Viền TAY CHÂN, KÍNH, TAI NGHE: mực đen #0B0B12. Điểm gắn tay: 55% chiều cao thân.</text>
+    <text class="nho" x="60" y="689">Bóng: ellipse bẹt, mép cứng — ảnh gốc chuyển màu trong 4% bề rộng. Bề rộng chưa đo lại.</text>
     <text class="nho" x="60" y="708">Tay 5.5 · chân 3.8 — giống nhau ở cả hai nhân vật.</text>
   </g>
 
@@ -182,7 +194,7 @@
     <text class="nhan" x="640" y="629" font-weight="700">Hai chỗ máy trượt nhiều nhất</text>
     <text class="nho" x="640" y="651">1. Thân Tim nhỏ hơn nên máy co luôn mắt theo. Mắt 2.6 và</text>
     <text class="nho" x="640" y="670">khoảng cách 4.2 phải giống hệt nhau ở cả hai — lệch cỡ là trượt.</text>
-    <text class="nho" x="640" y="693">2. Tròng kính 3.6 phải rộng hơn mắt 2.6 rõ rệt, hở một vành trắng</text>
-    <text class="nho" x="640" y="712">giữa con ngươi và gọng. Dính thành khối đen là tròng quá nhỏ.</text>
+    <text class="nho" x="640" y="693">2. Viền thân phải ám màu, không phải đen. Lấy pixel sẫm nhất sát mép</text>
+    <text class="nho" x="640" y="712">thân: dưới độ sáng 40 là mực, tức là sai. Khoảng 85–115 mới đúng.</text>
   </g>
 </svg>

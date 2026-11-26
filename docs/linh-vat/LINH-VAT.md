@@ -75,13 +75,13 @@ thước file.
 
 | | Não | Tim |
 |---|---|---|
-| Thân — cao | **10** | **8.8** |
+| Thân — cao | **10** | **9.3** |
 | Thân — rộng | 11.5 | 9.6 |
 | Mắt — đường kính | **2.6** | **2.6** |
 | Mắt — tâm cách tâm | **4.2** | **4.2** |
 | Mắt — tâm cao bao nhiêu, tính từ đáy thân | 58% | 58% |
 | Con ngươi — đường kính | 1.3 | 1.3 |
-| Nét viền — dày | **0.45** | **0.45** |
+| Nét viền thân — dày | **0.19** | **0.26** |
 | Tay — dài | 5.5 | 5.5 |
 | Chân — dài | 3.8 | 3.8 |
 | Điểm gắn tay, tính từ đáy thân | 55% | 55% |
@@ -96,8 +96,8 @@ mặt" kiểm được bằng thước thay vì bằng cảm giác.
 | | |
 |---|---|
 | Tròng kính — đường kính | **3.6** (rộng hơn mắt 2.6 một khoảng rõ rệt) |
-| Gọng kính — dày | **0.45** — bằng đúng nét thân, **không dày hơn** |
-| Cầu nối hai tròng — dày | 0.45 |
+| Gọng kính — dày | **0.2** — mảnh như nét thân, và là **mực đen**, không ám tím |
+| Cầu nối hai tròng — dày | 0.2 |
 | Chụp tai — đường kính | 2.8 |
 | Vòng cung tai nghe — dày | 0.5 |
 
@@ -107,6 +107,32 @@ Não mất mặt. Tròng rộng hơn mắt thì có khoảng trắng thở giữ
 
 **Dưới 32px:** kính rụng xuống còn một nét ngang, tai nghe bỏ hẳn — giống cách
 logo bỏ linh vật ở cỡ favicon. Dưới 20px thì chỉ còn khối thân.
+
+### Viền có hai tầng, không phải một
+
+Đây là chỗ bản hợp đồng trước ghi sai, và sai này đắt: nó bảo viền toàn bộ là
+mực đen, còn liệt `coloured outline` vào danh sách cấm — tức là **cấm đúng cái
+thiết kế của team**. Đo lại `anh-goc.webp` thì luật thật là:
+
+| | Viền | Đo được ở ảnh gốc |
+|---|---|---|
+| **Thân Não** | tím sẫm hơn thân | `#5F66AC` |
+| **Thân Tim** | đỏ sẫm hơn thân | `#8F404A` |
+| **Tay, chân, bàn tay, bàn chân** | mực đen | `#0B0B12` |
+| **Kính** | mực đen | `#0B0B12` |
+| **Tai nghe** | mực đen | `#0B0B12` |
+
+Luật một câu: **thân thì viền ám màu của chính nó, mọi thứ gắn vào thân thì
+viền mực.** Nó làm thân thấy mềm và hữu cơ, còn phụ kiện thấy là đồ vật — một
+quyết định thiết kế tốt, và chính vì nó tinh nên dễ bị san phẳng thành "viền
+đen hết".
+
+Bề dày đo được ở ảnh gốc: thân Não **0.19 đơn vị**, thân Tim **0.26**. Không
+phải 0.45 như bản trước ghi.
+
+> **Cách bắt lỗi này nhanh nhất:** lấy pixel sẫm nhất ngay sát mép thân. Dưới
+> độ sáng 40 là mực — tức là sai. Khoảng 85–115 mới đúng.
+> `scripts/do-linh-vat.mjs` in thẳng con số đó ra.
 
 ## Prompt có hai chế độ
 
@@ -144,18 +170,26 @@ people in costume: nothing sits on top of a body, and there are no shoulders,
 no chest, no waist, no hips, no neck.
 
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body
-height as 10 units: the heart's body is 8.8 tall, but BOTH characters have the
-same eyes — 2.6 across, centres 4.2 apart. The outline is 0.45 thick on both.
-A heart with smaller eyes than the brain is a failed drawing.
+height as 10 units: the heart's body is 9.3 tall, but BOTH characters have the
+same eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height from
+the bottom. A heart with smaller eyes than the brain is a failed drawing.
 
-THE GLASSES AND THE HEADPHONES are built, not stuck on. The glasses' rims are
-exactly as thick as the body outline, never thicker. Each lens is 3.6 across —
+THE OUTLINE HAS TWO TIERS, and this is the easiest thing in the whole brief to
+get wrong. Each BODY is outlined in a darker shade of its own colour — the
+brain in #5F66AC, the heart in #8F404A — thin, about 0.2 units. Everything
+ATTACHED to a body is outlined in true black ink #0B0B12: the arms, the legs,
+the hands, the feet, the glasses, the headphones. A body outlined in black is a
+failed drawing, and so is a limb outlined in colour.
+
+THE GLASSES AND THE HEADPHONES are built, not stuck on. They are black ink,
+unlike the body outline. Their rims are thin — about as thin as the body
+outline, never thicker. Each lens is 3.6 across —
 clearly wider than the 2.6 eye inside it — so a ring of white shows between
 pupil and rim. If rim and pupil merge into one black mass, the lens is too
 small; enlarge it.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight black ink outline drawn with a confident hand
+flat colour, an even-weight outline drawn with a confident hand
 rather than a mechanically perfect vector path, no gradient and no shading,
 minimal detail. And genuinely funny — minimalism in the drawing,
 personality in the acting. Cute alone is not the target; the joke is.
@@ -178,15 +212,18 @@ redraw the pose.
 You may borrow gags, poses and visual clichés from pop culture, Vietnamese or
 international, whenever they land better than a literal illustration.
 
-KEEP: brain #9097DE · heart #D46B76 · mint #9BE5C5 · ink #0B0B12 ·
+KEEP: brain body #9097DE outlined #5F66AC · heart body #D46B76 outlined
+#8F404A · mint #9BE5C5 · ink #0B0B12 for limbs, glasses and headphones ·
 paper #F5F4E9 · flat ellipse shadow #E0D8C8. Both characters share the SAME
 face size — the heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
-waist, hips, neck, gradient, shading, soft shadow, 3D,
-texture, blush cheeks, coloured outline, variable line
+waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D,
+texture, film grain, noise, blush cheeks, black outline around a body,
+coloured outline on a limb or an accessory, variable line
 weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical
-stock pose, subject floating with no ground contact, text, watermark, frame.
+stock pose, legs ending without feet, subject floating with no ground contact,
+text, watermark, frame.
 
 GIVE ME 3–5 VERSIONS of this request, as separate images — not one sheet,
 not one image split into panels. Identical characters, identical style and
@@ -231,7 +268,7 @@ ground. Nothing else exists in this image.
 
 Square image, as large as you can produce.
 
-Re-measure before you finish: the heart's body is 8.8 tall where the brain's is
+Re-measure before you finish: the heart's body is 9.3 tall where the brain's is
 10, but their eyes are the same size. Each glasses lens is clearly wider than
 the eye inside it.
 ```
@@ -334,11 +371,12 @@ một cách phòng thân — nhìn vào là biết không phải ảnh mẫu.
 **Không bao giờ đính `to-mau-ty-le.svg` vào prompt sinh ảnh.** Nó có chữ, và
 theo quy tắc ưu tiên thì ảnh thắng chữ.
 
-## Nhận ảnh về thì soi bảy thứ
+## Nhận ảnh về thì soi tám thứ
 
 1. **Không có hình người** — chỉ một khối thân cộng bốn nét tay chân. Thấy vai, ngực, eo, hay một cái đầu đặt trên một thân người là trượt.
 2. **Màu bệt và nét đều** — thấy chuyển sắc, bóng mềm hay nét lúc dày lúc mỏng là trượt.
-3. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất cái này là hai nhân vật trông như hai nhà khác nhau. Giờ kiểm được bằng thước: thân Tim bằng 88% thân Não, mắt bằng 100%.
+3. **Viền đúng tầng** — thân ám màu (`#5F66AC` · `#8F404A`), tay chân và phụ kiện mực đen. Thân viền đen là trượt, dù nhìn vẫn thấy "sạch".
+3. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất cái này là hai nhân vật trông như hai nhà khác nhau. Giờ kiểm được bằng thước: thân Tim bằng 93% thân Não, mắt bằng 100%.
 4. **Không có chữ trong ảnh** — kể cả chữ nhỏ trong bong bóng thoại.
 5. **Không có mùi AI** — nét run hoặc hở ở chỗ tay chân nối vào thân, bàn tay bàn chân nhoè, hai bên gần đối xứng mà lệch nhẹ, hào quang mờ quanh viền, lấp lánh hay vân nền không ai yêu cầu, và tư thế đứng đơ không diễn gì.
 6. **Kính không bít mắt** — phải thấy rõ khoảng trắng giữa con ngươi và gọng. Gọng dày bằng nét thân, không dày hơn.

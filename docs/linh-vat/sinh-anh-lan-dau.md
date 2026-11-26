@@ -98,37 +98,36 @@ It gets the important things RIGHT, and you must keep them unchanged:
     Do not change it.
 
 Where the image and this text disagree about how something LOOKS, the image
-wins — EXCEPT for the nine defects listed below, and except for the NEVER list
+wins — EXCEPT for the eight defects listed below, and except for the NEVER list
 at the end, which always wins.
 
 If any .md, .svg or other file was also attached, IGNORE IT.
 
 WHAT THE ATTACHED IMAGE GETS WRONG — fix every one of these:
 
-1. THE TWO OUTLINES DO NOT MATCH. The heart has a true black ink outline. The
-   brain does not — its outline is dark purple. Both characters must have the
-   SAME outline: black ink #0B0B12, the same thickness on both. A purple
-   outline on one and a black outline on the other makes them look like they
-   came from two different artists.
-2. THE BODIES ARE SHADED. Each body has a darker band of its own colour running
-   along the inside of its outline. Remove it. Each body is ONE flat colour from
-   edge to edge — no darker rim, no inner glow, no form shading, nothing that
-   suggests a light source.
-3. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse of solid
+1. THE HEART'S BODY OUTLINE TURNED BLACK. It must not be black. Each BODY is
+   outlined in a darker shade of its own colour: the brain in #5F66AC, the
+   heart in #8F404A. The brain in the attached image already has this right —
+   its outline is dark purple. The heart does not: along its top edge the
+   outline has gone to black ink. Give the heart the same treatment the brain
+   already has, in dark red.
+   Only the things ATTACHED to a body are black ink #0B0B12: the arms, the
+   legs, the hands, the feet, the glasses, the headphones. Never the body.
+2. THE GROUND SHADOW IS BLURRED. It must be a hard-edged flat ellipse of solid
    #E0D8C8, as if cut out with scissors. No blur, no fade, no soft falloff.
-4. THE WHOLE IMAGE HAS FILM GRAIN. The flat areas are not flat — the background
+3. THE WHOLE IMAGE HAS FILM GRAIN. The flat areas are not flat — the background
    alone contains dozens of slightly different creams. Every flat area must be
    exactly one single colour, pixel for pixel. No grain, no noise, no speckle,
    no paper texture.
-5. THE CHARACTERS ARE TOO SMALL — about 50% of the frame height. Make them
+4. THE CHARACTERS ARE TOO SMALL — about 50% of the frame height. Make them
    about 70%. Less empty space above and below, more character.
-6. THERE ARE NO FEET. The legs simply stop. Each leg must end in a small foot
+5. THERE ARE NO FEET. The legs simply stop. Each leg must end in a small foot
    stroke, the same way each arm ends in a hand.
-7. THE FEET SINK INTO THE SHADOW. Both characters stand ON one shared ground
+6. THE FEET SINK INTO THE SHADOW. Both characters stand ON one shared ground
    line, with the shadow lying underneath them — not wrapped around their ankles.
-8. THE POSE IS STIFF: both stand straight with arms hanging. Each character puts
+7. THE POSE IS STIFF: both stand straight with arms hanging. Each character puts
    its weight on one leg and makes one small gesture with one hand.
-9. THE COMPOSITION IS TOO WIDE. The two are spread far apart with big empty
+8. THE COMPOSITION IS TOO WIDE. The two are spread far apart with big empty
    bands at top and bottom. Bring them closer together and let them fill the
    height instead of the width.
 
@@ -141,13 +140,13 @@ in costume: nothing sits on top of a body, and there are no shoulders, no chest,
 no waist, no hips, no neck.
 
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body height
-as 10 units: the heart's body is 8.8 tall, but BOTH characters have the same
+as 10 units: the heart's body is 9.3 tall, but BOTH characters have the same
 eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height measured
-from the bottom. The outline is 0.45 thick, the same on both. The brain's body
+from the bottom. The body outline is thin, about 0.2 units. The brain's body
 is 11.5 wide against its 10 of height — wider than tall, but only slightly.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight black ink outline drawn with a confident hand rather
+flat colour, an even-weight outline drawn with a confident hand rather
 than a mechanically perfect vector path, no gradient and no shading, minimal
 detail.
 
@@ -159,16 +158,17 @@ stray third colour bleeding along the outline. Add nothing that was not asked
 for: no sparkles, no vignette, no texture overlay, no extra highlight, no
 decorative squiggles.
 
-KEEP, as exact flat colours: brain #9097DE · heart #D46B76 · mint #9BE5C5 ·
-ink #0B0B12 · background #F5F4E9 · ground shadow #E0D8C8. Six colours, nothing
-else, each one perfectly flat. Both characters share the SAME face size — the
+KEEP, as exact flat colours: brain body #9097DE outlined #5F66AC · heart body
+#D46B76 outlined #8F404A · mint #9BE5C5 · ink #0B0B12 for the limbs, the
+glasses and the headphones · background #F5F4E9 · ground shadow #E0D8C8. Eight
+colours, nothing else, each one perfectly flat. Both characters share the SAME face size — the
 heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
-waist, hips, neck, gradient, shading, soft shadow, blurred shadow, inner shadow,
-darker rim inside the outline, 3D, texture, film grain, noise, speckle, blush
-cheeks, coloured outline, purple outline, variable line weight, two characters
-with different outline colours, sparkles, glow, halo, vignette, texture overlay,
+waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D, texture,
+film grain, noise, speckle, blush cheeks, black outline around a body, coloured
+outline on a limb or an accessory, the two bodies outlined in different ways,
+variable line weight, sparkles, glow, halo, vignette, texture overlay,
 stiff symmetrical stock pose, legs ending without feet, subject floating with no
 ground contact, text, watermark, frame, contact sheet, grid, panels, multiple
 poses in one image, turnaround, caption, label, number.
@@ -193,9 +193,10 @@ this image.
 
 Square image, at the largest resolution you can produce.
 
-Before you finish, check these four: both characters have the same black ink
-outline; neither body has a darker band inside its edge; the ground shadows have
-hard edges; every flat area is exactly one colour.
+Before you finish, check these four: each body is outlined in a darker shade of
+its own colour and NEITHER is outlined in black; the limbs, glasses and
+headphones ARE black; the ground shadows have hard edges; every flat area is
+exactly one colour.
 ````
 
 **Duyệt lại bằng thước:**
@@ -216,7 +217,7 @@ have equal authority.
 
 - anh-goc.webp — the only existing picture of these two characters. Use it for
   exactly one thing: WHO THEY ARE and what the drawing language is — flat
-  colour, black ink outline, the brain's lavender body, the heart's coral body,
+  colour, the brain's lavender body, the heart's coral body,
   round glasses, mint headphones. It is NOT a quality standard, NOT a layout to
   copy, and NOT a style reference that overrides this text. It is a
   known-defective specimen. Its defects are listed immediately below.
@@ -255,9 +256,9 @@ costume: nothing sits on top of a body, and there are no shoulders, no chest,
 no waist, no hips, no neck.
 
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body
-height as 10 units: the heart's body is 8.8 tall, but BOTH characters have the
+height as 10 units: the heart's body is 9.3 tall, but BOTH characters have the
 same eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height
-measured from the bottom. The outline is 0.45 thick on both. A heart with
+measured from the bottom. The body outline is thin, about 0.2 units. A heart with
 smaller eyes than the brain is a failed drawing.
 
 THE GLASSES AND THE HEADPHONES are built, not stuck on. The glasses' rims are
@@ -267,7 +268,7 @@ pupil and rim. If rim and pupil merge into one black mass, the lens is too
 small; enlarge it.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight black ink outline drawn with a confident hand
+flat colour, an even-weight outline drawn with a confident hand
 rather than a mechanically perfect vector path, no gradient and no shading,
 minimal detail.
 
@@ -286,8 +287,8 @@ face size — the heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, 3D, texture, blush cheeks,
-coloured outline, variable line weight, sparkles, glow, halo, vignette, texture
-overlay, stiff symmetrical stock pose, subject floating with no ground contact,
+black outline around a body, coloured outline on a limb or an accessory,
+variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical stock pose, subject floating with no ground contact,
 text, watermark, frame, contact sheet, grid, panels, multiple poses in one
 image, turnaround, caption, label, number.
 
@@ -311,13 +312,13 @@ else exists in this image.
 
 Square image, at the largest resolution you can produce.
 
-Re-measure before you finish: the heart's body is 8.8 tall where the brain's is
+Re-measure before you finish: the heart's body is 9.3 tall where the brain's is
 10, but their eyes are the same size. Each glasses lens is clearly wider than
 the eye inside it.
 ```
 
 **Duyệt xong mới đi tiếp.** Soi bằng [`to-mau-ty-le.svg`](to-mau-ty-le.svg) và
-danh sách bảy thứ ở cuối [`LINH-VAT.md`](LINH-VAT.md).
+danh sách tám thứ ở cuối [`LINH-VAT.md`](LINH-VAT.md).
 
 ---
 
@@ -354,16 +355,17 @@ of a body, and there are no shoulders, no chest, no waist, no hips, no neck.
 
 PROPORTIONS — measure, do not eyeball. Taking the body height as 10 units: eyes
 2.6 across, centres 4.2 apart, centred at 58% of body height measured from the
-bottom. Outline 0.45 thick. Arms 5.5 long, attached at 55% of body height from
+bottom. Body outline about 0.2 units thick. Arms 5.5 long, attached at 55% of body height from
 the bottom. Legs 3.8 long.
 
-THE GLASSES are built, not stuck on. The rims are exactly as thick as the body
+THE GLASSES are built, not stuck on. They are BLACK INK, unlike the body
+outline, which is dark purple. The rims are thin, about as thin as the body
 outline, never thicker. Each lens is 3.6 across — clearly wider than the 2.6
 eye inside it — so a ring of white shows between pupil and rim. If rim and
 pupil merge into one black mass, the lens is too small; enlarge it.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight black ink outline drawn with a confident hand
+flat colour, an even-weight outline drawn with a confident hand
 rather than a mechanically perfect vector path, no gradient and no shading,
 minimal detail.
 
@@ -376,13 +378,14 @@ not asked for: no sparkles, no vignette, no texture overlay, no extra
 highlight, no decorative squiggles. The feet sit on the ground instead of
 floating.
 
-KEEP: brain #9097DE · ink #0B0B12 · paper #F5F4E9 · flat ellipse shadow
-#E0D8C8.
+KEEP: brain body #9097DE outlined #5F66AC · ink #0B0B12 for the limbs and the
+glasses · paper #F5F4E9 · flat ellipse shadow #E0D8C8. The body outline is a
+dark purple, NOT black. The limbs and the glasses ARE black.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, 3D, texture, blush cheeks,
-coloured outline, variable line weight, sparkles, glow, halo, vignette, texture
-overlay, stiff symmetrical stock pose, subject floating with no ground contact,
+black outline around a body, coloured outline on a limb or an accessory,
+variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical stock pose, subject floating with no ground contact,
 text, watermark, frame, contact sheet, grid, panels, multiple poses in one
 image, turnaround, caption, label, number.
 
@@ -440,17 +443,18 @@ anatomy. This is not a person and not a person in costume: nothing sits on top
 of a body, and there are no shoulders, no chest, no waist, no hips, no neck.
 
 PROPORTIONS — measure, do not eyeball. This is the critical part of this
-image. In tham-chieu-doi.png the heart's body is 8.8 units tall where the
+image. In tham-chieu-doi.png the heart's body is 9.3 units tall where the
 brain's is 10 — but their eyes are IDENTICAL: 2.6 across, centres 4.2 apart,
-centred at 58% of body height from the bottom, outline 0.45 thick. Keep the
+centred at 58% of body height from the bottom. Keep the
 eyes at exactly that size. Arms 5.5 long, attached at 55% of body height from
 the bottom. Legs 3.8 long.
 
-THE HEADPHONES are built, not stuck on. Mint green, each ear cup 2.8 across,
-the connecting band 0.5 thick.
+THE HEADPHONES are built, not stuck on. Mint green with a BLACK INK outline,
+unlike the body outline, which is dark red. Each ear cup 2.8 across, the
+connecting band 0.5 thick.
 
 STYLE DNA — Vietnamese webcomic, in the lineage of Én Comics and Thỏ Bảy Màu:
-flat colour, an even-weight black ink outline drawn with a confident hand
+flat colour, an even-weight outline drawn with a confident hand
 rather than a mechanically perfect vector path, no gradient and no shading,
 minimal detail.
 
@@ -463,13 +467,14 @@ not asked for: no sparkles, no vignette, no texture overlay, no extra
 highlight, no decorative squiggles. The feet sit on the ground instead of
 floating.
 
-KEEP: heart #D46B76 · mint #9BE5C5 · ink #0B0B12 · paper #F5F4E9 · flat
-ellipse shadow #E0D8C8.
+KEEP: heart body #D46B76 outlined #8F404A · mint #9BE5C5 · ink #0B0B12 for the
+limbs and the headphones · paper #F5F4E9 · flat ellipse shadow #E0D8C8. The body
+outline is a dark red, NOT black. The limbs and the headphones ARE black.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
 waist, hips, neck, gradient, shading, soft shadow, 3D, texture, blush cheeks,
-coloured outline, variable line weight, sparkles, glow, halo, vignette, texture
-overlay, stiff symmetrical stock pose, subject floating with no ground contact,
+black outline around a body, coloured outline on a limb or an accessory,
+variable line weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical stock pose, subject floating with no ground contact,
 text, watermark, frame, contact sheet, grid, panels, multiple poses in one
 image, turnaround, caption, label, number.
 
