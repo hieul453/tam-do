@@ -69,81 +69,7 @@ Cứ sinh ở cỡ lớn nhất nhận được. Thiếu thì phóng sau, đừn
 
 ---
 
-## Bước 1 · vòng 3 — dùng cái này
-
-> **Vòng 2 sửa được đúng một trong tám lỗi.** Tư thế có diễn rồi. Bốn lỗi khác
-> không nhúc nhích dù mỗi lỗi có một mục đánh số riêng, nói rõ sai gì và phải
-> thành gì: khung từ 50.4% sang 50.5%, vẫn không bàn chân, bóng vẫn mềm, viền
-> Tim vẫn đen. Độ phân giải còn tụt từ 2048 xuống 1024.
->
-> Nên vòng này đổi cách, không đổi nội dung: **prompt ngắn bằng một phần ba.**
-> Tám mục đánh số là tám thứ tranh nhau sự chú ý, và thứ được sửa là thứ dễ
-> nhất. Giờ chỉ còn bốn việc.
->
-> Và mỗi việc tả bằng **hình ảnh cụ thể thay vì con số**: "70% chiều cao khung"
-> đã bị bỏ qua hai lần, nên đổi thành "bước lại gần hai bước". "Hard-edged" đổi
-> thành "như miếng sticker dán". Máy sinh ảnh không đo, nó hình dung.
-
-**Chuẩn bị:** đổi tên ảnh vòng 2 thành `vong-2` (giữ nguyên đuôi tệp).
-**Chat mới.** Đính đúng một tệp — ảnh vòng 2.
-
-````
-The attached image is the character design. Keep the two characters exactly as
-they are: same shapes, same faces, same eye sizes, same glasses, same
-headphones, same colours, same friendly standing pose. Redraw this same picture
-with four changes and change nothing else.
-
-1. MUCH BIGGER IN THE FRAME. Right now the pair takes up only half the picture
-   and floats in a sea of empty background. Step two paces closer to them. The
-   brain's head should come near the top edge and their feet near the bottom
-   edge, with only a modest band of background left on each side. Keep both
-   characters whole — nothing cropped off.
-
-2. GIVE THEM FEET. Right now each leg is a bare line that simply stops in mid
-   air. Each leg must end in a small foot: the line turns sideways at the ankle
-   and runs forward a short way, like a tiny boot seen from the side. Draw it
-   in the same line weight as the leg. Four legs, four feet.
-
-3. THE HEART'S BODY OUTLINE IS DARK RED, NOT BLACK. Look closely at the brain
-   in the attached image: its body is outlined in a dark purple, a deeper shade
-   of its own lavender. That is correct, and the heart must get exactly the
-   same treatment in its own colour — a dark red #8F404A outline around its red
-   body. At the moment the heart is outlined in black, and that is the single
-   thing in this picture most worth fixing. The arms, legs, hands, feet,
-   glasses and headphones all stay black ink; only the two BODIES carry a
-   coloured outline.
-
-4. THE SHADOWS ARE STICKERS, NOT BLUR. Each ground shadow is one solid shape of
-   #E0D8C8 with a crisp cut edge, like a paper cut-out lying on the background.
-   In the attached image they fade softly outwards. No fade, no blur, no
-   gradient, no glow.
-
-Everything in the picture is perfectly flat colour: no noise, no film grain, no
-paper texture, no shading, no gradient. The background is one single cream.
-
-NEVER: text, watermark, frame, speech bubble, extra characters, props, scenery,
-black outline around a body, coloured outline on a limb or an accessory, soft
-or faded shadow.
-
-ONE image. Square. At the highest resolution available to you — 2048×2048 if
-you can, and do not give me 1024 if 2K is an option.
-````
-
-**Duyệt lại bằng thước:**
-
-```powershell
-node D:\tam-do\scripts\do-linh-vat.mjs <đường-dẫn-ảnh>
-```
-
-Thước đọc PNG. Nếu Gemini trả về `.webp` thì đổi sang PNG trước:
-
-```powershell
-Add-Type -AssemblyName PresentationCore; $s=[IO.File]::OpenRead("$env:USERPROFILE\Downloads\vong-3.webp"); $f=[Windows.Media.Imaging.BitmapDecoder]::Create($s,'None','OnLoad').Frames[0]; $e=New-Object Windows.Media.Imaging.PngBitmapEncoder; $e.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create($f)); $o=[IO.File]::Create("$env:USERPROFILE\Downloads\vong-3.png"); $e.Save($o); $o.Close(); $s.Close()
-```
-
----
-
-## Bước 1 · vòng 2 — đã chạy rồi, giữ để đối chiếu
+## Bước 1 · vòng 2 — dùng cái này
 
 > Vòng 1 đã chạy, đo bằng `scripts/do-linh-vat.mjs` thì trượt tám chỗ. Nhưng
 > nó **đúng bốn thứ khó nhất**: nhân vật là ai, kính dựng đúng, mắt hai con
@@ -598,6 +524,46 @@ Còn ba thứ phải tự nhìn:
 - **Tư thế có diễn không** hay đứng đơ tay buông
 - **Thu nhỏ còn 32px có đọc được không** — phép thử rẻ bắt được gần hết lỗi
   còn lại. Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
+
+## Dọn hậu kỳ
+
+Sau hai vòng prompt rất cụ thể, **bốn lỗi không nhúc nhích**: nhiễu, bóng mềm,
+viền Tim đen, khung hình. Riêng khung hình gần như không đổi một chữ số thập
+phân — 50.4% rồi 50.5%. Đó không phải máy hiểu nhầm, đó là máy **không làm
+được**. Và độ phân giải còn tụt 2048 → 1024, tức là ép thêm thì vỡ chỗ khác.
+
+Ba lỗi đầu nằm ở tầng render, nhưng chúng deterministic. Nên sửa bằng script:
+
+```powershell
+node scriptsdon-anh-linh-vat.mjs .ong-2.png .da-don.png
+```
+
+Nó làm ba việc:
+
+1. **Ép mọi pixel về đúng chín màu chuẩn.** Việc này một phát giết sạch nhiễu,
+   làm bóng thành ellipse mép cứng, san phẳng mọi chỗ đổ bóng, và kéo nền về
+   đúng `#F5F4E9`. Đo bản vòng 2: 15.717 màu còn 568, nền lệch 0.0.
+2. **Đổi viền thân Tim từ mực sang `#8F404A`** nếu máy bôi đen.
+3. **Làm mềm ranh giới 1px** để mảng bệt mà mép không răng cưa.
+
+Hai chi tiết kỹ thuật đáng nhớ, vì cả hai đều từng làm hỏng kết quả:
+
+- **So màu theo sắc, không theo khoảng cách RGB.** Máy hay thêm bóng, tức một
+  sắc độ tối hơn của chính màu đó. Đo bằng RGB thì bạc hà tối (`#7BAA98`) lại
+  gần màu thân Não hơn gần bạc hà — chụp tai bị ép thành **tím**. Tách sáng
+  khỏi sắc rồi hạ trọng số sáng thì bóng của một màu rơi về đúng màu gốc.
+- **Phân biệt viền với tay chân bằng cách bắn tia.** Viền ôm quanh thân nên
+  bắn tám tia ra là trúng thân ở nhiều hướng; gốc chân chỉ trúng đúng một
+  hướng — hướng nó cắm vào. Lấy mốc ba hướng. Không có phép này thì gốc hai
+  chân Tim bị nhuộm đỏ.
+
+**Việc script không làm được:** bàn chân và độ phân giải. Hai thứ đó phải xin
+máy sinh lại.
+
+**Và một hệ quả phải nói rõ:** dấu ghi nguồn ở góc chỉ lệch nền 8 mức sáng, nên
+bước ép màu **xoá luôn nó**. Script không có đoạn nào nhắm vào watermark — nó
+rơi ra vì quá nhạt so với nền. Muốn giữ dấu thì đừng chạy script này, hoặc sinh
+ảnh ở nơi không đóng dấu ngay từ đầu.
 
 ## Watermark
 
