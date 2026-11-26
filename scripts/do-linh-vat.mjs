@@ -284,6 +284,7 @@ doBet('Tim', thanTim, 'tim');
 function doVien(nhan, than, chuan, dayChuan) {
   if (!than) return;
   const sang = [], mau = new Map(), xa = Math.max(4, Math.round(than.cao * 0.06));
+  let boQua = 0;
   const laThan = (x, y) => {
     const [r, g, b] = tai(x, y);
     const k = ganNhat(r, g, b);
@@ -296,14 +297,22 @@ function doVien(nhan, than, chuan, dayChuan) {
       if (huong < 0) { for (let x = than.x0 - xa; x <= than.x1; x++) if (x >= 0 && laThan(x, y)) { mep = x; break; } }
       else { for (let x = Math.min(w - 1, than.x1 + xa); x >= than.x0; x--) if (laThan(x, y)) { mep = x; break; } }
       if (mep < 0) continue;
-      let toiNhat = null, toiL = 999;
-      for (let d = -2; d <= xa; d++) {
-        const x = mep + huong * -d;          // đi ra ngoài thân
+      // huong = -1 là mép TRÁI, ra ngoài thân là GIẢM x; +1 là mép phải, ra
+      // ngoài là tăng x. Bản đầu viết nhầm dấu nên quét ngược vào trong thân,
+      // chỉ bắt được viền nhờ vài pixel ở rìa.
+      // Và phụ kiện cũng viền mực, cũng nằm sát mép thân — dòng nào chạm phụ
+      // kiện thì bỏ, không thì thước đọc viền đen của chụp tai rồi kết tội
+      // thân là viền mực. Đã vấp thật ở ảnh vòng 4.
+      let toiNhat = null, toiL = 999, chamPhuKien = false;
+      for (let d = 0; d <= xa; d++) {
+        const x = mep + huong * d;
         if (x < 0 || x >= w) continue;
         const [r, g, b] = tai(x, y);
+        if (ganNhat(r, g, b).ten === 'bac-ha') { chamPhuKien = true; break; }
         const l = 0.299 * r + 0.587 * g + 0.114 * b;
         if (l < toiL) { toiL = l; toiNhat = hex(r, g, b); }
       }
+      if (chamPhuKien) { boQua++; continue; }
       if (toiNhat && toiL < 200) { sang.push(toiL); mau.set(toiNhat, (mau.get(toiNhat) || 0) + 1); }
     }
   }
@@ -321,6 +330,7 @@ function doVien(nhan, than, chuan, dayChuan) {
   else if (tv < 72) ket = `~ SÁT — đúng họ màu nhưng sẫm quá (${tv.toFixed(0)} so với ~89 của ${chuan})`;
   else ket = 'ĐẠT — ám màu';
   console.log(`${nhan} — viền thân: độ sáng trung vị ${tv.toFixed(0)}, bão hoà ${bao}  ${top.map(([k, n]) => `${k}×${n}`).join(' · ')}`);
+  if (boQua) console.log(`   (bỏ ${boQua} lát cắt chạm phụ kiện — chúng viền mực, không phải viền thân)`);
   console.log(`   chuẩn ${chuan} · ${ket}`);
 }
 console.log('\nVIỀN THÂN  (phải ám màu, không được là mực)');
@@ -368,7 +378,10 @@ function khoangMat(nhan, mat, than) {
   const dv = d / than.cao * 10;
   console.log(`${nhan}: đường kính mắt = ${dv.toFixed(2)} đơn vị theo thân của chính nó  (chuẩn ${mong.toFixed(2)})` +
               `${Math.abs(dv - mong) <= 0.3 ? '  ĐẠT' : '  ⚠ TRƯỢT'}`);
-  console.log(`${nhan}: tâm mắt ở ${((than.y1 - mat[0].cy) / than.cao * 100).toFixed(0)}% chiều cao thân tính từ đáy  (chuẩn 58%)`);
+  const caoMat = (than.y1 - mat[0].cy) / than.cao * 100;
+  const mongMat = nhan === 'Tim' ? 57 : 52;   // đo từ ảnh gốc, không phải số tự đặt
+  console.log(`${nhan}: tâm mắt ở ${caoMat.toFixed(0)}% chiều cao thân tính từ đáy  (chuẩn ${mongMat}%)` +
+              `${Math.abs(caoMat - mongMat) <= 5 ? '  ĐẠT' : '  ⚠ TRƯỢT'}`);
 }
 
 if (doi && ben.length && phai.length) {
