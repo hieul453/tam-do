@@ -4,90 +4,11 @@
 // Lý do tồn tại: luật số 9 của dự án — "đo, đừng chốt bằng mắt". Vòng trước
 // chốt màu bằng mắt, tới lúc đo thì bảy token trượt.
 //
-// Không phụ thuộc thư viện nào: tự giải mã PNG bằng node:zlib.
+// Không phụ thuộc thư viện nào: giải mã PNG bằng scripts/anh-png.mjs.
 //
 //   node scripts/do-linh-vat.mjs <anh.png>
 
-import { readFileSync } from 'node:fs';
-import { inflateSync } from 'node:zlib';
-
-// ---------------------------------------------------------------- giải mã PNG
-
-function giaiMaPng(duongDan) {
-  const buf = readFileSync(duongDan);
-  if (buf.readUInt32BE(0) !== 0x89504e47) throw new Error('Không phải tệp PNG');
-
-  let w = 0, h = 0, bitDepth = 0, colorType = 0, interlace = 0;
-  let plte = null;
-  const idat = [];
-
-  for (let i = 8; i + 8 <= buf.length; ) {
-    const len = buf.readUInt32BE(i);
-    const type = buf.toString('ascii', i + 4, i + 8);
-    const data = buf.subarray(i + 8, i + 8 + len);
-    if (type === 'IHDR') {
-      w = data.readUInt32BE(0);
-      h = data.readUInt32BE(4);
-      bitDepth = data[8];
-      colorType = data[9];
-      interlace = data[12];
-    } else if (type === 'PLTE') plte = data;
-    else if (type === 'IDAT') idat.push(data);
-    else if (type === 'IEND') break;
-    i += 12 + len;
-  }
-
-  if (bitDepth !== 8) throw new Error(`Chỉ đọc được bitDepth 8, tệp này ${bitDepth}`);
-  if (interlace !== 0) throw new Error('Không đọc được ảnh interlace');
-
-  const soKenh = { 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 }[colorType];
-  if (!soKenh) throw new Error(`colorType không đỡ được: ${colorType}`);
-
-  const raw = inflateSync(Buffer.concat(idat));
-  const stride = w * soKenh;
-  const phang = Buffer.alloc(h * stride);
-
-  let pos = 0;
-  for (let y = 0; y < h; y++) {
-    const filter = raw[pos++];
-    const dong = raw.subarray(pos, pos + stride);
-    pos += stride;
-    const cur = phang.subarray(y * stride, (y + 1) * stride);
-    const tren = y > 0 ? phang.subarray((y - 1) * stride, y * stride) : null;
-    for (let x = 0; x < stride; x++) {
-      const a = x >= soKenh ? cur[x - soKenh] : 0;
-      const b = tren ? tren[x] : 0;
-      const c = tren && x >= soKenh ? tren[x - soKenh] : 0;
-      let v = dong[x];
-      if (filter === 1) v = (v + a) & 255;
-      else if (filter === 2) v = (v + b) & 255;
-      else if (filter === 3) v = (v + ((a + b) >> 1)) & 255;
-      else if (filter === 4) {
-        const p = a + b - c;
-        const pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
-        v = (v + (pa <= pb && pa <= pc ? a : pb <= pc ? b : c)) & 255;
-      } else if (filter !== 0) throw new Error(`filter không đỡ được: ${filter}`);
-      cur[x] = v;
-    }
-  }
-
-  // đưa về RGB phẳng
-  const rgb = new Uint8Array(w * h * 3);
-  for (let i = 0, n = w * h; i < n; i++) {
-    let r, g, b;
-    if (colorType === 2 || colorType === 6) {
-      r = phang[i * soKenh]; g = phang[i * soKenh + 1]; b = phang[i * soKenh + 2];
-    } else if (colorType === 0 || colorType === 4) {
-      r = g = b = phang[i * soKenh];
-    } else {
-      const k = phang[i] * 3;
-      r = plte[k]; g = plte[k + 1]; b = plte[k + 2];
-    }
-    rgb[i * 3] = r; rgb[i * 3 + 1] = g; rgb[i * 3 + 2] = b;
-  }
-
-  return { w, h, rgb };
-}
+import { docPng } from './anh-png.mjs';
 
 // ------------------------------------------------------------------ tiện ích
 
@@ -96,6 +17,7 @@ const BANG_MAU = [
   ['tim', 0xd4, 0x6b, 0x76],
   ['bac-ha', 0x9b, 0xe5, 0xc5],
   ['muc', 0x0b, 0x0b, 0x12],
+  ['trang', 0xff, 0xff, 0xff],
   ['giay', 0xf5, 0xf4, 0xe9],
   ['bong', 0xe0, 0xd8, 0xc8],
 ];
@@ -169,7 +91,7 @@ if (!duongDan) {
   process.exit(1);
 }
 
-const { w, h, rgb } = giaiMaPng(duongDan);
+const { w, h, rgb } = docPng(duongDan);
 const tai = (x, y) => {
   const i = (y * w + x) * 3;
   return [rgb[i], rgb[i + 1], rgb[i + 2]];
@@ -333,9 +255,110 @@ function doVien(nhan, than, chuan, dayChuan) {
   if (boQua) console.log(`   (bỏ ${boQua} lát cắt chạm phụ kiện — chúng viền mực, không phải viền thân)`);
   console.log(`   chuẩn ${chuan} · ${ket}`);
 }
+// Trên ảnh ĐÃ DỌN, mọi mảng đều là màu chuẩn nên đếm được chính xác: đi vòng
+// quanh MÉP NGOÀI của thân, nhìn ra ngoài vài pixel, xem gặp màu viền ám hay
+// gặp mực. Luật là thân không bao giờ viền mực, nên tỉ lệ mực ở đây là tỉ lệ sai.
+//
+// "Mép ngoài" là chỗ dễ sai nhất của phép đo này. Bản đầu đếm mọi ranh giới
+// thân-với-không-phải-thân, nên kính nằm lọt trong mặt Não cũng bị tính là
+// "thân viền mực", và nó báo Não lẫn 55% mực trong khi viền Não vốn đúng.
+// Giờ loang từ biên ảnh qua mọi pixel không phải thân: cái gì tới được mới là
+// mép ngoài. Kính không tới được nên không tính.
+function doTinhKhiet(nhan, than, vien) {
+  if (!than) return;
+  const THAN_NAO = [0x90, 0x97, 0xde], THAN_TIM = [0xd4, 0x6b, 0x76];
+  const MUC = [0x0b, 0x0b, 0x12], BH = [0x9b, 0xe5, 0xc5];
+  const bang = (x, y, c) => {
+    const i = (y * w + x) * 3;
+    return rgb[i] === c[0] && rgb[i + 1] === c[1] && rgb[i + 2] === c[2];
+  };
+  const laThanBatKy = (x, y) => bang(x, y, THAN_NAO) || bang(x, y, THAN_TIM);
+
+  // loang từ biên ảnh, không đi qua pixel thân
+  const ngoai = new Uint8Array(w * h);
+  const ngan = new Int32Array(w * h);
+  let dinh = 0;
+  const day = (x, y) => {
+    const i = y * w + x;
+    if (ngoai[i] || laThanBatKy(x, y)) return;
+    ngoai[i] = 1; ngan[dinh++] = i;
+  };
+  for (let x = 0; x < w; x++) { day(x, 0); day(x, h - 1); }
+  for (let y = 0; y < h; y++) { day(0, y); day(w - 1, y); }
+  while (dinh) {
+    const q = ngan[--dinh], qx = q % w, qy = (q / w) | 0;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nx = qx + dx, ny = qy + dy;
+      if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+      day(nx, ny);
+    }
+  }
+
+  const THAN = nhan === 'Tim' ? THAN_TIM : THAN_NAO;
+  let am = 0, muc = 0, bh = 0, khac = 0;
+  for (let y = Math.max(1, than.y0); y <= Math.min(h - 2, than.y1); y++) {
+    for (let x = Math.max(1, than.x0); x <= Math.min(w - 2, than.x1); x++) {
+      if (!bang(x, y, THAN)) continue;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        if (bang(x + dx, y + dy, THAN)) continue;
+        if (!ngoai[(y + dy) * w + (x + dx)]) continue;   // ranh giới bên trong: bỏ
+        let thay = null;
+        for (let d = 1; d <= 6; d++) {
+          const nx = x + dx * d, ny = y + dy * d;
+          if (nx < 0 || ny < 0 || nx >= w || ny >= h) break;
+          if (bang(nx, ny, vien)) { thay = 'am'; break; }
+          if (bang(nx, ny, MUC)) { thay = 'muc'; break; }
+          if (bang(nx, ny, BH)) { thay = 'bh'; break; }
+        }
+        if (thay === 'am') am++; else if (thay === 'muc') muc++;
+        else if (thay === 'bh') bh++; else khac++;
+        break;
+      }
+    }
+  }
+  const tinh = am + muc;
+  if (!tinh) return console.log(`${nhan} — không đọc được mép ngoài`);
+  const ti = am / tinh * 100;
+  console.log(`${nhan} — độ tinh khiết viền: ${ti.toFixed(0)}% ám màu, ${(100 - ti).toFixed(0)}% mực` +
+              `   ${ti >= 90 ? 'ĐẠT' : ti >= 70 ? '~ còn lẫn mực' : '⚠ lẫn mực nhiều'}`);
+  console.log(`   ${tinh.toLocaleString('vi')} điểm mép ngoài · ${bh.toLocaleString('vi')} chạm phụ kiện · ` +
+              `${khac.toLocaleString('vi')} không đọc được, cả ba không tính vào tỉ lệ`);
+}
+
 console.log('\nVIỀN THÂN  (phải ám màu, không được là mực)');
 doVien('Não', thanNao, '#5F66AC', 0.19);
 doVien('Tim', thanTim, '#8F404A', 0.26);
+
+// Chỉ chạy được trên ảnh đã dọn — ảnh thô thì không có màu nào đúng tuyệt đối.
+console.log('\nĐỘ TINH KHIẾT VIỀN  (chỉ có nghĩa với ảnh đã qua don-anh-linh-vat.mjs)');
+doTinhKhiet('Não', thanNao, [0x5f, 0x66, 0xac]);
+doTinhKhiet('Tim', thanTim, [0x8f, 0x40, 0x4a]);
+
+// --- khe hở: phải có một dải cột toàn nền chạy suốt từ đỉnh xuống đáy.
+// Hai nhân vật chạm nhau thì sau này tách nền từng con sẽ vướng.
+if (thanNao && thanTim) {
+  const sach = (x) => {
+    for (let y = 0; y < h; y++) {
+      const [r, g, b] = tai(x, y);
+      if (Math.hypot(r - nr, g - ng, b - nb) > 10) return false;
+    }
+    return true;
+  };
+  let rong = 0, dau = -1, chay = 0, batDau = -1;
+  const tu = Math.min(thanNao.x1, thanTim.x1), den = Math.max(thanNao.x0, thanTim.x0);
+  for (let x = tu; x <= den; x++) {
+    if (sach(x)) { if (!chay) batDau = x; chay++; if (chay > rong) { rong = chay; dau = batDau; } }
+    else chay = 0;
+  }
+  console.log('\nKHE GIỮA HAI NHÂN VẬT');
+  if (!rong) {
+    console.log('  ⚠ TRƯỢT — không có cột nào toàn nền giữa hai con: chúng đang chạm hoặc chồng nhau');
+  } else {
+    const theo = rong / thanTim.cao * 100;
+    console.log(`  dải nền trống rộng ${rong}px (x ${dau}–${dau + rong - 1}) = ${theo.toFixed(0)}% chiều cao thân Tim`);
+    console.log(`  ${theo >= 20 ? 'ĐẠT — tách rời, tách nền từng con được' : '⚠ hơi sát'}`);
+  }
+}
 
 // --- mắt: các mảng trắng, trừ watermark ra
 const laTrang = (x, y) => {

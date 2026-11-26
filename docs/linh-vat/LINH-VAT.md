@@ -5,18 +5,24 @@
 >
 > Ảnh đính kèm là thứ giữ phong cách, không phải chữ. Thiếu ảnh thì prompt này chỉ còn một nửa tác dụng.
 
-> **Tình trạng hôm nay (26/11/2026):** ba ảnh tham chiếu bên dưới **chưa được
-> sinh**. Thứ đang có là `anh-goc.webp` — một tờ gộp bảy cặp ở 1024×1024, nên
-> mỗi nhân vật chỉ còn khoảng 186px: quá nhỏ để đọc chất nét, mà chất nét lại là
-> yêu cầu khó nhất của cả bộ. Nó cũng có chữ trong ảnh, trái luật số 4.
+> **Tình trạng (26/11/2026): ba ảnh tham chiếu đã có.**
+> `tham-chieu-doi.png` · `tham-chieu-nao.png` · `tham-chieu-tim.png`.
 >
-> Dùng tạm được, nhưng **bảng tỉ lệ bên dưới mới là chuẩn**, không phải ảnh cũ.
-> Sinh ba ảnh mới theo đúng đặc tả rồi mới bỏ `anh-goc.webp` đi.
+> Chúng do Gemini sinh qua bốn vòng, rồi chạy `scripts/don-anh-linh-vat.mjs`
+> để ép về đúng chín màu chuẩn — bước đó giết lớp nhiễu mảnh máy phủ lên ảnh,
+> làm bóng thành ellipse mép cứng, và kéo nền về đúng `#F5F4E9`.
 >
-> **Sinh chúng thì theo [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md)** — prompt
-> chép thẳng được, đã tính tới chuyện ảnh duy nhất đang có là ảnh hỏng.
-> Ảnh nhận về thì soi bằng [`to-mau-ty-le.svg`](to-mau-ty-le.svg) — tờ mẫu tỉ lệ
-> cho người duyệt, **không phải ảnh để đính kèm**.
+> **Hai chỗ chưa đạt, ghi ra để đừng quên:**
+> - **Không có bàn chân.** Chân kết thúc bằng nét trơn. Bốn vòng prompt không
+>   ép được. Muốn đúng thì sửa tay.
+> - **Viền thân Tim còn lẫn mực** — đo được 70–79% ám màu, phần còn lại là mực
+>   đen. Viền Não thì đạt, 93–94%. Chữa bằng máy đã thử và bỏ: chỗ mực trên
+>   mép thân nằm sát viền chụp tai, không tách được bằng hình học.
+>
+> `anh-goc.webp` giữ lại làm tư liệu — bảng màu và bảng tỉ lệ trong file này
+> đều đo ra từ nó. Đừng đính nó vào prompt nữa.
+>
+> Cách sinh ba ảnh này: [`sinh-anh-lan-dau.md`](sinh-anh-lan-dau.md).
 
 ## Ba ảnh tham chiếu
 
@@ -122,6 +128,9 @@ thiết kế của team**. Đo lại `anh-goc.webp` thì luật thật là:
 | **Kính** | mực đen | `#0B0B12` |
 | **Tai nghe** | mực đen | `#0B0B12` |
 
+**Tròng mắt là trắng thật `#FFFFFF`**, không phải màu nền. Ảnh gốc dùng trắng
+tinh cho tròng mắt, và đó là màu thứ chín của bộ — thiếu nó thì mắt chìm vào nền.
+
 Luật một câu: **thân thì viền ám màu của chính nó, mọi thứ gắn vào thân thì
 viền mực.** Nó làm thân thấy mềm và hữu cơ, còn phụ kiện thấy là đồ vật — một
 quyết định thiết kế tốt, và chính vì nó tinh nên dễ bị san phẳng thành "viền
@@ -214,7 +223,7 @@ international, whenever they land better than a literal illustration.
 
 KEEP: brain body #9097DE outlined #5F66AC · heart body #D46B76 outlined
 #8F404A · mint #9BE5C5 · ink #0B0B12 for limbs, glasses and headphones ·
-paper #F5F4E9 · flat ellipse shadow #E0D8C8. Both characters share the SAME
+white #FFFFFF for the eyes · paper #F5F4E9 · flat ellipse shadow #E0D8C8. Both characters share the SAME
 face size — the heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
