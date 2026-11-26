@@ -10,9 +10,37 @@
    mắt, tới lúc đo thì bảy token trượt 4.5:1.
    =========================================================================== */
 @theme {
+  /* --- vỏ app ------------------------------------------------------------ */
   --color-nen: #ffffff;
   --color-chu: #18181b;
   --color-chu-phu: #52525b;
+  --color-ke: #e6e6e2;
+
+  /* --- nền khối, nói khối này đòi người đọc làm gì -----------------------
+     Ba sắc pha từ màu linh vật với tỉ lệ KHÁC NHAU (8% · 18% · 6%) để cả ba
+     nổi bằng nhau trên trắng. Pha cùng tỉ lệ thì bạc hà chìm còn đỏ thì ồn. */
+  --color-lam-thu: #f6f7fc; /* tím Não 8%  — tự tay làm, kết quả là của mình */
+  --color-tu-kiem: #edfaf5; /* bạc hà 18%  — xem có đọng lại không           */
+  --color-ghi-lai: #fcf5f6; /* đỏ Tim 6%   — mang ra khỏi app, vào đời sống  */
+  /* khối "Đọc" không có nền tô: vắng màu chính là tín hiệu không phải làm gì */
+
+  /* --- màu ngữ nghĩa, bộ riêng, KHÔNG lấy từ linh vật -------------------- */
+  --color-dung: #15803d;
+  --color-sai: #b91c1c;
+  --color-han-lam: #4338ca;
+
+  /* --- màu linh vật: CHỈ làm nền tô hoặc chấm, không bao giờ làm màu chữ --
+     Cả ba đều trượt 4.5:1 trên trắng (2.74 · 3.41 · 1.46). Đó không phải
+     khuyết điểm cần chữa — nó là lý do luật này tồn tại. */
+  --color-nao: #9097de;
+  --color-nao-vien: #5f66ac;
+  --color-tim: #d46b76;
+  --color-tim-vien: #8f404a;
+  --color-bac-ha: #9be5c5;
+  --color-muc: #0b0b12;
+
+  /* --- chữ --------------------------------------------------------------
+     Một họ duy nhất, hai sức nặng. Phân cấp làm bằng cỡ chữ. */
   --font-than: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
 }
 
@@ -27,6 +55,17 @@
     font-family: var(--font-than);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Dấu tiếng Việt đội lên 51% so với chữ hoa ở Be Vietnam Pro, nên hai dòng
+     chạm nhau từ giãn dòng 1.38. Mọi thứ có thể xuống dòng đều phải ≥1.4 —
+     kể cả tiêu đề, chỗ mà thiết kế tiếng Anh hay đặt 1.2. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
+    text-wrap: balance;
   }
 
   /* Vùng chạm tối thiểu 44px theo chuẩn tay người. */

@@ -3,6 +3,7 @@
 > Bộ não chung của dự án. Đọc trước khi sửa bất cứ gì.
 >
 > - **App này là gì, và không được là gì: [docs/CONCEPT.md](docs/CONCEPT.md)**
+> - Màu, font, nhịp chữ, loại khối — kèm phép đo: [docs/HE-STYLE.md](docs/HE-STYLE.md)
 > - Những cái bẫy đã mất thời gian thật để tìm ra: [docs/BAI-HOC.md](docs/BAI-HOC.md)
 > - Cài đặt, cấp quyền, token: [docs/SETUP.md](docs/SETUP.md)
 
@@ -71,6 +72,7 @@ npm test
 npm run format
 npm run build
 
+node scripts/do-mau.mjs           # kiểm tương phản toàn bộ token màu
 node scripts/sql.mjs <file.sql>   # chạy SQL trên Supabase
 node scripts/nhan-tep.mjs         # cổng nhận tệp từ trình duyệt
 ```
