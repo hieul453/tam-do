@@ -12,6 +12,11 @@
 >
 > Dùng tạm được, nhưng **bảng tỉ lệ bên dưới mới là chuẩn**, không phải ảnh cũ.
 > Sinh ba ảnh mới theo đúng đặc tả rồi mới bỏ `anh-goc.webp` đi.
+>
+> Ba yêu cầu để sinh chúng đã viết sẵn, chép thẳng được: mục
+> [Ba yêu cầu để sinh ba ảnh tham chiếu](#ba-yêu-cầu-để-sinh-ba-ảnh-tham-chiếu).
+> Ảnh nhận về thì soi bằng [`to-mau-ty-le.svg`](to-mau-ty-le.svg) — tờ mẫu tỉ lệ
+> cho người duyệt, **không phải ảnh để đính kèm**.
 
 ## Ba ảnh tham chiếu
 
@@ -74,6 +79,7 @@ thước file.
 | Thân — rộng | 11.5 | 9.6 |
 | Mắt — đường kính | **2.6** | **2.6** |
 | Mắt — tâm cách tâm | **4.2** | **4.2** |
+| Mắt — tâm cao bao nhiêu, tính từ đáy thân | 58% | 58% |
 | Con ngươi — đường kính | 1.3 | 1.3 |
 | Nét viền — dày | **0.45** | **0.45** |
 | Tay — dài | 5.5 | 5.5 |
@@ -101,6 +107,20 @@ Não mất mặt. Tròng rộng hơn mắt thì có khoảng trắng thở giữ
 
 **Dưới 32px:** kính rụng xuống còn một nét ngang, tai nghe bỏ hẳn — giống cách
 logo bỏ linh vật ở cỡ favicon. Dưới 20px thì chỉ còn khối thân.
+
+## Prompt có hai chế độ
+
+Cùng một khối prompt, khác nhau đúng ở đoạn cuối.
+
+**Chế độ khám phá** — giữ nguyên khối `GIVE ME 3–5 VERSIONS`. Dùng khi cần ý
+tưởng: chưa biết muốn tư thế nào, muốn xem máy nghĩ ra gì.
+
+**Chế độ sản xuất** — **xoá hẳn khối `GIVE ME 3–5 VERSIONS`**, thay bằng
+`GIVE ME ONE IMAGE.` Dùng khi đã biết chính xác cần gì: ảnh tham chiếu, ảnh cho
+một màn cụ thể, một khung truyện. Xin năm phương án cho một thứ đã biết rõ chỉ
+làm loãng, và mỗi phương án lại lệch chuẩn một kiểu.
+
+**Ba ảnh tham chiếu phải sinh ở chế độ sản xuất.**
 
 ## Prompt — chép nguyên văn
 
@@ -177,6 +197,79 @@ answer. Number them in your reply, never inside the image.
 REQUEST:
 ```
 
+## Ba yêu cầu để sinh ba ảnh tham chiếu
+
+Chép khối prompt ở trên, **xoá khối `GIVE ME 3–5 VERSIONS`**, thay bằng
+`GIVE ME ONE IMAGE.`, rồi dán một trong ba đoạn dưới vào sau `REQUEST:`.
+
+Đính kèm `anh-goc.webp` làm ảnh phong cách cho cả ba lần — nó là thứ duy nhất
+đang có. Nhưng **bảng tỉ lệ mới là chuẩn**, nên trong cả ba yêu cầu đều có câu
+bắt đo lại, và người duyệt phải soi bằng tờ mẫu tỉ lệ chứ không bằng ảnh cũ.
+
+### 1 · `tham-chieu-doi.png`
+
+```
+This image becomes the canonical style reference for every future request, so
+it must show line quality and the size relationship between the two clearly.
+Give them the whole frame.
+
+Both characters standing on one shared ground line, facing the viewer, LIGHTLY
+performed: weight on one leg, one small hand gesture each, mouths in an easy
+closed smile. Brain on the left with its glasses, heart on the right with its
+headphones. No gag, no props, no scene, no interaction between them — this is a
+portrait of the pair, not a joke.
+
+Fill the frame: the pair should be about 70% of the image height, with empty
+cream on all four sides and neither character touching any edge.
+Flat cream background. Each character has its flat ellipse shadow on the
+ground. Nothing else exists in this image.
+
+Square image, as large as you can produce.
+
+Re-measure before you finish: the heart's body is 8.8 tall where the brain's is
+10, but their eyes are the same size. Each glasses lens is clearly wider than
+the eye inside it.
+```
+
+### 2 · `tham-chieu-nao.png`
+
+```
+The BRAIN alone, nothing else in the frame.
+
+Facing the viewer, lightly performed: weight on one leg, one hand making a
+small gesture, easy closed smile, glasses on. No props, no gag, no scene.
+
+Fill the frame: about 70% of the image height, empty cream on all four sides,
+not touching any edge. Flat cream background, its flat ellipse shadow on the
+ground, nothing else.
+
+Square image, as large as you can produce.
+
+The glasses are the thing to get right here: rims exactly as thick as the body
+outline, each lens clearly wider than the eye inside it, a visible ring of
+white between pupil and rim.
+```
+
+### 3 · `tham-chieu-tim.png`
+
+```
+The HEART alone, nothing else in the frame.
+
+Facing the viewer, lightly performed: weight on one leg, one hand making a
+small gesture, easy closed smile, headphones on. No props, no gag, no scene.
+
+Fill the frame: about 70% of the image height, empty cream on all four sides,
+not touching any edge. Flat cream background, its flat ellipse shadow on the
+ground, nothing else.
+
+Square image, as large as you can produce.
+
+The eyes are the thing to get right here. This character's body is smaller than
+the brain's, and the eyes must NOT shrink with it: same diameter, same spacing,
+same size as the brain's eyes. If the face looks smaller than the brain's face,
+redraw it.
+```
+
 ## Luật phụ kiện
 
 Phụ kiện phải nói đúng bản chất nhân vật, không thêm chỉ vì dễ thương.
@@ -222,6 +315,19 @@ phép viết chữ vào hình**.
 |---|---|---|
 | **Tờ mẫu nội bộ** | người duyệt đối chiếu: tỉ lệ, điểm gắn tay chân, cỡ mắt, bảng màu có mã | **Có** — nó là tài liệu sản xuất, không phải tài sản của app |
 | **Ảnh tham chiếu** | đính kèm cho máy bắt chước | **Không một chữ nào** |
+
+Tờ mẫu nội bộ của bộ này là [`to-mau-ty-le.svg`](to-mau-ty-le.svg). Mở nó cạnh
+ảnh nhận về để soi. Nó cố tình **không vẽ lại nhân vật**: chỉ có hộp bao, vòng
+mắt, vòng tròng kính, trục tay chân và số đo. Khung chữ nhật đứt nét là hộp bao,
+không phải hình thân.
+
+Lý do không vẽ nhân vật ra cho đẹp: tờ này là vector sạch tuyệt đối, đúng thứ
+`NEVER` cấm máy bắt chước. Vẽ càng giống thì càng có ngày ai đó đính nó vào
+prompt, và khi đó nó dạy máy đúng cái sai. Để nó trông như bản vẽ kỹ thuật là
+một cách phòng thân — nhìn vào là biết không phải ảnh mẫu.
+
+**Không bao giờ đính `to-mau-ty-le.svg` vào prompt sinh ảnh.** Nó có chữ, và
+theo quy tắc ưu tiên thì ảnh thắng chữ.
 
 ## Nhận ảnh về thì soi bảy thứ
 
