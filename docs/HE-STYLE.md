@@ -17,7 +17,7 @@
 | 03 · Font | **chốt** |
 | 04 · Nhịp chữ | **chốt** |
 | 05 · Hình khối | **chốt** |
-| 06 · Biểu tượng | mở khoá, chưa chốt |
+| 06 · Biểu tượng | **chốt** |
 | 07 · Art style nội dung | mở khoá, chưa chốt |
 | 08 · Chuyển động | chờ có cái để động |
 
@@ -211,17 +211,78 @@ Chúng cũng là chỗ tự nhiên để phát sự kiện cho tầng gamificati
 
 ---
 
+## 06 · Biểu tượng: Lucide, nét 1.75
+
+Dùng `lucide-react` — đã là phụ thuộc sẵn. **Không vẽ bộ icon riêng**, và
+**không dùng emoji**.
+
+### Vì sao không vẽ riêng cho giống linh vật
+
+Nghe hợp lý, nhưng đo thì không chuyển được. Viền thân linh vật dày **1.9–2.6%**
+chiều cao thân. Một icon Lucide nét 1.75 trên lưới 24 là **7.3%** bề ngang ô.
+Muốn icon "cùng tỉ lệ nét" với linh vật thì ở ô 24px nét phải mảnh 0.5px — biến
+mất. **Nét của linh vật không mang sang cỡ icon được, dù muốn.**
+
+Và không nên muốn. Icon là **vỏ app**, mà CONCEPT nói vỏ phải gọn. Nét "vẽ tay,
+không hoàn hảo" là đặc tính của linh vật ở cỡ lớn; thu xuống 20px nó thành
+nhiễu chứ không thành cá tính. Đặt cạnh nhau thì hai thứ đọc ra hai thanh ghi
+khác nhau — linh vật là khối có viền tô đặc, icon là nét hở — và đó đúng là
+điều cần: linh vật ở nội dung, icon ở giao diện.
+
+### Thông số
+
+| | |
+|---|---|
+| Bề dày nét | **1.75** ở mọi cỡ (đơn vị viewBox, nên tỉ lệ không đổi khi phóng) |
+| Cỡ dùng | **20px** mặc định · **16px** cho nhãn và chỗ chật · **24px** cho nút đứng một mình |
+
+Đã so ba bề dày ở cỡ thật, dựng bằng chính thư viện: **1.5 mảnh như dây**, **2
+bắt đầu bít các hình nhỏ ở 16px**. 1.75 sống được ở cả 16 lẫn 20, nên một giá
+trị dùng chung — không cần đổi nét theo cỡ.
+
+### Import đích danh, không bao giờ `import * as`
+
+```ts
+import { Check, ArrowLeft } from 'lucide-react' // đúng
+import * as Icons from 'lucide-react' // ← từng ngốn 210 kB gzip
+```
+
+Đo ngày 27/11/2026, bản dựng thật:
+
+| | gzip | thêm |
+|---|---|---|
+| không có Lucide | 68.87 kB | — |
+| 1 icon | 70.00 kB | +1.13 kB (chi phí thư viện) |
+| 16 icon | 71.23 kB | +2.36 kB |
+
+Tức là **thư viện tốn 1.13 kB, mỗi icon thêm khoảng 82 byte**. Rẻ. Cái đắt chưa
+bao giờ là số lượng icon — nó là cách import.
+
+`src/bundle.test.ts` canh chỗ này trong CI: chặn `import * as` từ lucide-react,
+và chặn cả kiểu tra component bằng chuỗi lúc chạy (`Icons[ten]`), vì kiểu đó
+cũng buộc bundler giữ cả thư viện.
+
+### Chỗ KHÔNG đặt icon
+
+**Nhãn loại khối.** Đã so hai bản đặt cạnh nhau: nhãn có chấm màu, và nhãn có
+icon. Bản có icon ồn hơn mà không thêm nghĩa — chữ *"Làm thử · 3 giây"* đã nói
+đủ. Loại khối được báo bằng **sắc nền + chấm màu + chữ**, ba kênh là vừa.
+
+Chữ cũng là lý do bộ này đạt WCAG 1.4.1: màu không phải kênh duy nhất mang
+nghĩa, vì nhãn chữ luôn có mặt.
+
+---
+
 ## Chưa chốt
-
-Ba ảnh tham chiếu linh vật **đã có** từ 26/11/2026, nên hai trục dưới đây hết
-bị chặn. Chưa chốt, nhưng làm được rồi.
-
-**06 · Biểu tượng** — bộ icon phải mang được nét của linh vật: viền đều một
-độ dày, nét khép kín, không chuyển sắc. Một điều đã chắc: **không dùng emoji**.
-Mỗi máy vẽ một kiểu, không đổi màu được, không mang được nét vẽ nào.
 
 **07 · Art style nội dung** — CONCEPT mục 4: linh vật **không sống ở vỏ app**,
 chúng ở trong nội dung và lúc chuyển cảnh.
+
+Lúc dựng bản so icon có một quan sát ngoài dự tính, ghi lại vì nó là bằng chứng
+cho điều kiện mở lại ở mục 01: đặt thẳng `tham-chieu-nao.png` lên một khối có
+tô, **nền kem của nó nổi thành ô sáng rõ mồn một**. Ảnh tham chiếu dùng đúng
+mục đích của nó thì không sao, nhưng nó cho thấy tài sản giao cho app mà không
+tách nền thì hỏng ngay từ chỗ đầu tiên đặt vào.
 
 Hai khuyết điểm đã biết của ba ảnh chuẩn, cần tính tới khi làm hai trục này:
 **không có bàn chân** (bốn vòng prompt không ép được, muốn đúng thì sửa tay),
