@@ -50,9 +50,9 @@ sẽ chép cái lưới. Biểu cảm mô tả bằng chữ trong `REQUEST`; pho
 
 | | |
 |---|---|
-| Kích thước | **2048×2048**, tối thiểu 1536 |
+| Kích thước | càng lớn càng tốt. Ba ảnh hiện có: đôi 2528×1559, Não 940×940, Tim 1004×1004. Hai ảnh đơn dưới mức mong muốn — mỗi nhân vật vẫn cao ~700px, gấp gần bốn lần ảnh gốc, nên dùng được |
 | Định dạng | **PNG, hoặc WebP không mất dữ liệu** |
-| Nhân vật cao | khoảng **70% chiều cao khung** |
+| Nhân vật cao | khoảng **70% chiều cao khung** — ảnh đơn thì vuông, ảnh đôi thì **ngang 3:2**, vì cặp dàn ngang không bao giờ cao 70% được trong khung vuông |
 | Lề trống | **ít nhất 8% mỗi phía**, nhân vật không chạm mép khung |
 | Nền | kem `#F5F4E9`, phẳng, **không tách nền** |
 | Bóng | giữ ellipse `#E0D8C8` dưới chân — nó dạy máy luật "chân chạm đất" |
@@ -75,29 +75,39 @@ Ba chỗ đáng giải thích thêm:
 
 ## Bảng tỉ lệ
 
-Đây là **đặc tả mà ảnh tham chiếu phải đạt**, không phải số đo của ảnh cũ. Làm
-theo thứ tự này: chốt bảng → sinh ảnh theo bảng → ảnh đó thành chuẩn.
+Bảng này **mô tả ba ảnh chuẩn**, không phải một mục tiêu mà chúng phải đạt. Thứ
+tự đã đi qua rồi: đặc tả → sinh ảnh → đo ảnh → bảng chép lại số đo. Làm ngược
+lại thì chữ và ảnh đá nhau, mà quy tắc ưu tiên nói ảnh thắng, nên chữ chỉ còn
+gây nhiễu.
 
 Mọi số tính theo đơn vị **chiều cao thân Não = 10**, nên không phụ thuộc kích
-thước file.
+thước file. Cột cuối nói số đó đã đo hay mới chỉ ước.
 
-| | Não | Tim |
-|---|---|---|
-| Thân — cao | **10** | **9.3** |
-| Thân — rộng | 11.5 | 9.6 |
-| Mắt — đường kính | **2.6** | **2.6** |
-| Mắt — tâm cách tâm | **4.2** | **4.2** |
-| Mắt — tâm cao bao nhiêu, tính từ đáy thân | 58% | 58% |
-| Con ngươi — đường kính | 1.3 | 1.3 |
-| Nét viền thân — dày | **0.19** | **0.26** |
-| Tay — dài | 5.5 | 5.5 |
-| Chân — dài | 3.8 | 3.8 |
-| Điểm gắn tay, tính từ đáy thân | 55% | 55% |
-| Bóng — rộng | 11 | 9.5 |
+| | Não | Tim | Nguồn |
+|---|---|---|---|
+| Thân — cao | **10** | **8.85** | đo cả ba ảnh |
+| Thân — rộng | **13.1** | **9.1** | đo cả ba ảnh |
+| Mắt — đường kính | **2.55** | **2.4** | đo cả ba ảnh |
+| Mắt — tâm cách tâm | 4.6 | 4.2 | đo cả ba ảnh |
+| Mắt — tâm cao, tính từ đáy thân | **51%** | **57%** | đo cả ba ảnh |
+| Nét viền thân — dày | 0.19 | 0.26 | đo `anh-goc.webp` |
+| Con ngươi — đường kính | 1.3 | 1.3 | **chưa đo** |
+| Tay — dài · Chân — dài | 5.5 · 3.8 | 5.5 · 3.8 | **chưa đo** |
+| Điểm gắn tay, tính từ đáy thân | 55% | 55% | **chưa đo** |
+| Bóng — rộng | — | — | **chưa đo**, cứ theo ảnh chuẩn |
 
-Những ô **in đậm** là những ô không được trôi. Đặc biệt: **thân Tim bằng 88% thân
-Não, nhưng mắt bằng 100%.** Đó chính là con số làm cho luật "hai nhân vật cùng cỡ
-mặt" kiểm được bằng thước thay vì bằng cảm giác.
+Hai con số quan trọng nhất, và **chỉ hai con số này thôi**:
+
+- **Mắt hai nhân vật gần bằng nhau**: 2.55 và 2.4 đơn vị, lệch 6%. Đây là thứ
+  làm hai con trông như ra từ một bàn tay. Máy rất hay co mắt Tim theo thân nhỏ
+  hơn; mất cái này là hỏng cả bộ.
+- **Thân Tim bằng 88.5% thân Não.**
+
+> **Một chỗ trôi, ghi ra cho minh bạch.** Ảnh gốc của team đo được tỉ lệ thân
+> **93%**; ba ảnh chuẩn ra **88.5%**. Lệch 4.5 điểm, nhìn thì thấy Tim hơi nhỏ
+> hơn bản gốc một chút. Đã chấp nhận, vì ảnh chuẩn mới là thứ được đính kèm mọi
+> lần sau, nên nó là cái thực sự được nhân bản. Muốn kéo về 93% thì phải sinh
+> lại cả ba.
 
 ### Kính và tai nghe
 
@@ -162,10 +172,13 @@ làm loãng, và mỗi phương án lại lệch chuẩn một kiểu.
 ## Prompt — chép nguyên văn
 
 ```
-The attached image is the style reference. Match its art style, line, colour
-and proportions. Where the image and this text disagree about how something
-LOOKS, the image wins. The NEVER list at the end always wins and is never
-overridden by anything you see in the image.
+The attached image or images are the style reference. Match their art style,
+line, colour and proportions. Where an attachment and this text disagree about
+how something LOOKS, the attachment wins. The NEVER list at the end always wins
+and is never overridden by anything you see in an attachment.
+
+If more than one image is attached they are the same two characters drawn the
+same way; treat them as one reference, not as two options to choose between.
 
 TWO CHARACTERS, from a Vietnamese psychology-learning app:
 - BRAIN — lavender purple, round black-rimmed glasses. Reason, logic, the one
@@ -181,9 +194,11 @@ people in costume: nothing sits on top of a body, and there are no shoulders,
 no chest, no waist, no hips, no neck.
 
 PROPORTIONS — measure these, do not eyeball them. Taking the brain's body
-height as 10 units: the heart's body is 9.3 tall, but BOTH characters have the
-same eyes — 2.6 across, centres 4.2 apart, centred at 58% of body height from
-the bottom. A heart with smaller eyes than the brain is a failed drawing.
+height as 10 units: the brain's body is 13.1 wide, the heart's is 8.85 tall and
+9.1 wide. BOTH characters have eyes of the same size, about 2.5 units across.
+The brain's eye centres sit at 51% of its body height from the bottom and 4.6
+apart; the heart's at 57% and 4.2 apart. A heart with smaller eyes than the
+brain is a failed drawing — that is the single thing most often got wrong.
 
 THE OUTLINE HAS TWO TIERS, and this is the easiest thing in the whole brief to
 get wrong. Each BODY is outlined in a darker shade of its own colour — the
@@ -229,12 +244,15 @@ white #FFFFFF for the eyes · paper #F5F4E9 · flat ellipse shadow #E0D8C8. Both
 face size — the heart's body is smaller, its eyes are not.
 
 NEVER: human figure, person, humanoid body, mascot costume, shoulders, chest,
-waist, hips, neck, gradient, shading, soft shadow, blurred shadow, 3D,
-texture, film grain, noise, blush cheeks, black outline around a body,
-coloured outline on a limb or an accessory, variable line
-weight, sparkles, glow, halo, vignette, texture overlay, stiff symmetrical
-stock pose, legs ending without feet, subject floating with no ground contact,
-text, watermark, frame.
+waist, hips, neck, gradient, shading, soft shadow, blurred shadow, inner shadow,
+a darker band inside a body's own outline, 3D, perspective on an accessory —
+an ear cup or a lens is drawn flat and straight on, never turned to show its
+side — texture, film grain, noise, speckle, blush cheeks, black outline around
+a body, coloured outline on a limb or an accessory, the two bodies outlined in
+different ways, variable line weight, sparkles, glow, halo, vignette, texture
+overlay, stiff symmetrical stock pose, legs ending without feet, subject
+floating with no ground contact, text, watermark, frame, contact sheet, grid,
+panels, multiple poses in one image, turnaround, caption, label, number.
 
 GIVE ME 3–5 VERSIONS of this request, as separate images — not one sheet,
 not one image split into panels. Identical characters, identical style and
@@ -304,13 +322,52 @@ một cách phòng thân — nhìn vào là biết không phải ảnh mẫu.
 **Không bao giờ đính `to-mau-ty-le.svg` vào prompt sinh ảnh.** Nó có chữ, và
 theo quy tắc ưu tiên thì ảnh thắng chữ.
 
+## Hợp đồng này chưa bao đến đâu
+
+Phần trên đủ để giữ **nhân vật là ai** và **nó được dựng thế nào**: hình khối,
+tỉ lệ, bảng màu, luật viền hai tầng. Đính ba ảnh chuẩn vào là một AI lạ vẽ ra
+đúng hai con này.
+
+Chưa đủ để giữ **nhân vật thay đổi thế nào**. Mà yêu cầu khác nhau thì khác
+nhau đúng ở chỗ đó. Sáu lỗ, xếp theo mức đau:
+
+**1. Không có từ vựng biểu cảm.** Hợp đồng bảo "biểu cảm mô tả bằng chữ trong
+`REQUEST`" rồi dừng ở đó. Ba ảnh chuẩn chỉ có đúng một biểu cảm: cười khép nhẹ.
+Nên "Não đang lo" ở yêu cầu này và "Não đang lo" ở yêu cầu sau sẽ ra hai khuôn
+mặt khác nhau — mỗi máy tự bịa. Cần chốt bằng chữ: mắt biến dạng thế nào, có
+lông mày không, miệng có mấy kiểu. **Đây là lỗ to nhất.**
+
+**2. Chỉ có góc chính diện.** Mọi ảnh chuẩn đều nhìn thẳng. Yêu cầu nào cần
+nghiêng hoặc quay lưng — tức là gần như mọi khung truyện — đều phải tự chế.
+
+**3. Bàn tay không có luật.** Ảnh chuẩn cho thấy bàn tay xoè bốn ngón, nhưng
+chữ không nói gì. Tư thế chỉ trỏ, cầm nắm, ôm thì mỗi máy vẽ một kiểu tay.
+
+**4. Hai nhân vật tương tác thì chưa có luật.** Ảnh chuẩn cố tình để hai con
+tách hẳn và không chạm nhau, còn `NEVER` thì cấm chúng chồng lên nhau. Truyện
+thì cần chúng chạm, che nhau, đứng trước sau. Lúc đó ai che ai, con ở xa nhỏ đi
+bao nhiêu — chưa có gì, và luật hiện hành còn đang cấm.
+
+**5. Không có ví dụ `REQUEST` đã điền.** Có khối prompt nhưng không có một dòng
+yêu cầu mẫu nào. Người dùng sau phải tự đoán độ chi tiết: tả tư thế tới đâu, tả
+biểu cảm tới đâu, nói hay không nói bố cục.
+
+**6. Nền và bóng mới chỉ có một trường hợp.** Nền kem, nhân vật đứng, bóng
+ellipse dưới chân. Ảnh dùng trong app thì nền gì? Nhân vật nhảy, ngồi, nằm thì
+bóng ra sao? Chưa có.
+
+Bốn lỗ đầu đều chữa bằng cùng một cách: **thêm ảnh chuẩn, mỗi ảnh một việc** —
+đúng nguyên tắc ở mục "Ba ảnh tham chiếu". Một tờ gộp nhiều biểu cảm thì không
+được, vì máy sẽ chép cái lưới; phải mỗi biểu cảm một ảnh, và chốt bằng chữ
+trước khi sinh.
+
 ## Nhận ảnh về thì soi tám thứ
 
 1. **Không có hình người** — chỉ một khối thân cộng bốn nét tay chân. Thấy vai, ngực, eo, hay một cái đầu đặt trên một thân người là trượt.
 2. **Màu bệt và nét đều** — thấy chuyển sắc, bóng mềm hay nét lúc dày lúc mỏng là trượt.
 3. **Viền đúng tầng** — thân ám màu (`#5F66AC` · `#8F404A`), tay chân và phụ kiện mực đen. Thân viền đen là trượt, dù nhìn vẫn thấy "sạch".
-3. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất cái này là hai nhân vật trông như hai nhà khác nhau. Giờ kiểm được bằng thước: thân Tim bằng 93% thân Não, mắt bằng 100%.
-4. **Không có chữ trong ảnh** — kể cả chữ nhỏ trong bong bóng thoại.
-5. **Không có mùi AI** — nét run hoặc hở ở chỗ tay chân nối vào thân, bàn tay bàn chân nhoè, hai bên gần đối xứng mà lệch nhẹ, hào quang mờ quanh viền, lấp lánh hay vân nền không ai yêu cầu, và tư thế đứng đơ không diễn gì.
-6. **Kính không bít mắt** — phải thấy rõ khoảng trắng giữa con ngươi và gọng. Gọng dày bằng nét thân, không dày hơn.
-7. **Thu nhỏ còn 32px vẫn đọc được** — cách kiểm rẻ nhất cho mọi lỗi ở trên. Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
+4. **Mặt hai nhân vật cùng cỡ** — AI rất hay co mặt Tim theo thân nhỏ hơn. Mất cái này là hai nhân vật trông như hai nhà khác nhau. Giờ kiểm được bằng thước: thân Tim bằng 88.5% thân Não, mắt lệch nhau dưới 6%.
+5. **Không có chữ trong ảnh** — kể cả chữ nhỏ trong bong bóng thoại.
+6. **Không có mùi AI** — nét run hoặc hở ở chỗ tay chân nối vào thân, bàn tay bàn chân nhoè, hai bên gần đối xứng mà lệch nhẹ, hào quang mờ quanh viền, lấp lánh hay vân nền không ai yêu cầu, và tư thế đứng đơ không diễn gì.
+7. **Kính không bít mắt** — phải thấy rõ khoảng trắng giữa con ngươi và gọng. Gọng dày bằng nét thân, không dày hơn.
+8. **Thu nhỏ còn 32px vẫn đọc được** — cách kiểm rẻ nhất cho mọi lỗi ở trên. Chi tiết thừa ở cỡ lớn trông vô hại, ở cỡ nhỏ thành vệt bẩn.
