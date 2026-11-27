@@ -17,8 +17,8 @@
 | 03 · Font | **chốt** |
 | 04 · Nhịp chữ | **chốt** |
 | 05 · Hình khối | **chốt** |
-| 06 · Biểu tượng | chờ linh vật xong |
-| 07 · Art style nội dung | chờ linh vật xong |
+| 06 · Biểu tượng | mở khoá, chưa chốt |
+| 07 · Art style nội dung | mở khoá, chưa chốt |
 | 08 · Chuyển động | chờ có cái để động |
 
 Token sống ở block `@theme` trong [`src/styles/index.css`](../src/styles/index.css).
@@ -43,9 +43,16 @@ câu trả lời thật cho ban đêm là chế độ tối. Và kem có giá ph
 - Chế độ tối phải tự quyết lại từ đầu. Trắng → tối là ánh xạ ai cũng biết;
   kem → tối thì chưa ai giải sẵn.
 
-> **Điều kiện mở lại:** quyết định này treo vào việc **ảnh linh vật được giao
-> đã tách nền**. Nếu quay về giao ảnh nguyên nền kem, hoặc bỏ linh vật, thì mở
-> lại — lúc đó cái giá đảo chiều, vì mỗi ảnh lại phải xoá hoặc vẽ lại bóng.
+> **Điều kiện mở lại:** quyết định này treo vào việc **tài sản linh vật giao
+> cho app đã tách nền**. Nếu chuyển sang giao ảnh nguyên nền kem, hoặc bỏ linh
+> vật, thì mở lại — lúc đó cái giá đảo chiều, vì mỗi ảnh lại phải xoá hoặc vẽ
+> lại bóng.
+>
+> **Trạng thái của điều kiện này:** hợp đồng linh vật vẫn giữ luật *"ảnh tham
+> chiếu không tách nền, tài sản giao cho app thì phải tách"*. Bước tách **chưa
+> có script**, nhưng giờ rẻ: `scripts/don-anh-linh-vat.mjs` đã ép nền về đúng
+> một màu `#F5F4E9` duy nhất, nên khoá màu đó ra là xong. Ngày nào thấy bước
+> tách quá đắt mà bỏ, thì quay lại đọc mục này trước khi đổi nền app.
 
 Mức nhạt nhất mà chữ phụ còn đạt 4.5:1: `#76767C` trên trắng, `#717179` khi
 nằm trong khối có tô. Token hiện tại `#52525b` đậm hơn thế nhiều, còn dư chỗ.
@@ -206,12 +213,20 @@ Chúng cũng là chỗ tự nhiên để phát sự kiện cho tầng gamificati
 
 ## Chưa chốt
 
-**06 · Biểu tượng** — chờ linh vật xong. Bộ icon phải mang được nét của linh
-vật; chốt bây giờ thì sau cũng phải làm lại. Một điều đã chắc: **không dùng
-emoji**. Mỗi máy vẽ một kiểu, không đổi màu được, không mang được nét vẽ nào.
+Ba ảnh tham chiếu linh vật **đã có** từ 26/11/2026, nên hai trục dưới đây hết
+bị chặn. Chưa chốt, nhưng làm được rồi.
 
-**07 · Art style nội dung** — chờ linh vật xong. CONCEPT mục 4: linh vật
-**không sống ở vỏ app**, chúng ở trong nội dung và lúc chuyển cảnh.
+**06 · Biểu tượng** — bộ icon phải mang được nét của linh vật: viền đều một
+độ dày, nét khép kín, không chuyển sắc. Một điều đã chắc: **không dùng emoji**.
+Mỗi máy vẽ một kiểu, không đổi màu được, không mang được nét vẽ nào.
+
+**07 · Art style nội dung** — CONCEPT mục 4: linh vật **không sống ở vỏ app**,
+chúng ở trong nội dung và lúc chuyển cảnh.
+
+Hai khuyết điểm đã biết của ba ảnh chuẩn, cần tính tới khi làm hai trục này:
+**không có bàn chân** (bốn vòng prompt không ép được, muốn đúng thì sửa tay),
+và **viền thân Tim còn lẫn mực** — đo được 70–79% ám màu, trong khi viền Não
+đạt 93–94%. Xem ghi chú đầu [LINH-VAT.md](linh-vat/LINH-VAT.md).
 
 **08 · Chuyển động** — chờ có cái để động. Luật 7 đã xử lý ở `index.css`;
 hoạt ảnh viết bằng JavaScript thì phải tự gọi `matchMedia`.
