@@ -25,3 +25,8 @@ supabase/.branches/
 .DS_Store
 Thumbs.db
 *.log
+
+# Tệp nháp khi soi ảnh, đo màu — không bao giờ vào repo.
+# Đã vấp: hai phiên dùng chung một thư mục, phiên kia chạy "git add -A" và
+# cuốn theo bốn tệp nháp của phiên này vào commit của nó.
+tmp-*
